@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Delivery.Common.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -9,15 +10,14 @@ namespace Delivery.BackendAPI.Controllers;
 [ApiController]
 [Route("api/restaurant/{restaurantId}/menu")]
 public class MenuController : ControllerBase {
-
     /// <summary>
     /// [Manager] Creates a new menu. You shouldn`t create menu for new Restaurant, It always has Default one. 
     /// </summary>
-    /// <param name="name" example="Russian kitchen">New menu name</param>
     /// <param name="restaurantId"></param>
+    /// <param name="restaurantCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult CreateRestaurantMenu([FromQuery] String name, [FromRoute] Guid restaurantId) {
+    public ActionResult CreateRestaurantMenu([FromRoute] Guid restaurantId, [FromBody] RestaurantCreateDto restaurantCreateDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
     
@@ -28,7 +28,7 @@ public class MenuController : ControllerBase {
     /// <param name="restaurantId"></param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult GetRestaurantMenus([FromQuery] String name, [FromRoute] Guid restaurantId) {
+    public ActionResult<List<MenuShortDto>> GetRestaurantMenus([FromQuery] String name, [FromRoute] Guid restaurantId) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -40,7 +40,22 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{menuId}")]
-    public ActionResult GetMenu([FromRoute] Guid menuId) {
+    public ActionResult<MenuFullDto> GetMenu([FromRoute] Guid menuId) {
+        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    }
+
+    /// <summary>
+    /// [Manager] Update menu. Unable for Default menu.
+    /// </summary>
+    /// <remarks>
+    /// Update menu name.
+    /// </remarks>
+    /// <param name="menuId"></param>
+    /// <param name="menuEditDto"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [Route("{menuId}")]
+    public ActionResult Update([FromRoute] Guid menuId, [FromBody] MenuEditDto menuEditDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
     
@@ -64,7 +79,7 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("archived")]
-    public ActionResult ArchivedMenus() {
+    public ActionResult<List<MenuShortDto>> ArchivedMenus() {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
     

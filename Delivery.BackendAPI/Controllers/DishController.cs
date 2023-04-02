@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Runtime.InteropServices;
+using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,9 +38,9 @@ public class DishController : ControllerBase {
     /// <param name="page">Page of list (natural number)</param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult GetDishes([FromRoute] Guid restaurantId, [FromQuery] [Optional] List<Guid>? menus,
-        [FromQuery] [Optional] List<DishCategory>? categories, [FromQuery] [Optional] DishSort? sort,
-        [FromQuery] [Optional] String? name, [FromQuery] Boolean isVegetarian = false, [FromQuery] int page = 1) {
+    public ActionResult<Pagination<DishShortDto>> GetDishes([FromRoute] Guid restaurantId, [FromQuery] [Optional] List<Guid>? menus,
+        [FromQuery] [Optional] List<DishCategory>? categories, [FromQuery] [Optional] String? name, 
+        [FromQuery] Boolean isVegetarian = false, [FromQuery] int page = 1, [FromQuery] DishSort? sort = DishSort.NameAsc) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -50,7 +51,7 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{dishId}")]
-    public ActionResult GetDish([FromRoute] Guid dishId) {
+    public ActionResult<DishFullDto> GetDish([FromRoute] Guid dishId) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -58,10 +59,11 @@ public class DishController : ControllerBase {
     /// [Manager] Edit information about dish
     /// </summary>
     /// <param name="dishId"></param>
+    /// <param name="dishEditDto"></param>
     /// <returns></returns>
     [HttpPut]
     [Route("{dishId}/edit")]
-    public ActionResult EditDish([FromRoute] Guid dishId) {
+    public ActionResult EditDish([FromRoute] Guid dishId, [FromBody] DishEditDto dishEditDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -82,10 +84,11 @@ public class DishController : ControllerBase {
     /// <summary>
     /// [Manager] Get list of archived dishes
     /// </summary>
+    /// <param name="restaurantId"></param>
     /// <returns></returns>
     [HttpGet]
     [Route("archived")]
-    public ActionResult ArchivedDishes() {
+    public ActionResult ArchivedDishes([FromRoute] Guid restaurantId) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -110,7 +113,7 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{dishId}/rating/check")]
-    public ActionResult RatingCheck([FromRoute] Guid dishId) {
+    public ActionResult<RatingCheckDto> RatingCheck([FromRoute] Guid dishId) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -118,10 +121,11 @@ public class DishController : ControllerBase {
     /// [Customer] Set user rating for the dish 
     /// </summary>
     /// <param name="dishId"></param>
+    /// <param name="ratingSetDto"></param>
     /// <returns></returns>
     [HttpPost]
     [Route("{dishId}/rating")]
-    public ActionResult Rating([FromRoute] Guid dishId) {
+    public ActionResult Rating([FromRoute] Guid dishId, [FromBody] RatingSetDto ratingSetDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 }

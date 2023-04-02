@@ -3,13 +3,9 @@
 namespace Delivery.Common.DTO; 
 
 /// <summary>
-/// Dish DTO info about dish
+/// DTO for editing dish
 /// </summary>
-public class DishFullDto {
-    /// <summary>
-    /// Dish Identifier
-    /// </summary>
-    public Guid Id { get; set; }
+public class DishEditDto {
     /// <summary>
     /// Name of the dish
     /// </summary>
@@ -27,19 +23,7 @@ public class DishFullDto {
     /// </summary>
     public string? ImageUrl { get; set; }
     /// <summary>
-    /// Is dish archived
-    /// </summary>
-    public Boolean IsArchived { get; set; }
-    /// <summary>
-    /// Calculated rating
-    /// </summary>
-    public decimal CalculatedRating { get; set; }
-    /// <summary>
     /// Categories of the dish
     /// </summary>
     public List<DishCategory>? DishCategories { get; set; }
-    /// <summary>
-    /// Is dish vegetarian
-    /// </summary>
-    public Boolean IsVegetarian { get; set; }
 }

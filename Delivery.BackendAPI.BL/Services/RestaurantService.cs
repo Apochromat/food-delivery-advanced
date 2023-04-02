@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Delivery.BackendAPI.DAL;
 using Delivery.Common.DTO;
+using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ public class RestaurantService : IRestaurantService {
         _mapper = mapper;
     }
     
-    public Pagination<RestaurantShortDto> GetAllRestaurants(String name, int page, int pageSize = 10) {
+    public Pagination<RestaurantShortDto> GetAllUnarchivedRestaurants(String name, int page, int pageSize = 10) {
         var allCount = _backendDbContext.Restaurants?.Where(x => x.IsArchived == false).Count();
         if (allCount == null) {
             throw new NotFoundException("Restaurants not found");
@@ -47,6 +48,22 @@ public class RestaurantService : IRestaurantService {
     }
 
     public RestaurantFullDto UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto) {
+        throw new NotImplementedException();
+    }
+
+    public RestaurantFullDto ArchiveRestaurant(Guid restaurantId) {
+        throw new NotImplementedException();
+    }
+
+    public RestaurantFullDto UnarchiveRestaurant(Guid restaurantId) {
+        throw new NotImplementedException();
+    }
+
+    public List<RestaurantShortDto> GetArchivedRestaurants() {
+        throw new NotImplementedException();
+    }
+
+    public Pagination<OrderShortDto> GetRestaurantOrders(Guid restaurantId, OrderSort sort, List<OrderStatus>? status, string? number, int page = 1) {
         throw new NotImplementedException();
     }
 

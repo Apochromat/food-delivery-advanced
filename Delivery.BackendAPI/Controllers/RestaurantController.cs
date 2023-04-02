@@ -41,7 +41,7 @@ public class RestaurantController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     public ActionResult<Pagination<RestaurantShortDto>> GetRestaurants([FromQuery] String name, [FromQuery] int page = 1 ) {
-        return Ok(_restaurantService.GetAllRestaurants(name, page));
+        return Ok(_restaurantService.GetAllUnarchivedRestaurants(name, page));
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public class RestaurantController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("archived")]
-    public ActionResult ArchivedRestaurants() {
+    public ActionResult<List<RestaurantShortDto>> ArchivedRestaurants() {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -121,8 +121,8 @@ public class RestaurantController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{restaurantId}/order")]
-    public ActionResult<Pagination<OrderShortDto>> GetOrders([FromQuery] [Optional] OrderSort? sort,
-        [FromQuery] [Optional] List<OrderStatus>? status, [FromQuery] [Optional] String? number, [FromQuery] int page = 1 ) {
+    public ActionResult<Pagination<OrderShortDto>> GetOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 }

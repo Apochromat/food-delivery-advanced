@@ -1,11 +1,9 @@
-﻿using Delivery.Common.Enums;
-
-namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO; 
 
 /// <summary>
-/// Dish DTO info about dish
+/// DTO of dish with short information
 /// </summary>
-public class DishFullDto {
+public class DishShortDto {
     /// <summary>
     /// Dish Identifier
     /// </summary>
@@ -27,17 +25,9 @@ public class DishFullDto {
     /// </summary>
     public string? ImageUrl { get; set; }
     /// <summary>
-    /// Is dish archived
-    /// </summary>
-    public Boolean IsArchived { get; set; }
-    /// <summary>
     /// Calculated rating
     /// </summary>
     public decimal CalculatedRating { get; set; }
-    /// <summary>
-    /// Categories of the dish
-    /// </summary>
-    public List<DishCategory>? DishCategories { get; set; }
     /// <summary>
     /// Is dish vegetarian
     /// </summary>

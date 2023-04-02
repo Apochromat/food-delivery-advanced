@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Runtime.InteropServices;
+using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,15 +22,18 @@ public class OrderController : ControllerBase {
     /// <param name="sort">Sort type</param>
     /// <param name="status">Order statuses for filter</param>
     /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="page"></param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult GetAllOrders([FromQuery] [Optional] OrderSort? sort,
-        [FromQuery] [Optional] List<OrderStatus>? status, [FromQuery] [Optional] String? number) {
+    public ActionResult<Pagination<OrderShortDto>> GetAllOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1,
+        [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
     /// <summary>
     /// [Cook, Courier, Customer] Get user`s orders from all restaurants.
+    /// TODO: Разделить на разные эндпоинты
     /// </summary>
     /// <remarks>
     /// Cook see his orders with statuses: Kitchen, Packaged, Delivered(history of cooked orders).<br/>
@@ -38,11 +42,13 @@ public class OrderController : ControllerBase {
     /// <param name="sort">Sort type</param>
     /// <param name="status">Order statuses for filter</param>
     /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="page"></param>
     /// <returns></returns>
     [HttpGet]
     [Route("mine")]
-    public ActionResult GetMyOrders([FromQuery] [Optional] OrderSort? sort,
-        [FromQuery] [Optional] List<OrderStatus>? status, [FromQuery] [Optional] String? number) {
+    public ActionResult<Pagination<OrderShortDto>> GetMyOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
+        [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -60,7 +66,7 @@ public class OrderController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{orderId}")]
-    public ActionResult GetOrder([FromRoute] Guid orderId) {
+    public ActionResult<OrderFullDto> GetOrder([FromRoute] Guid orderId) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -70,9 +76,10 @@ public class OrderController : ControllerBase {
     /// <remarks>
     /// Creates a new order with status Created
     /// </remarks>
+    /// <param name="orderCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult CreateOrder() {
+    public ActionResult CreateOrder([FromBody] OrderCreateDto orderCreateDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -90,7 +97,7 @@ public class OrderController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{orderId}/status")]
-    public ActionResult CancelOrder([FromRoute] Guid orderId, [FromQuery] OrderStatus status) {
+    public ActionResult CancelOrder([FromRoute] Guid orderId, [FromBody] OrderChangeStatusDto status) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
