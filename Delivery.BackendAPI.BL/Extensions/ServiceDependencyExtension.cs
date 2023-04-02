@@ -1,4 +1,6 @@
-﻿using Delivery.BackendAPI.DAL;
+﻿using Delivery.BackendAPI.BL.Services;
+using Delivery.BackendAPI.DAL;
+using Delivery.Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Delivery.BackendAPI.BL.Extensions;
@@ -13,6 +15,8 @@ public static class ServiceDependencyExtension {
     /// <returns></returns>
     public static IServiceCollection AddBackendBlServiceDependencies(this IServiceCollection services) {
         services.AddDbContext<BackendDbContext>();
+        services.AddScoped<IRestaurantService, RestaurantService>();
+        services.AddAutoMapper(typeof(MappingProfiles.MappingProfile));
         return services;
     }
 }

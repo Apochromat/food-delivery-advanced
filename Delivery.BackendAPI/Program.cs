@@ -1,8 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
-using Delivery.BackendAPI.BL.Services;
 using Delivery.BackendAPI.BL.Extensions;
-using Delivery.Common.Interfaces;
+using Delivery.BackendAPI.Middlewares;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
@@ -16,7 +15,6 @@ builder.Services.AddControllers().AddJsonOptions(opts => {
 });
 
 builder.Services.AddBackendBlServiceDependencies();
-builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -67,5 +65,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseErrorHandleMiddleware();
 
 app.Run();

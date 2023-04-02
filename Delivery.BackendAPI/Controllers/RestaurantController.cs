@@ -41,7 +41,7 @@ public class RestaurantController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     public ActionResult<Pagination<RestaurantShortDto>> GetRestaurants([FromQuery] String name, [FromQuery] int page = 1 ) {
-        return Ok(_restaurantService.GetAllRestaurants());
+        return Ok(_restaurantService.GetAllRestaurants(name, page));
     }
 
     /// <summary>

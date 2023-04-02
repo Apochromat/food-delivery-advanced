@@ -10,5 +10,10 @@ public interface IRestaurantService {
     /// Get all restaurants
     /// </summary>
     /// <returns></returns>
-    List<RestaurantShortDto> GetAllRestaurants();
+    Pagination<RestaurantShortDto> GetAllRestaurants(String name, int page, int pageSize = 10);
+    RestaurantFullDto GetRestaurant(Guid restaurantId);
+    RestaurantFullDto CreateRestaurant(RestaurantCreateDto restaurantCreateDto);
+    RestaurantFullDto UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto);
+    void DeleteRestaurant(Guid restaurantId);
+    
 }

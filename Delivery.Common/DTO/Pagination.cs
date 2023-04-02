@@ -7,6 +7,26 @@ namespace Delivery.Common.DTO;
 /// </summary>
 public class Pagination<T> {
     /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="current"></param>
+    /// <param name="items"></param>
+    /// <param name="pages"></param>
+    public Pagination(List<T> content, int current, int items, int pages) {
+        Content = content;
+        Current = current;
+        Items = items;
+        Pages = pages;
+    }
+    
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public Pagination() {
+    }
+
+    /// <summary>
     /// List of items
     /// </summary>
     [DisplayName("content")]

@@ -14,32 +14,32 @@ public class BackendDbContext : DbContext {
     /// <summary>
     /// Restaurants table
     /// </summary>
-    public DbSet<Restaurant>? Restaurants { get; set; }
+    public DbSet<Restaurant> Restaurants { get; set; }
 
     /// <summary>
     /// Menus table
     /// </summary>
-    public DbSet<Menu>? Menus { get; set; }
+    public DbSet<Menu> Menus { get; set; }
 
     /// <summary>
     /// Dishes table
     /// </summary>
-    public DbSet<Dish>? Dishes { get; set; }
+    public DbSet<Dish> Dishes { get; set; }
 
     /// <summary>
     /// Orders table
     /// </summary>
-    public DbSet<Order>? Orders { get; set; }
+    public DbSet<Order> Orders { get; set; }
 
     /// <summary>
     /// Dishes in order table
     /// </summary>
-    public DbSet<DishInCart>? DishesInCart { get; set; }
+    public DbSet<DishInCart> DishesInCart { get; set; }
 
     /// <summary>
     /// Ratings table
     /// </summary>
-    public DbSet<Rating>? Ratings { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
 
     /// <inheritdoc />
     public BackendDbContext(DbContextOptions<BackendDbContext> options, IConfiguration configuration) : base(options) {
