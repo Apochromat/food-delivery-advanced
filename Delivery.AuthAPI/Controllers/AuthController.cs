@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Delivery.Common.DTO;
 using Delivery.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.AuthAPI.Controllers; 
@@ -71,6 +72,7 @@ public class AuthController : ControllerBase {
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices")]
     public async Task<ActionResult<List<DeviceDto>>> GetDevices() {
         return Ok(await _authService.GetDevicesAsync(User.Identity.Name));

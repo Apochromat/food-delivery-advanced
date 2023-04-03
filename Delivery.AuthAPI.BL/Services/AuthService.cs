@@ -195,7 +195,7 @@ public class AuthService : IAuthService {
         if (email == null) {
             throw new ArgumentNullException(nameof(email));
         }
-        var user = _userManager.Users.First(u => u.Email == email);
+        var user = _userManager.Users.Include(x=> x.Devices).First(u => u.Email == email);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
