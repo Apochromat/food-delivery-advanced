@@ -1,7 +1,10 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Delivery.AuthAPI.BL.Extensions;
-using Delivery.AuthAPI.DAL;
+using Delivery.Common.Configurations;
+using Delivery.Common.Middlewares;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
@@ -46,6 +49,20 @@ builder.Services.AddSwaggerGen(option => {
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuer = true,
+            ValidIssuer = JwtConfiguration.Issuer,
+            ValidateAudience = true,
+            ValidAudience = JwtConfiguration.Audience,
+            ValidateLifetime = true,
+            IssuerSigningKey = JwtConfiguration.GetSymmetricSecurityKey(),
+            ValidateIssuerSigningKey = true,
+        };
+    });
+
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
@@ -69,6 +86,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseErrorHandleMiddleware();
 await app.ConfigureIdentityAsync();
 
 app.Run();

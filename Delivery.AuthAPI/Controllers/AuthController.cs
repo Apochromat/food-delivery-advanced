@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using Delivery.Common.DTO;
+using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.AuthAPI.Controllers; 
@@ -9,14 +11,24 @@ namespace Delivery.AuthAPI.Controllers;
 [ApiController]
 [Route("api")]
 public class AuthController : ControllerBase {
+    private readonly IAuthService _authService;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="authService"></param>
+    public AuthController(IAuthService authService) {
+        _authService = authService;
+    }
+
     /// <summary>
     /// Register new user as Customer
     /// </summary>
     /// <returns></returns>
     [HttpPost]
     [Route("register")]
-    public ActionResult Register() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<TokenResponseDto>> Register([FromBody] AccountRegisterDto accountRegisterDto) {
+        return Ok(await _authService.RegisterAsync(accountRegisterDto, HttpContext));
     }
     
     /// <summary>
@@ -29,8 +41,8 @@ public class AuthController : ControllerBase {
     /// <returns></returns>
     [HttpPost]
     [Route("login")]
-    public ActionResult Login() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<TokenResponseDto>> Login([FromBody] AccountLoginDto accountLoginDto) {
+        return Ok(await _authService.LoginAsync(accountLoginDto, HttpContext));
     }
     
     /// <summary>

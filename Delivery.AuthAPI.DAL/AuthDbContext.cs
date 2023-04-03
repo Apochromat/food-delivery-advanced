@@ -12,6 +12,7 @@ public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, I
     
     public DbSet<User> Users { get; set; }
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<Device> Devices { get; set; }
 
     /// <inheritdoc />
     public AuthDbContext(DbContextOptions<AuthDbContext> options, IConfiguration configuration) : base(options) {

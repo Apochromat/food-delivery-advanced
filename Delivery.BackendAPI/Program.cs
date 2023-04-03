@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Delivery.BackendAPI.BL.Extensions;
-using Delivery.BackendAPI.Middlewares;
+using Delivery.Common.Middlewares;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;

@@ -1,12 +1,15 @@
 ﻿using Delivery.Common.Enums;
-using Microsoft.AspNetCore.Identity;
 
-namespace Delivery.AuthAPI.DAL.Entities;
+namespace Delivery.Common.DTO; 
 
 /// <summary>
-/// AuthDB general User Model   
+/// Account profile DTO
 /// </summary>
-public class User : IdentityUser<Guid> {
+public class AccountProfileFullDto {
+    /// <summary>
+    /// User email
+    /// </summary>
+    public String? Email { get; set; }
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
@@ -23,8 +26,4 @@ public class User : IdentityUser<Guid> {
     /// Date when user joined the system
     /// </summary>
     public DateTime JoinedAt { get; set; }
-    /// <summary>
-    /// User`s devices
-    /// </summary>
-    public List<Device> Devices { get; set; }
 }

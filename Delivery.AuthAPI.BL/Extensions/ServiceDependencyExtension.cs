@@ -1,4 +1,6 @@
-﻿using Delivery.AuthAPI.DAL;
+﻿using Delivery.AuthAPI.BL.Services;
+using Delivery.AuthAPI.DAL;
+using Delivery.Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Delivery.AuthAPI.BL.Extensions;
@@ -13,6 +15,7 @@ public static class ServiceDependencyExtension {
     /// <returns></returns>
     public static IServiceCollection AddAuthBlServiceDependencies(this IServiceCollection services) {
         services.AddDbContext<AuthDbContext>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddAutoMapper(typeof(MappingProfiles.MappingProfile));
         return services;
     }
