@@ -1,5 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Delivery.AuthAPI.BL.Extensions;
+using Delivery.AuthAPI.DAL;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
@@ -11,6 +13,10 @@ builder.Services.AddControllers().AddJsonOptions(opts => {
     var enumConverter = new JsonStringEnumConverter();
     opts.JsonSerializerOptions.Converters.Add(enumConverter);
 });
+
+builder.Services.AddAuthBlServiceDependencies();
+
+builder.Services.AddAuthBlServiceIdentityDependencies();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -49,6 +55,8 @@ builder.Logging.AddSerilog(logger);
 
 var app = builder.Build();
 
+await app.ConfigureIdentityAsync();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
@@ -60,5 +68,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.ConfigureIdentityAsync();
 
 app.Run();

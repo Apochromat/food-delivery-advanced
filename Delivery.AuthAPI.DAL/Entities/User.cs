@@ -10,7 +10,7 @@ public class User : IdentityUser<Guid> {
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
-    public string FullName { get; set; } = "";
+    public string? FullName { get; set; }
     /// <summary>
     /// User`s birth date
     /// </summary>
@@ -23,8 +23,4 @@ public class User : IdentityUser<Guid> {
     /// Date when user joined the system
     /// </summary>
     public DateTime JoinedAt { get; set; }
-    /// <summary>
-    /// List of roles that user has
-    /// </summary>
-    public ICollection<Role>? Roles { get; set; }
 }
