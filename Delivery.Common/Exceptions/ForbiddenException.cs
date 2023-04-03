@@ -1,27 +1,27 @@
 ﻿namespace Delivery.Common.Exceptions;
 
 /// <summary>
-/// Exception for conflict HTTP status code
+/// Exception for forbidden status 
 /// </summary>
 [Serializable]
-public class IncorrectLoginException : Exception {
+public class ForbiddenException : Exception {
     /// <summary>
     /// Constructor
     /// </summary>
-    public IncorrectLoginException() {
+    public ForbiddenException() {
     }
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public IncorrectLoginException(string message)
+    public ForbiddenException(string message)
         : base(message) {
     }
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public IncorrectLoginException(string message, Exception inner)
+    public ForbiddenException(string message, Exception inner)
         : base(message, inner) {
     }
 }

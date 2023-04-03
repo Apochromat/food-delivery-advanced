@@ -51,8 +51,8 @@ public class AuthController : ControllerBase {
     /// <returns></returns>
     [HttpPost]
     [Route("refresh")]
-    public ActionResult Refresh() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<TokenResponseDto>> Refresh([FromBody] TokenRequestDto tokenRequestDto) {
+        return Ok(await _authService.RefreshTokenAsync(tokenRequestDto.AccessToken, tokenRequestDto.RefreshToken, HttpContext));
     }
     
     /// <summary>
@@ -61,7 +61,43 @@ public class AuthController : ControllerBase {
     /// <returns></returns>
     [HttpPost]
     [Route("change-password")]
-    public ActionResult ChangePassword() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto) {
+        await _authService.ChangePasswordAsync(User.Identity.Name, changePasswordDto);
+        return Ok();    
+    }
+    
+    /// <summary>
+    /// Get user devices
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("devices")]
+    public async Task<ActionResult<List<DeviceDto>>> GetDevices() {
+        return Ok(await _authService.GetDevicesAsync(User.Identity.Name));
+    }
+    
+    /// <summary>
+    /// Rename device
+    /// </summary>
+    /// <param name="deviceId"></param>
+    /// <param name="deviceRenameDto"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [Route("devices/{deviceId}")]
+    public async Task<ActionResult> RenameDevice([FromRoute] Guid deviceId, [FromBody] DeviceRenameDto deviceRenameDto) {
+        await _authService.RenameDeviceAsync(User.Identity.Name, deviceId, deviceRenameDto);
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Delete device from user devices
+    /// </summary>
+    /// <param name="deviceId"></param>
+    /// <returns></returns>
+    [HttpDelete]
+    [Route("devices/{deviceId}")]
+    public async Task<ActionResult> DeleteDevice([FromRoute] Guid deviceId) {
+        await _authService.DeleteDeviceAsync(User.Identity.Name, deviceId);
+        return Ok();
     }
 }
