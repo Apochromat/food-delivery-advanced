@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Delivery.AuthAPI.BL.Extensions; 
 
+/// <summary>
+/// Extension methods for AuthAPI BL service Identity dependencies
+/// </summary>
 public static class ConfigureIdentityDependency {
     /// <summary>
     /// Add AuthAPI BL service Identity dependencies

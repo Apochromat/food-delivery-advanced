@@ -8,7 +8,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Delivery.AuthAPI.BL.Extensions; 
 
+/// <summary>
+/// Create default roles and users
+/// </summary>
 public static class ConfigureIdentityRoles {
+    /// <summary>
+    /// Create default roles and administrator user
+    /// </summary>
+    /// <param name="app"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
     public static async Task ConfigureIdentityAsync(this WebApplication app) {
         using var serviceScope = app.Services.CreateScope();
         

@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Delivery.Common.DTO;
+﻿using Delivery.Common.DTO;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +35,7 @@ public class AuthController : ControllerBase {
     /// Login user into the system
     /// </summary>
     /// <remarks>
-    /// Returns the user access-token(JWT) and refresh-token(non-JWT), a list of roles.<br/>
+    /// Returns the user access-token(JWT) and refresh-token(non-JWT).<br/>
     /// If the user logs in from any device, this device is remembered to work with a specific refresh-token
     /// </remarks>
     /// <returns></returns>
@@ -61,6 +60,7 @@ public class AuthController : ControllerBase {
     /// </summary>
     /// <returns></returns>
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("change-password")]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto) {
         await _authService.ChangePasswordAsync(User.Identity.Name, changePasswordDto);
@@ -85,6 +85,7 @@ public class AuthController : ControllerBase {
     /// <param name="deviceRenameDto"></param>
     /// <returns></returns>
     [HttpPut]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices/{deviceId}")]
     public async Task<ActionResult> RenameDevice([FromRoute] Guid deviceId, [FromBody] DeviceRenameDto deviceRenameDto) {
         await _authService.RenameDeviceAsync(User.Identity.Name, deviceId, deviceRenameDto);
@@ -97,6 +98,7 @@ public class AuthController : ControllerBase {
     /// <param name="deviceId"></param>
     /// <returns></returns>
     [HttpDelete]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices/{deviceId}")]
     public async Task<ActionResult> DeleteDevice([FromRoute] Guid deviceId) {
         await _authService.DeleteDeviceAsync(User.Identity.Name, deviceId);

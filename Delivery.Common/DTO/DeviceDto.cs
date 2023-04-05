@@ -7,7 +7,7 @@ public class DeviceDto {
     /// <summary>
     /// Device identifier
     /// </summary>
-    public Guid DeviceId { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
     /// <summary>
     /// Ip address
     /// </summary>

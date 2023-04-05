@@ -10,7 +10,7 @@ public class Device {
     /// Device identifier
     /// </summary>
     [Key]
-    public Guid DeviceId { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.NewGuid();
     /// <summary>
     /// User identifier
     /// </summary>

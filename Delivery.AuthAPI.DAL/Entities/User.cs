@@ -19,10 +19,11 @@ public class User : IdentityUser<Guid> {
     /// User`s gender
     /// </summary>
     public Gender Gender { get; set; }
+
     /// <summary>
     /// Date when user joined the system
     /// </summary>
-    public DateTime JoinedAt { get; set; }
+    public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
     /// <summary>
     /// User`s devices
     /// </summary>

@@ -63,15 +63,7 @@ public class AuthService : IAuthService {
             throw new ConflictException("User with this email already exists");
         }
 
-        var user = new Customer() {
-            UserName = accountRegisterDto.Email,
-            Email = accountRegisterDto.Email,
-            FullName = accountRegisterDto.FullName,
-            Address = "",
-            Gender = accountRegisterDto.Gender,
-            JoinedAt = DateTime.Now.ToUniversalTime(),
-            BirthDate = accountRegisterDto.BirthDate
-        };
+        var user = _mapper.Map<Customer>(accountRegisterDto);
 
         var result = await _userManager.CreateAsync(user, accountRegisterDto.Password);
 
@@ -84,7 +76,7 @@ public class AuthService : IAuthService {
         }
 
         var errors = string.Join(", ", result.Errors.Select(x => x.Description));
-        throw new InvalidOperationException(errors);
+        throw new BadRequestException(errors);
     }
 
     /// <summary>
@@ -104,6 +96,7 @@ public class AuthService : IAuthService {
         if (user == null) {
             throw new NotFoundException("User not found");
         }
+
         var device =
             user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
 
@@ -155,10 +148,12 @@ public class AuthService : IAuthService {
             throw new BadRequestException("Invalid jwt token");
         }
 
-        var user = _userManager.Users.Include(x => x.Devices).FirstOrDefault(x => x.Id.ToString() == principal.Identity.Name);
+        var user = _userManager.Users.Include(x => x.Devices)
+            .FirstOrDefault(x => x.Id.ToString() == principal.Identity.Name);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
+
         var device =
             user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
 
@@ -179,7 +174,7 @@ public class AuthService : IAuthService {
             signingCredentials: new SigningCredentials(JwtConfiguration.GetSymmetricSecurityKey(),
                 SecurityAlgorithms.HmacSha256));
 
-        device.LastActivity = DateTime.Now.ToUniversalTime();
+        device.LastActivity = DateTime.UtcNow;
         await _authDbContext.SaveChangesAsync();
 
         return new TokenResponseDto() {
@@ -203,8 +198,7 @@ public class AuthService : IAuthService {
             throw new NotFoundException("User not found");
         }
 
-        var devices = _authDbContext.Devices.Where(d => d.User == user).ToList();
-        return Task.FromResult(devices.Select(d => _mapper.Map<DeviceDto>(d)).ToList());
+        return Task.FromResult(user.Devices.Select(d => _mapper.Map<DeviceDto>(d)).ToList());
     }
 
     /// <summary>
@@ -220,12 +214,12 @@ public class AuthService : IAuthService {
             throw new ArgumentNullException(nameof(userId));
         }
 
-        var user = _userManager.Users.First(u => u.Id.ToString() == userId);
+        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
 
-        var device = _authDbContext.Devices.FirstOrDefault(d => d.User == user);
+        var device = user.Devices.FirstOrDefault(d => d.Id == deviceId);
         if (device == null) {
             throw new NotFoundException("Device not found");
         }
@@ -274,7 +268,11 @@ public class AuthService : IAuthService {
             throw new NotFoundException("User not found");
         }
 
-        await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+        var result =
+            await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+        if (!result.Succeeded) {
+            throw new BadRequestException(string.Join(", ", result.Errors.Select(x => x.Description)));
+        }
     }
 
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string jwtToken) {

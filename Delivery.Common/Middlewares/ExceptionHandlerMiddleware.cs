@@ -79,6 +79,18 @@ public class ExceptionHandlerMiddleware {
             await context.Response.WriteAsync(errorDetails.ToString());
         }
         
+        catch (UnauthorizedException ex) {
+            var errorDetails = new ErrorDetails {
+                StatusCode = (int)HttpStatusCode.Unauthorized,
+                Message = ex.Message,
+                TraceId = Activity.Current?.Id ?? context.TraceIdentifier
+            };
+            _logger.LogError(ex, errorDetails.ToString());
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(errorDetails.ToString());
+        }
+        
         catch (Exception ex) {
             var errorDetails = new ErrorDetails {
                 StatusCode = (int)HttpStatusCode.InternalServerError,

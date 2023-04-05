@@ -42,4 +42,10 @@ public class AccountRegisterDto {
     /// </summary>
     [Required]
     public Gender Gender { get; set; }
+    
+    /// <summary>
+    /// User`s phone number
+    /// </summary>
+    [Required]
+    public String? Address { get; set; }
 }
