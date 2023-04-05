@@ -53,7 +53,7 @@ public class AuthController : ControllerBase {
     [HttpPost]
     [Route("refresh")]
     public async Task<ActionResult<TokenResponseDto>> Refresh([FromBody] TokenRequestDto tokenRequestDto) {
-        return Ok(await _authService.RefreshTokenAsync(tokenRequestDto.AccessToken, tokenRequestDto.RefreshToken, HttpContext));
+        return Ok(await _authService.RefreshTokenAsync(tokenRequestDto, HttpContext));
     }
     
     /// <summary>

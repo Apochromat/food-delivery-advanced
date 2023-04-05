@@ -26,11 +26,10 @@ public interface IAuthService {
     /// <summary>
     /// Refresh token
     /// </summary>
-    /// <param name="jwtToken"></param>
-    /// <param name="refreshToken"></param>
+    /// <param name="tokenRequestDto"></param>
     /// <param name="httpContext"></param>
     /// <returns></returns>
-    Task<TokenResponseDto> RefreshTokenAsync(string jwtToken, string refreshToken, HttpContext httpContext);
+    Task<TokenResponseDto> RefreshTokenAsync(TokenRequestDto tokenRequestDto, HttpContext httpContext);
     
     /// <summary>
     /// Get user devices

@@ -4,7 +4,6 @@ using Delivery.BackendAPI.BL.Extensions;
 using Delivery.Common.Middlewares;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +38,6 @@ builder.Services.AddSwaggerGen(option => {
     //         new string[] { }
     //     }
     // });
-    option.OperationFilter<SecurityRequirementsOperationFilter>();
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });

@@ -102,39 +102,39 @@ public class AuthService : IAuthService {
         if (accountLoginDto.Password == null) {
             throw new ArgumentNullException(nameof(accountLoginDto.Password));
         }
-        
+
         var identity = await GetIdentity(accountLoginDto.Email.ToLower(), accountLoginDto.Password);
         if (identity == null) {
             throw new BadRequestException("Incorrect username or password");
         }
-        
+
         var user = _userManager.Users.Include(x => x.Devices).First(x => x.Email == accountLoginDto.Email);
-        var device = user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
-        
+        var device =
+            user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
+
         if (device == null) {
             device = new Device() {
                 IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
                 User = user,
                 RefreshToken = $"{Guid.NewGuid()}-{Guid.NewGuid()}",
                 UserAgent = httpContext.Request.Headers["User-Agent"],
-                CreatedAt = DateTime.Now.ToUniversalTime(),
-                LastActivity = DateTime.Now.ToUniversalTime(),
-                ExpirationDate = DateTime.Now.AddMonths(6).ToUniversalTime()
+                CreatedAt = DateTime.UtcNow,
+                LastActivity = DateTime.UtcNow,
+                ExpirationDate = DateTime.UtcNow.AddMonths(6)
             };
             await _authDbContext.Devices.AddAsync(device);
             await _authDbContext.SaveChangesAsync();
         }
-        
-        device.LastActivity = DateTime.Now.ToUniversalTime();
+
+        device.LastActivity = DateTime.UtcNow;
         await _authDbContext.SaveChangesAsync();
-        
-        var now = DateTime.UtcNow;
+
         var jwt = new JwtSecurityToken(
             issuer: JwtConfiguration.Issuer,
             audience: JwtConfiguration.Audience,
-            notBefore: now,
+            notBefore: DateTime.UtcNow,
             claims: identity.Claims,
-            expires: now.Add(TimeSpan.FromMinutes(JwtConfiguration.Lifetime)),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(JwtConfiguration.Lifetime)),
             signingCredentials: new SigningCredentials(JwtConfiguration.GetSymmetricSecurityKey(),
                 SecurityAlgorithms.HmacSha256));
 
@@ -149,14 +149,29 @@ public class AuthService : IAuthService {
     /// <summary>
     /// Refresh token
     /// </summary>
-    /// <param name="jwtToken"></param>
-    /// <param name="refreshToken"></param>
+    /// <param name="tokenRequestDto"></param>
     /// <param name="httpContext"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<TokenResponseDto> RefreshTokenAsync(string jwtToken, string refreshToken, HttpContext httpContext) {
-        jwtToken = jwtToken.Replace("Bearer ", "");
-        var principal = GetPrincipalFromExpiredToken(jwtToken);
+    public async Task<TokenResponseDto> RefreshTokenAsync(TokenRequestDto tokenRequestDto, HttpContext httpContext) {
+        tokenRequestDto.AccessToken = tokenRequestDto.AccessToken.Replace("Bearer ", "");
+        var principal = GetPrincipalFromExpiredToken(tokenRequestDto.AccessToken);
+        if (principal.Identity == null) {
+            throw new BadRequestException("Invalid jwt token");
+        }
+
+        var user = _userManager.Users.Include(x => x.Devices).First(x => x.Email == principal.Identity.Name);
+        var device =
+            user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
+
+        if (device == null) {
+            throw new ForbiddenException("You can't refresh token from another device");
+        }
+
+        if (device.RefreshToken != tokenRequestDto.RefreshToken) {
+            throw new BadRequestException("Refresh token is invalid");
+        }
+
         var jwt = new JwtSecurityToken(
             issuer: JwtConfiguration.Issuer,
             audience: null,
@@ -165,27 +180,16 @@ public class AuthService : IAuthService {
             expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(JwtConfiguration.Lifetime)),
             signingCredentials: new SigningCredentials(JwtConfiguration.GetSymmetricSecurityKey(),
                 SecurityAlgorithms.HmacSha256));
-        
-        if (principal == null || principal.Identity == null) {
-            throw new BadRequestException("Invalid jwt token");
-        }
-        
-        var user = _userManager.Users.Include(x => x.Devices).First(x => x.Email == principal.Identity.Name);
-        var device = user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
-        
-        if (device == null) {
-            throw new ForbiddenException("You can't refresh token from another device");
-        }
-        
+
         device.LastActivity = DateTime.Now.ToUniversalTime();
         await _authDbContext.SaveChangesAsync();
-        
+
         return new TokenResponseDto() {
             AccessToken = new JwtSecurityTokenHandler().WriteToken(jwt),
             RefreshToken = device.RefreshToken
         };
     }
-    
+
     /// <summary>
     /// Get user devices
     /// </summary>
@@ -195,10 +199,12 @@ public class AuthService : IAuthService {
         if (email == null) {
             throw new ArgumentNullException(nameof(email));
         }
-        var user = _userManager.Users.Include(x=> x.Devices).First(u => u.Email == email);
+
+        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Email == email);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
+
         var devices = _authDbContext.Devices.Where(d => d.User == user).ToList();
         return Task.FromResult(devices.Select(d => _mapper.Map<DeviceDto>(d)).ToList());
     }
@@ -215,11 +221,12 @@ public class AuthService : IAuthService {
         if (email == null) {
             throw new ArgumentNullException(nameof(email));
         }
+
         var user = _userManager.Users.First(u => u.Email == email);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-        
+
         var device = _authDbContext.Devices.FirstOrDefault(d => d.User == user);
         if (device == null) {
             throw new NotFoundException("Device not found");
@@ -239,10 +246,12 @@ public class AuthService : IAuthService {
         if (email == null) {
             throw new ArgumentNullException(nameof(email));
         }
+
         var user = _userManager.Users.First(u => u.Email == email);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
+
         var device = _authDbContext.Devices.FirstOrDefault(d => d.User == user);
         if (device == null) {
             throw new NotFoundException("Device not found");
@@ -251,7 +260,7 @@ public class AuthService : IAuthService {
         _authDbContext.Devices.Remove(device);
         await _authDbContext.SaveChangesAsync();
     }
-    
+
     /// <summary>
     /// Change password
     /// </summary>
@@ -261,10 +270,12 @@ public class AuthService : IAuthService {
         if (email == null) {
             throw new ArgumentNullException(nameof(email));
         }
+
         var user = _userManager.Users.First(u => u.Email == email);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
+
         await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
     }
 
@@ -281,13 +292,18 @@ public class AuthService : IAuthService {
             ValidateLifetime = false
         };
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var principal = tokenHandler.ValidateToken(jwtToken, validationParameters, out var securityToken);
-        var jwtSecurityToken = securityToken as JwtSecurityToken;
-        if (jwtSecurityToken == null ||
-            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                StringComparison.InvariantCultureIgnoreCase))
-            throw new SecurityTokenException("Invalid token");
+        ClaimsPrincipal principal;
+        try {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            principal = tokenHandler.ValidateToken(jwtToken, validationParameters, out var securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+        }
+        catch (ArgumentException ex) {
+            throw new BadRequestException("Invalid jwt token", ex);
+        }
 
         return principal;
     }

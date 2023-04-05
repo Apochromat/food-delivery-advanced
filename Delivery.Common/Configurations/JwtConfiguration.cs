@@ -11,7 +11,7 @@ public static class JwtConfiguration {
     /// <summary>
     /// JWT lifetime in minutes
     /// </summary>
-    public static int Lifetime = 10;
+    public static int Lifetime = 5;
     /// <summary>
     /// JWT issuer
     /// </summary>
