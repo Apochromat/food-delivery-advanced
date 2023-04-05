@@ -34,32 +34,32 @@ public interface IAuthService {
     /// <summary>
     /// Get user devices
     /// </summary>
-    /// <param name="email"></param>
+    /// <param name="userId"></param>
     /// <returns></returns>
-    Task<List<DeviceDto>> GetDevicesAsync(string email);
+    Task<List<DeviceDto>> GetDevicesAsync(string userId);
 
     /// <summary>
     /// Rename device
     /// </summary>
-    /// <param name="email"></param>
+    /// <param name="userId"></param>
     /// <param name="deviceId"></param>
     /// <param name="deviceRenameDto"></param>
     /// <returns></returns>
-    Task RenameDeviceAsync(string email, Guid deviceId, DeviceRenameDto deviceRenameDto);
+    Task RenameDeviceAsync(string userId, Guid deviceId, DeviceRenameDto deviceRenameDto);
     
     /// <summary>
     /// Delete device from user devices
     /// </summary>
-    /// <param name="email"></param>
+    /// <param name="userId"></param>
     /// <param name="deviceId"></param>
     /// <returns></returns>
-    Task DeleteDeviceAsync(string email, Guid deviceId);
+    Task DeleteDeviceAsync(string userId, Guid deviceId);
 
     /// <summary>
     /// Change password
     /// </summary>
-    /// <param name="email"></param>
+    /// <param name="userId"></param>
     /// <param name="changePasswordDto"></param>
     /// <returns></returns>
-    Task ChangePasswordAsync(string email, ChangePasswordDto changePasswordDto);
+    Task ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto);
 }

@@ -13,12 +13,13 @@ public class AccountLoginDto {
     [Required]
     [EmailAddress]
     [DisplayName("email")]
-    public String? Email { get; set; }
+    public String Email { get; set; } = "";
+
     /// <summary>
     /// User password
     /// </summary>
     [Required]
     [DefaultValue("P@ssw0rd")]
     [DisplayName("password")]
-    public String? Password { get; set; }
+    public String Password { get; set; } = "";
 }

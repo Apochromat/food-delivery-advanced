@@ -95,20 +95,15 @@ public class AuthService : IAuthService {
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
     public async Task<TokenResponseDto> LoginAsync(AccountLoginDto accountLoginDto, HttpContext httpContext) {
-        if (accountLoginDto.Email == null) {
-            throw new ArgumentNullException(nameof(accountLoginDto.Email));
-        }
-
-        if (accountLoginDto.Password == null) {
-            throw new ArgumentNullException(nameof(accountLoginDto.Password));
-        }
-
         var identity = await GetIdentity(accountLoginDto.Email.ToLower(), accountLoginDto.Password);
         if (identity == null) {
             throw new BadRequestException("Incorrect username or password");
         }
 
-        var user = _userManager.Users.Include(x => x.Devices).First(x => x.Email == accountLoginDto.Email);
+        var user = _userManager.Users.Include(x => x.Devices).FirstOrDefault(x => x.Email == accountLoginDto.Email);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
         var device =
             user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
 
@@ -160,7 +155,10 @@ public class AuthService : IAuthService {
             throw new BadRequestException("Invalid jwt token");
         }
 
-        var user = _userManager.Users.Include(x => x.Devices).First(x => x.Email == principal.Identity.Name);
+        var user = _userManager.Users.Include(x => x.Devices).FirstOrDefault(x => x.Id.ToString() == principal.Identity.Name);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
         var device =
             user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
 
@@ -193,14 +191,14 @@ public class AuthService : IAuthService {
     /// <summary>
     /// Get user devices
     /// </summary>
-    /// <param name="email"></param>
+    /// <param name="userId"></param>
     /// <returns></returns>
-    public Task<List<DeviceDto>> GetDevicesAsync(string email) {
-        if (email == null) {
-            throw new ArgumentNullException(nameof(email));
+    public Task<List<DeviceDto>> GetDevicesAsync(string userId) {
+        if (userId == null) {
+            throw new ArgumentNullException(nameof(userId));
         }
 
-        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Email == email);
+        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -212,17 +210,17 @@ public class AuthService : IAuthService {
     /// <summary>
     /// Rename device
     /// </summary>
-    /// <param name="email"></param>
+    /// <param name="userId"></param>
     /// <param name="deviceId"></param>
     /// <param name="deviceRenameDto"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task RenameDeviceAsync(string email, Guid deviceId, DeviceRenameDto deviceRenameDto) {
-        if (email == null) {
-            throw new ArgumentNullException(nameof(email));
+    public async Task RenameDeviceAsync(string userId, Guid deviceId, DeviceRenameDto deviceRenameDto) {
+        if (userId == null) {
+            throw new ArgumentNullException(nameof(userId));
         }
 
-        var user = _userManager.Users.First(u => u.Email == email);
+        var user = _userManager.Users.First(u => u.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -239,15 +237,15 @@ public class AuthService : IAuthService {
     /// <summary>
     /// Delete device
     /// </summary>
-    /// <param name="email"></param>
+    /// <param name="userId"></param>
     /// <param name="deviceId"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task DeleteDeviceAsync(string email, Guid deviceId) {
-        if (email == null) {
-            throw new ArgumentNullException(nameof(email));
+    public async Task DeleteDeviceAsync(string userId, Guid deviceId) {
+        if (userId == null) {
+            throw new ArgumentNullException(nameof(userId));
         }
 
-        var user = _userManager.Users.First(u => u.Email == email);
+        var user = _userManager.Users.First(u => u.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -264,14 +262,14 @@ public class AuthService : IAuthService {
     /// <summary>
     /// Change password
     /// </summary>
-    /// <param name="email"></param>
+    /// <param name="userId"></param>
     /// <param name="changePasswordDto"></param>
-    public async Task ChangePasswordAsync(string email, ChangePasswordDto changePasswordDto) {
-        if (email == null) {
-            throw new ArgumentNullException(nameof(email));
+    public async Task ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto) {
+        if (userId == null) {
+            throw new ArgumentNullException(nameof(userId));
         }
 
-        var user = _userManager.Users.First(u => u.Email == email);
+        var user = _userManager.Users.First(u => u.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -318,7 +316,7 @@ public class AuthService : IAuthService {
         if (!result.Succeeded) return null;
 
         var claims = new List<Claim> {
-            new Claim(ClaimTypes.Name, user.Email ?? "")
+            new Claim(ClaimTypes.Name, user.Id.ToString())
         };
 
         foreach (var role in await _userManager.GetRolesAsync(user)) {
