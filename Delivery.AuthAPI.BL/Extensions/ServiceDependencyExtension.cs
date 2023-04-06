@@ -16,6 +16,7 @@ public static class ServiceDependencyExtension {
     public static IServiceCollection AddAuthBlServiceDependencies(this IServiceCollection services) {
         services.AddDbContext<AuthDbContext>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IAccountService, AccountService>();
         services.AddAutoMapper(typeof(MappingProfiles.MappingProfile));
         return services;
     }

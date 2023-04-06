@@ -24,8 +24,26 @@ public class User : IdentityUser<Guid> {
     /// Date when user joined the system
     /// </summary>
     public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+
     /// <summary>
     /// User`s devices
     /// </summary>
-    public List<Device> Devices { get; set; }
+    public List<Device> Devices { get; set; } = new List<Device>();
+    
+    /// <summary>
+    /// Link to customer
+    /// </summary>
+    public Customer? Customer { get; set; }
+    /// <summary>
+    /// Link to courier
+    /// </summary>
+    public Courier? Courier { get; set; }
+    /// <summary>
+    /// Link to manager
+    /// </summary>
+    public Manager? Manager { get; set; }
+    /// <summary>
+    /// Link to cook
+    /// </summary>
+    public Cook? Cook { get; set; }
 }

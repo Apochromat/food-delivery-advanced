@@ -63,10 +63,12 @@ public class AuthService : IAuthService {
             throw new ConflictException("User with this email already exists");
         }
 
-        var user = _mapper.Map<Customer>(accountRegisterDto);
-
+        var user = _mapper.Map<User>(accountRegisterDto);
+        user.Customer = new Customer(user);
+        user.Customer.Address = accountRegisterDto.Address;
+        
         var result = await _userManager.CreateAsync(user, accountRegisterDto.Password);
-
+        
         if (result.Succeeded) {
             _logger.LogInformation("Successful register");
             await _userManager.AddToRoleAsync(user, ApplicationRoleNames.Customer);

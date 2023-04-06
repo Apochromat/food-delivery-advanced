@@ -46,6 +46,5 @@ public class AccountRegisterDto {
     /// <summary>
     /// User`s phone number
     /// </summary>
-    [Required]
     public String? Address { get; set; }
 }

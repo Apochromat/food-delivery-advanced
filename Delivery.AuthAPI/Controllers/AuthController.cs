@@ -1,9 +1,10 @@
 ﻿using Delivery.Common.DTO;
+using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Delivery.AuthAPI.Controllers; 
+namespace Delivery.AuthAPI.Controllers;
 
 /// <summary>
 /// Controller for register, authentication, changing the password
@@ -30,7 +31,7 @@ public class AuthController : ControllerBase {
     public async Task<ActionResult<TokenResponseDto>> Register([FromBody] AccountRegisterDto accountRegisterDto) {
         return Ok(await _authService.RegisterAsync(accountRegisterDto, HttpContext));
     }
-    
+
     /// <summary>
     /// Login user into the system
     /// </summary>
@@ -44,7 +45,7 @@ public class AuthController : ControllerBase {
     public async Task<ActionResult<TokenResponseDto>> Login([FromBody] AccountLoginDto accountLoginDto) {
         return Ok(await _authService.LoginAsync(accountLoginDto, HttpContext));
     }
-    
+
     /// <summary>
     /// Refreshes access-token
     /// </summary>
@@ -54,7 +55,7 @@ public class AuthController : ControllerBase {
     public async Task<ActionResult<TokenResponseDto>> Refresh([FromBody] TokenRequestDto tokenRequestDto) {
         return Ok(await _authService.RefreshTokenAsync(tokenRequestDto, HttpContext));
     }
-    
+
     /// <summary>
     /// Changes user password
     /// </summary>
@@ -63,10 +64,14 @@ public class AuthController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("change-password")]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto) {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+
         await _authService.ChangePasswordAsync(User.Identity.Name, changePasswordDto);
-        return Ok();    
+        return Ok();
     }
-    
+
     /// <summary>
     /// Get user devices
     /// </summary>
@@ -75,9 +80,13 @@ public class AuthController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices")]
     public async Task<ActionResult<List<DeviceDto>>> GetDevices() {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+
         return Ok(await _authService.GetDevicesAsync(User.Identity.Name));
     }
-    
+
     /// <summary>
     /// Rename device
     /// </summary>
@@ -87,11 +96,16 @@ public class AuthController : ControllerBase {
     [HttpPut]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices/{deviceId}")]
-    public async Task<ActionResult> RenameDevice([FromRoute] Guid deviceId, [FromBody] DeviceRenameDto deviceRenameDto) {
+    public async Task<ActionResult>
+        RenameDevice([FromRoute] Guid deviceId, [FromBody] DeviceRenameDto deviceRenameDto) {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+
         await _authService.RenameDeviceAsync(User.Identity.Name, deviceId, deviceRenameDto);
         return Ok();
     }
-    
+
     /// <summary>
     /// Delete device from user devices
     /// </summary>
@@ -101,6 +115,10 @@ public class AuthController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices/{deviceId}")]
     public async Task<ActionResult> DeleteDevice([FromRoute] Guid deviceId) {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+
         await _authService.DeleteDeviceAsync(User.Identity.Name, deviceId);
         return Ok();
     }
