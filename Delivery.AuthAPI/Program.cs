@@ -1,8 +1,11 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Delivery.AuthAPI.BL.Extensions;
+using Delivery.Common.Extensions;
+using Delivery.Common.Middlewares;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 using Serilog;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +15,10 @@ builder.Services.AddControllers().AddJsonOptions(opts => {
     opts.JsonSerializerOptions.Converters.Add(enumConverter);
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddAuthBlServiceDependencies();
+builder.Services.AddAuthBlServiceIdentityDependencies();
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option => {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Food Delivery Advanced: auth-component", Version = "v1" });
@@ -24,21 +30,23 @@ builder.Services.AddSwaggerGen(option => {
         BearerFormat = "JWT",
         Scheme = "Bearer"
     });
-    // option.AddSecurityRequirement(new OpenApiSecurityRequirement {
-    //     {
-    //         new OpenApiSecurityScheme {
-    //             Reference = new OpenApiReference {
-    //                 Type = ReferenceType.SecurityScheme,
-    //                 Id = "Bearer"
-    //             }
-    //         },
-    //         new string[] { }
-    //     }
-    // });
-    option.OperationFilter<SecurityRequirementsOperationFilter>();
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+
+builder.Services.AddAuthorization();
+builder.Services.AddJwtAuthorisation();
 
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -49,6 +57,8 @@ builder.Logging.AddSerilog(logger);
 
 var app = builder.Build();
 
+await app.ConfigureIdentityAsync();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
@@ -57,8 +67,12 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapMetrics();
+
+app.UseErrorHandleMiddleware();
 
 app.Run();

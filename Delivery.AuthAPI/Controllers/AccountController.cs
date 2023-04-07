@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using Delivery.Common.DTO;
+using Delivery.Common.Exceptions;
+using Delivery.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.AuthAPI.Controllers;
@@ -9,24 +12,45 @@ namespace Delivery.AuthAPI.Controllers;
 [ApiController]
 [Route("api")]
 public class AccountController : ControllerBase {
+    private readonly IAccountService _accountService;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="accountService"></param>
+    public AccountController(IAccountService accountService) {
+        _accountService = accountService;
+    }
+
     /// <summary>
     /// Get information about current authenticated user
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("account")]
-    public ActionResult GetCurrentProfile() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<AccountProfileFullDto>> GetCurrentProfile() {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+
+        return Ok(await _accountService.GetProfileAsync(User.Identity.Name));
     }
 
-    /// <summary>
+    /// <summary>   
     /// Edit current authenticated user`s profile
     /// </summary>
     /// <returns></returns>
     [HttpPut]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("account")]
-    public ActionResult UpdateProfile() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> UpdateProfile([FromBody] AccountProfileEditDto accountProfileEditDto) {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+
+        await _accountService.UpdateProfileAsync(User.Identity.Name, accountProfileEditDto);
+        return Ok();
     }
 
     /// <summary>
@@ -36,8 +60,8 @@ public class AccountController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("courier-profile/{courierId}")]
-    public ActionResult GetCourierProfile([FromRoute] Guid courierId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<AccountCourierProfileDto>> GetCourierProfile([FromRoute] Guid courierId) {
+        return Ok(await _accountService.GetCourierProfileAsync(courierId.ToString()));
     }
 
     /// <summary>
@@ -47,7 +71,18 @@ public class AccountController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("customer-profile/{customerId}")]
-    public ActionResult GetCustomerProfile([FromRoute] Guid customerId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<AccountCustomerProfileDto>> GetCustomerProfile([FromRoute] Guid customerId) {
+        return Ok(await _accountService.GetCustomerProfileAsync(customerId.ToString()));
+    }
+
+    /// <summary>
+    /// Get general information about cook
+    /// </summary>
+    /// <param name="cookId"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("cook-profile/{cookId}")]
+    public async Task<ActionResult<AccountCustomerProfileDto>> GetCookProfile([FromRoute] Guid cookId) {
+        return Ok(await _accountService.GetCookProfileAsync(cookId.ToString()));
     }
 }

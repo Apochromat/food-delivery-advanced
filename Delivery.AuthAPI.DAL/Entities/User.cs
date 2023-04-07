@@ -10,7 +10,7 @@ public class User : IdentityUser<Guid> {
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
-    public string FullName { get; set; } = "";
+    public string? FullName { get; set; }
     /// <summary>
     /// User`s birth date
     /// </summary>
@@ -19,12 +19,31 @@ public class User : IdentityUser<Guid> {
     /// User`s gender
     /// </summary>
     public Gender Gender { get; set; }
+
     /// <summary>
     /// Date when user joined the system
     /// </summary>
-    public DateTime JoinedAt { get; set; }
+    public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+
     /// <summary>
-    /// List of roles that user has
+    /// User`s devices
     /// </summary>
-    public ICollection<Role>? Roles { get; set; }
+    public List<Device> Devices { get; set; } = new List<Device>();
+    
+    /// <summary>
+    /// Link to customer
+    /// </summary>
+    public Customer? Customer { get; set; }
+    /// <summary>
+    /// Link to courier
+    /// </summary>
+    public Courier? Courier { get; set; }
+    /// <summary>
+    /// Link to manager
+    /// </summary>
+    public Manager? Manager { get; set; }
+    /// <summary>
+    /// Link to cook
+    /// </summary>
+    public Cook? Cook { get; set; }
 }

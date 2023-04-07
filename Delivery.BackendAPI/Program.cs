@@ -1,10 +1,11 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Delivery.BackendAPI.BL.Extensions;
-using Delivery.BackendAPI.Middlewares;
+using Delivery.Common.Extensions;
+using Delivery.Common.Middlewares;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 using Serilog;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,21 +29,23 @@ builder.Services.AddSwaggerGen(option => {
         BearerFormat = "JWT",
         Scheme = "Bearer"
     });
-    // option.AddSecurityRequirement(new OpenApiSecurityRequirement {
-    //     {
-    //         new OpenApiSecurityScheme {
-    //             Reference = new OpenApiReference {
-    //                 Type = ReferenceType.SecurityScheme,
-    //                 Id = "Bearer"
-    //             }
-    //         },
-    //         new string[] { }
-    //     }
-    // });
-    option.OperationFilter<SecurityRequirementsOperationFilter>();
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+
+builder.Services.AddAuthorization();
+builder.Services.AddJwtAuthorisation();
 
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -65,6 +68,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapMetrics();
 
 app.UseErrorHandleMiddleware();
 
