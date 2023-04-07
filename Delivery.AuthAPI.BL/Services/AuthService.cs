@@ -49,7 +49,6 @@ public class AuthService : IAuthService {
     /// <param name="accountRegisterDto"></param>
     /// <param name="httpContext"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<TokenResponseDto> RegisterAsync(AccountRegisterDto accountRegisterDto, HttpContext httpContext) {
         if (accountRegisterDto.Email == null) {
             throw new ArgumentNullException(nameof(accountRegisterDto.Email));
@@ -64,9 +63,10 @@ public class AuthService : IAuthService {
         }
 
         var user = _mapper.Map<User>(accountRegisterDto);
-        user.Customer = new Customer(user);
-        user.Customer.Address = accountRegisterDto.Address;
-        
+        user.Customer = new Customer(user) {
+            Address = accountRegisterDto.Address
+        };
+
         var result = await _userManager.CreateAsync(user, accountRegisterDto.Password);
         
         if (result.Succeeded) {
@@ -87,7 +87,6 @@ public class AuthService : IAuthService {
     /// <param name="accountLoginDto"></param>
     /// <param name="httpContext"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<TokenResponseDto> LoginAsync(AccountLoginDto accountLoginDto, HttpContext httpContext) {
         var identity = await GetIdentity(accountLoginDto.Email.ToLower(), accountLoginDto.Password);
         if (identity == null) {
@@ -117,6 +116,7 @@ public class AuthService : IAuthService {
         }
 
         device.LastActivity = DateTime.UtcNow;
+        device.ExpirationDate = DateTime.UtcNow.AddMonths(6);
         await _authDbContext.SaveChangesAsync();
 
         var jwt = new JwtSecurityToken(
@@ -142,7 +142,6 @@ public class AuthService : IAuthService {
     /// <param name="tokenRequestDto"></param>
     /// <param name="httpContext"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<TokenResponseDto> RefreshTokenAsync(TokenRequestDto tokenRequestDto, HttpContext httpContext) {
         tokenRequestDto.AccessToken = tokenRequestDto.AccessToken.Replace("Bearer ", "");
         var principal = GetPrincipalFromExpiredToken(tokenRequestDto.AccessToken);
@@ -165,6 +164,10 @@ public class AuthService : IAuthService {
 
         if (device.RefreshToken != tokenRequestDto.RefreshToken) {
             throw new BadRequestException("Refresh token is invalid");
+        }
+        
+        if (device.ExpirationDate < DateTime.UtcNow) {
+            throw new UnauthorizedException("Refresh token is expired. Re-login needed");
         }
 
         var jwt = new JwtSecurityToken(
@@ -210,7 +213,6 @@ public class AuthService : IAuthService {
     /// <param name="deviceId"></param>
     /// <param name="deviceRenameDto"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task RenameDeviceAsync(string userId, Guid deviceId, DeviceRenameDto deviceRenameDto) {
         if (userId == null) {
             throw new ArgumentNullException(nameof(userId));
@@ -235,7 +237,6 @@ public class AuthService : IAuthService {
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="deviceId"></param>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task DeleteDeviceAsync(string userId, Guid deviceId) {
         if (userId == null) {
             throw new ArgumentNullException(nameof(userId));

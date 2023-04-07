@@ -1,10 +1,8 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Delivery.AuthAPI.BL.Extensions;
-using Delivery.Common.Configurations;
+using Delivery.Common.Extensions;
 using Delivery.Common.Middlewares;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
 using Serilog;
@@ -18,10 +16,9 @@ builder.Services.AddControllers().AddJsonOptions(opts => {
 });
 
 builder.Services.AddAuthBlServiceDependencies();
-
 builder.Services.AddAuthBlServiceIdentityDependencies();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option => {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Food Delivery Advanced: auth-component", Version = "v1" });
@@ -49,18 +46,7 @@ builder.Services.AddSwaggerGen(option => {
 });
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
-        options.TokenValidationParameters = new TokenValidationParameters {
-            ValidateIssuer = true,
-            ValidIssuer = JwtConfiguration.Issuer,
-            ValidateAudience = true,
-            ValidAudience = JwtConfiguration.Audience,
-            ValidateLifetime = true,
-            IssuerSigningKey = JwtConfiguration.GetSymmetricSecurityKey(),
-            ValidateIssuerSigningKey = true,
-        };
-    });
+builder.Services.AddJwtAuthorisation();
 
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -78,11 +64,15 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-app.UseErrorHandleMiddleware();
 
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 app.MapMetrics();
+
+app.UseErrorHandleMiddleware();
 
 app.Run();

@@ -42,7 +42,6 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<AccountProfileFullDto> GetProfileAsync(string userId) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
@@ -63,7 +62,6 @@ public class AccountService : IAccountService {
     /// <param name="userId"></param>
     /// <param name="accountProfileEditDto"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task UpdateProfileAsync(string userId, AccountProfileEditDto accountProfileEditDto) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
@@ -89,7 +87,6 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<AccountCourierProfileDto> GetCourierProfileAsync(string userId) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
@@ -113,7 +110,6 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<AccountCookProfileDto> GetCookProfileAsync(string userId) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
@@ -137,7 +133,6 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public async Task<AccountCustomerProfileDto> GetCustomerProfileAsync(string userId) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
