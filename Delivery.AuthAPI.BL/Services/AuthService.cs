@@ -137,6 +137,30 @@ public class AuthService : IAuthService {
     }
 
     /// <summary>
+    /// Logout user by deleting his current device
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="httpContext"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task LogoutAsync(string userId, HttpContext httpContext) {
+        var user = _userManager.Users.Include(x => x.Devices).FirstOrDefault(x => x.Id.ToString() == userId);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        var device =
+            user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
+
+        if (device == null) {
+            throw new MethodNotAllowedException("You can`t logout from this device");
+        }
+        
+        _authDbContext.Devices.Remove(device);
+        await _authDbContext.SaveChangesAsync();
+    }
+
+    /// <summary>
     /// Refresh token
     /// </summary>
     /// <param name="tokenRequestDto"></param>
@@ -159,7 +183,7 @@ public class AuthService : IAuthService {
             user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
 
         if (device == null) {
-            throw new ForbiddenException("You can't refresh token from another device");
+            throw new MethodNotAllowedException("You can't refresh token from another device. Re-login needed");
         }
 
         if (device.RefreshToken != tokenRequestDto.RefreshToken) {
@@ -255,7 +279,7 @@ public class AuthService : IAuthService {
         _authDbContext.Devices.Remove(device);
         await _authDbContext.SaveChangesAsync();
     }
-
+    
     /// <summary>
     /// Change password
     /// </summary>

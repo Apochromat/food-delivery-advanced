@@ -9,7 +9,7 @@ namespace Delivery.Common.DTO;
 /// </summary>
 public class TokenRequestDto {
     /// <summary>
-    /// TODO: Remove this field
+    /// Expired access token
     /// </summary>
     [Required]
     [DisplayName("access_token")]

@@ -55,12 +55,28 @@ public class AuthController : ControllerBase {
     public async Task<ActionResult<TokenResponseDto>> Refresh([FromBody] TokenRequestDto tokenRequestDto) {
         return Ok(await _authService.RefreshTokenAsync(tokenRequestDto, HttpContext));
     }
+    
+    /// <summary>
+    /// Logout user by deleting his current device
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="UnauthorizedException"></exception>
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Route("logout")]
+    public async Task<ActionResult<TokenResponseDto>> Logout() {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+        await _authService.LogoutAsync(User.Identity.Name, HttpContext);
+        return Ok();
+    }
 
     /// <summary>
     /// Changes user password
     /// </summary>
     /// <returns></returns>
-    [HttpPost]
+    [HttpPut]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("change-password")]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto) {

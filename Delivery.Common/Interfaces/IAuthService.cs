@@ -24,6 +24,14 @@ public interface IAuthService {
     Task<TokenResponseDto> LoginAsync(AccountLoginDto accountLoginDto, HttpContext httpContext);
 
     /// <summary>
+    /// Logout user by deleting his current device
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="httpContext"></param>
+    /// <returns></returns>
+    Task LogoutAsync(string userId, HttpContext httpContext);
+
+    /// <summary>
     /// Refresh token
     /// </summary>
     /// <param name="tokenRequestDto"></param>

@@ -1,27 +1,27 @@
 ﻿namespace Delivery.Common.Exceptions;
 
 /// <summary>
-/// Exception for forbidden status 
+/// Exception for method not allowed status 
 /// </summary>
 [Serializable]
-public class ForbiddenException : Exception {
+public class MethodNotAllowedException : Exception {
     /// <summary>
     /// Constructor
     /// </summary>
-    public ForbiddenException() {
+    public MethodNotAllowedException() {
     }
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public ForbiddenException(string message)
+    public MethodNotAllowedException(string message)
         : base(message) {
     }
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public ForbiddenException(string message, Exception inner)
+    public MethodNotAllowedException(string message, Exception inner)
         : base(message, inner) {
     }
 }
