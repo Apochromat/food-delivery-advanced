@@ -1,7 +1,29 @@
-﻿@{
+﻿@model RestaurantUnarchivedListViewModel
+
+@{
     ViewData["Title"] = "Restaurants";
 }
 
-<div class="text-center my-auto align-items-center">
-    <h1 class="display-4">Restaurant management</h1>
+<div class="mx-5 mb-4 container bg-dark mx-auto shadow rounded pb-2">
+    <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-1">
+        @foreach (var restaurantShortDto in Model.Restaurants) {
+            <div class="col py-2">
+                <div class="card rounded-1 h-100">
+                    <div class="position-relative">
+                        <img src="@restaurantShortDto.SmallImage" class="d-block rounded-top card-img-top ibg" alt="...">
+                    </div>
+                    <div class="card-header px-1">
+                        <h3 class="card-title m-0">
+                            <a asp-controller="Restaurant" asp-action="ConcreteRestaurant"
+                               asp-route-restaurantId="@restaurantShortDto.Id"
+                               class="title text-decoration-none">
+                                @restaurantShortDto.Name
+                            </a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-12">Page: @Model.Page Pages: @Model.Pages PageSize: @Model.PageSize</div>
 </div>

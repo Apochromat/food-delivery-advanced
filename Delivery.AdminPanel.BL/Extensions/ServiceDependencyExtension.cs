@@ -18,6 +18,7 @@ public static class ServiceDependencyExtension {
         services.AddDbContext<AuthDbContext>();
         services.AddDbContext<BackendDbContext>();
         services.AddScoped<IAdminPanelAccountService, AdminPanelAccountService>();
+        services.AddScoped<IAdminPanelRestaurantService, AdminPanelRestaurantService>();
         services.AddAutoMapper(typeof(MappingProfiles.MappingProfile));
         return services;
     }

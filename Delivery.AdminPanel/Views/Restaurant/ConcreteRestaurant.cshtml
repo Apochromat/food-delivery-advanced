@@ -1,0 +1,52 @@
+﻿@model RestaurantViewModel
+
+@{
+    ViewBag.Title = @Model.Restaurant.Name;
+    Layout = "_Layout";
+}
+
+<div class="m-2 container bg-dark mx-auto shadow rounded p-2">
+    <div class="card col rounded-1 h-100">
+        <div class="position-relative">
+            <img src="@Model.Restaurant.BigImage" class="d-block rounded-top card-img-top ibg" alt="...">
+        </div>
+        <div class="card-header px-2">
+            <h3 class="card-title m-0 text">
+                @Model.Restaurant.Name
+            </h3>
+        </div>
+        <div class="col-12 card-body">
+            <p class="m-0">@Model.Restaurant.Description</p>
+        </div>
+        <div class="card-footer">
+            <p class="mb-1 text-muted">Address: @Model.Restaurant.Address</p>
+        </div>
+    </div>
+    <nav>
+        <div class="nav nav-tabs row row-cols-2 m-1" role="tablist">
+            <button class="nav-link active" id="nav-manager-tab" data-bs-toggle="tab" data-bs-target="#nav-manager" type="button" role="tab" aria-selected="true">Managers</button>
+            <button class="nav-link" id="nav-cook-tab" data-bs-toggle="tab" data-bs-target="#nav-cook" type="button" role="tab" aria-selected="false">Cooks</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-manager" role="tabpanel" aria-labelledby="nav-manager-tab" tabindex="0">
+            <div class="card">
+                <div class="card-body d-flex">
+                    <input type="text" class="form-control" placeholder="username@example.com">
+                    <button type="button" class="btn btn-primary ms-1 col-2">Add</button>
+                </div>
+            </div>
+            @foreach (var manager in Model.Managers) {
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <input type="text" class="form-control disabled" placeholder="username@example.com" value=@manager.Email>
+                        <button type="button" class="btn btn-primary ms-1 col-2">Edit</button>
+                        <button type="button" class="btn btn-primary ms-1 col-2">Delete</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="tab-pane fade" id="nav-cook" role="tabpanel" aria-labelledby="nav-cook-tab" tabindex="0">Cooks management</div>
+    </div>
+
+</div>

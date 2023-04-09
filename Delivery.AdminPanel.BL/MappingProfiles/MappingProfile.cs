@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Delivery.AuthAPI.DAL.Entities;
+using Delivery.BackendAPI.DAL.Entities;
+using Delivery.Common.DTO;
 
 namespace Delivery.AdminPanel.BL.MappingProfiles; 
 
@@ -10,5 +13,8 @@ public class MappingProfile : Profile {
     /// Profile constructor
     /// </summary>
     public MappingProfile() {
+        CreateMap<Restaurant, RestaurantShortDto>();
+        CreateMap<Restaurant, RestaurantFullDto>();
+        CreateMap<User, AccountProfileFullDto>();
     }
 }
