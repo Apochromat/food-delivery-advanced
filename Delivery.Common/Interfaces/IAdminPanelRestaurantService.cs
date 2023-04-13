@@ -89,6 +89,14 @@ public interface IAdminPanelRestaurantService {
     Task AddManagerToRestaurant(Guid restaurantId, String email);
     
     /// <summary>
+    /// Remove manager from restaurant
+    /// </summary>
+    /// <param name="restaurantId"></param>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    Task RemoveManagerFromRestaurant(Guid restaurantId, String email);
+    
+    /// <summary>
     /// Add cook to restaurant
     /// </summary>
     /// <param name="restaurantId"></param>

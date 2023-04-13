@@ -44,6 +44,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         // Get restaurants
         var raw = _backendDbContext.Restaurants?
             .Where(x => x.IsArchived == false)
+            .OrderBy(x=>x.Name)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToList();
@@ -110,18 +111,41 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
             throw new NotFoundException("User not found");
         }
         
-        if (user.Manager == null) {
-            user.Manager = new Manager() {
-                Id = Guid.NewGuid()
-            };
+        user.Manager ??= new Manager() {
+            Id = Guid.NewGuid()
+        };
+        
+        restaurant.Managers ??= new List<Guid>();
+        
+        if (restaurant.Managers.Contains(user.Id)) {
+            throw new MethodNotAllowedException("User already is a manager of this restaurant");
         }
         
-        if (restaurant.Managers == null) {
-            restaurant.Managers = new List<Guid>();
-        }
+        restaurant.Managers ??= new List<Guid>();
         restaurant.Managers.Add(user.Id);
         await _backendDbContext.SaveChangesAsync();
         await _authDbContext.SaveChangesAsync();
+    }
+
+    public async Task RemoveManagerFromRestaurant(Guid restaurantId, string email) {
+        var restaurant = _backendDbContext.Restaurants?.FirstOrDefault(x => x.Id == restaurantId);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        
+        var user = _authDbContext.Users?.AsNoTracking().Include(x=>x.Manager).FirstOrDefault(x => x.Email == email);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        
+        restaurant.Managers ??= new List<Guid>();
+        
+        if (!restaurant.Managers.Contains(user.Id)) {
+            throw new MethodNotAllowedException("User is not a manager of this restaurant");
+        }
+        
+        restaurant.Managers.Remove(user.Id);
+        await _backendDbContext.SaveChangesAsync();
     }
 
     public Task AddCookToRestaurant(Guid restaurantId, string email) {

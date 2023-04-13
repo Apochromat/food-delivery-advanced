@@ -1,3 +1,5 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using Delivery.AdminPanel.BL.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -12,6 +14,12 @@ builder.Services.AddAdminPanelBlServiceIdentityDependencies();
 
 // Add cookie authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
+builder.Services.AddNotyf(config => {
+    config.DurationInSeconds = 3;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.TopRight;
+});
 
 var app = builder.Build();
 
@@ -29,6 +37,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseNotyf();
 
 app.MapControllerRoute(
     name: "default",

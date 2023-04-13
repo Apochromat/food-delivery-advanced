@@ -32,14 +32,10 @@
         <div class="tab-pane fade show active" id="nav-manager" role="tabpanel" aria-labelledby="nav-manager-tab" tabindex="0">
             @await Html.PartialAsync("_AddManager", Model.Manager)
             @foreach (var manager in Model.Managers) {
-                <div class="card-body d-flex">
-                    <div class="col">
-                        <input type="text" id="manager-input-@manager.Id" class="form-control" readonly value=@manager.Email>
-                    </div>
-                    <div class="">
-                        <button type="button" id="manager-delete-@manager.Id" class="btn btn-danger ms-1 px-5">Delete</button>
-                    </div>
-                </div>
+                @await Html.PartialAsync("_ManagerCard", new ManagerCardModel() {
+                    RestaurantId = Model.Restaurant.Id,
+                    Email = manager.Email
+                })
             }
         </div>
         <div class="tab-pane fade" id="nav-cook" role="tabpanel" aria-labelledby="nav-cook-tab" tabindex="0">Cooks management</div>

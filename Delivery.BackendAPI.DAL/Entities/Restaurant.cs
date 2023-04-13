@@ -44,13 +44,14 @@ public class Restaurant {
     /// Update date
     /// </summary>
     public DateTime UpdatedAt { get; set; }
-    
+
     /// <summary>
     /// List of cooks in restaurant
     /// </summary>
-    public List<Guid>? Cooks { get; set; }
+    public List<Guid>? Cooks { get; set; } = new List<Guid>();
+
     /// <summary>
     /// List of managers in restaurant
     /// </summary>
-    public List<Guid>? Managers { get; set; }
+    public List<Guid>? Managers { get; set; } = new List<Guid>();
 }
