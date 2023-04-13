@@ -79,4 +79,20 @@ public interface IAdminPanelRestaurantService {
     /// <returns></returns>
     Pagination<OrderShortDto> GetRestaurantOrders(Guid restaurantId, OrderSort sort,
         List<OrderStatus>? status, String? number, int page = 1);
+    
+    /// <summary>
+    /// Add manager to restaurant
+    /// </summary>
+    /// <param name="restaurantId"></param>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    Task AddManagerToRestaurant(Guid restaurantId, String email);
+    
+    /// <summary>
+    /// Add cook to restaurant
+    /// </summary>
+    /// <param name="restaurantId"></param>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    Task AddCookToRestaurant(Guid restaurantId, String email);
 }

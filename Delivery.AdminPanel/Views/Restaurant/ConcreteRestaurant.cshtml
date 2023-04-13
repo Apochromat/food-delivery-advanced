@@ -6,7 +6,7 @@
 }
 
 <div class="m-2 container bg-dark mx-auto shadow rounded p-2">
-    <div class="card col rounded-1 h-100">
+    <div class="card col rounded-1">
         <div class="position-relative">
             <img src="@Model.Restaurant.BigImage" class="d-block rounded-top card-img-top ibg" alt="...">
         </div>
@@ -30,18 +30,14 @@
     </nav>
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-manager" role="tabpanel" aria-labelledby="nav-manager-tab" tabindex="0">
-            <div class="card">
-                <div class="card-body d-flex">
-                    <input type="text" class="form-control" placeholder="username@example.com">
-                    <button type="button" class="btn btn-primary ms-1 col-2">Add</button>
-                </div>
-            </div>
+            @await Html.PartialAsync("_AddManager", Model.Manager)
             @foreach (var manager in Model.Managers) {
-                <div class="card">
-                    <div class="card-body d-flex">
-                        <input type="text" class="form-control disabled" placeholder="username@example.com" value=@manager.Email>
-                        <button type="button" class="btn btn-primary ms-1 col-2">Edit</button>
-                        <button type="button" class="btn btn-primary ms-1 col-2">Delete</button>
+                <div class="card-body d-flex">
+                    <div class="col">
+                        <input type="text" id="manager-input-@manager.Id" class="form-control" readonly value=@manager.Email>
+                    </div>
+                    <div class="">
+                        <button type="button" id="manager-delete-@manager.Id" class="btn btn-danger ms-1 px-5">Delete</button>
                     </div>
                 </div>
             }

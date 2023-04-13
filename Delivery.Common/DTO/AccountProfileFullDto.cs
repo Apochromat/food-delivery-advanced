@@ -7,6 +7,10 @@ namespace Delivery.Common.DTO;
 /// </summary>
 public class AccountProfileFullDto {
     /// <summary>
+    /// Profile Identifier
+    /// </summary>
+    public Guid Id { get; set; }
+    /// <summary>
     /// User email
     /// </summary>
     public String? Email { get; set; }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Delivery.AuthAPI.DAL;
+using Delivery.AuthAPI.DAL.Entities;
 using Delivery.BackendAPI.DAL;
 using Delivery.BackendAPI.DAL.Entities;
 using Delivery.Common.DTO;
@@ -95,6 +96,35 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     }
 
     public Pagination<OrderShortDto> GetRestaurantOrders(Guid restaurantId, OrderSort sort, List<OrderStatus>? status, string? number, int page = 1) {
+        throw new NotImplementedException();
+    }
+
+    public async Task AddManagerToRestaurant(Guid restaurantId, string email) {
+        var restaurant = _backendDbContext.Restaurants?.FirstOrDefault(x => x.Id == restaurantId);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        
+        var user = _authDbContext.Users?.Include(x=>x.Manager).FirstOrDefault(x => x.Email == email);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        
+        if (user.Manager == null) {
+            user.Manager = new Manager() {
+                Id = Guid.NewGuid()
+            };
+        }
+        
+        if (restaurant.Managers == null) {
+            restaurant.Managers = new List<Guid>();
+        }
+        restaurant.Managers.Add(user.Id);
+        await _backendDbContext.SaveChangesAsync();
+        await _authDbContext.SaveChangesAsync();
+    }
+
+    public Task AddCookToRestaurant(Guid restaurantId, string email) {
         throw new NotImplementedException();
     }
 }
