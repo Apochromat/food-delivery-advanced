@@ -10,34 +10,31 @@ namespace Delivery.BackendAPI.Controllers;
 /// Controller for orders management
 /// </summary>
 [ApiController]
-[Route("api/order")]
+[Route("api")]
 public class OrderController : ControllerBase {
     /// <summary>
-    /// [AdminPanel, Courier] Get orders from all restaurants.
+    /// [Courier] Get orders from all restaurants for courier.
     /// </summary>
     /// <remarks>
-    /// Administrator see all the orders.<br/>
     /// Courier see orders in all restaurants with statuses: Packaged.<br/>
     /// </remarks>
     /// <param name="sort">Sort type</param>
-    /// <param name="status">Order statuses for filter</param>
     /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
     /// <param name="page"></param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<Pagination<OrderShortDto>> GetAllOrders([FromQuery] [Optional] List<OrderStatus>? status, 
-        [FromQuery] [Optional] String? number, [FromQuery] int page = 1,
+    [Route("orders/courier/avaliable")]
+    public ActionResult<Pagination<OrderShortDto>> GetAllPackagedOrders([FromQuery] [Optional] String? number, 
+        [FromQuery] int page = 1,
         [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
     /// <summary>
-    /// [Cook, Courier, Customer] Get user`s orders from all restaurants.
-    /// TODO: Разделить на разные эндпоинты
+    /// [Cook] Get cooks`s orders for work with them.
     /// </summary>
     /// <remarks>
-    /// Cook see his orders with statuses: Kitchen, Packaged, Delivered(history of cooked orders).<br/>
-    /// Courier see his orders with statuses: AssignedForCourier (assigned for him), Delivery (his deliveries).<br/>
+    /// Cook see his orders with statuses: Kitchen, Packaged.
     /// </remarks>
     /// <param name="sort">Sort type</param>
     /// <param name="status">Order statuses for filter</param>
@@ -45,27 +42,118 @@ public class OrderController : ControllerBase {
     /// <param name="page"></param>
     /// <returns></returns>
     [HttpGet]
-    [Route("mine")]
-    public ActionResult<Pagination<OrderShortDto>> GetMyOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+    [Route("orders/cook/current")]
+    public ActionResult<Pagination<OrderShortDto>> GetCookCurrentOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
+        [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    }
+    
+    /// <summary>
+    /// [Courier] Get courier`s orders for work with them.
+    /// </summary>
+    /// <remarks>
+    /// Courier see his orders with statuses: AssignedForCourier, Delivery.
+    /// </remarks>
+    /// <param name="sort">Sort type</param>
+    /// <param name="status">Order statuses for filter</param>
+    /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("orders/courier/current")]
+    public ActionResult<Pagination<OrderShortDto>> GetCourierCurrentOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
+        [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    }
+    
+    /// <summary>
+    /// [Customer] Get customer`s current orders.
+    /// </summary>
+    /// <remarks>
+    /// Customer see his orders with statuses: Created, Kitchen, Packaged, AssignedForCourier, Delivery.
+    /// </remarks>
+    /// <param name="sort">Sort type</param>
+    /// <param name="status">Order statuses for filter</param>
+    /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("orders/customer/current")]
+    public ActionResult<Pagination<OrderShortDto>> GetCustomerCurrentOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
+        [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    }
+    
+    /// <summary>
+    /// [Cook] Get cook`s orders history.
+    /// </summary>
+    /// <remarks>
+    /// Cook see his orders with statuses: AssignedForCourier, Delivery, Delivered, Canceled.
+    /// </remarks>
+    /// <param name="sort">Sort type</param>
+    /// <param name="status">Order statuses for filter</param>
+    /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("orders/cook/history")]
+    public ActionResult<Pagination<OrderShortDto>> GetCookOrdersHistory([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
+        [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    }
+    
+    /// <summary>
+    /// Get courier`s orders history.
+    /// </summary>
+    /// <remarks>
+    /// [Courier] Courier see his orders with statuses: Delivered, Canceled.
+    /// </remarks>
+    /// <param name="sort">Sort type</param>
+    /// <param name="status">Order statuses for filter</param>
+    /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("orders/courier/history")]
+    public ActionResult<Pagination<OrderShortDto>> GetCourierOrdersHistory([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
+        [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    }
+    
+    /// <summary>
+    /// [Customer] Get customer`s orders history.
+    /// </summary>
+    /// <remarks>
+    /// Customer see his orders with statuses: Delivered, Canceled.
+    /// </remarks>
+    /// <param name="sort">Sort type</param>
+    /// <param name="status">Order statuses for filter</param>
+    /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("orders/customer/history")]
+    public ActionResult<Pagination<OrderShortDto>> GetCustomerOrdersHistory([FromQuery] [Optional] List<OrderStatus>? status, 
         [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
         [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
     /// <summary>
-    /// [AdminPanel, Manager, Cook, Courier, Customer] Get information about specific order.
+    /// [Manager, Cook, Courier, Customer] Get information about specific order.
     /// </summary>
     /// <remarks>
-    /// Administrator see all the orders.<br/>
-    /// Manager see all the orders in his restaurant.<br/>
-    /// Cook see orders in his restaurant with statuses: Created, Kitchen, Packaged, Delivered (history of orders).<br/>
-    /// Courier see orders in all restaurants with statuses: Packaged, AssignedForCourier (only assigned for him), Delivery (only his deliveries).<br/>
-    /// Customer see only his orders with any statuses.<br/>
+    /// User see his order information with resource based access.
     /// </remarks>
     /// <param name="orderId"></param>
     /// <returns></returns>
     [HttpGet]
-    [Route("{orderId}")]
+    [Route("order/{orderId}")]
     public ActionResult<OrderFullDto> GetOrder([FromRoute] Guid orderId) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
@@ -79,6 +167,7 @@ public class OrderController : ControllerBase {
     /// <param name="orderCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
+    [Route("order")]
     public ActionResult CreateOrder([FromBody] OrderCreateDto orderCreateDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
@@ -96,19 +185,20 @@ public class OrderController : ControllerBase {
     /// <param name="status">Status to set</param>
     /// <returns></returns>
     [HttpPut]
-    [Route("{orderId}/status")]
+    [Route("order/{orderId}/status")]
     public ActionResult CancelOrder([FromRoute] Guid orderId, [FromBody] OrderChangeStatusDto status) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
     /// <summary>
-    /// [Customer] Repeats Delivered order.
+    /// [Customer] Repeats Delivered order, by adding all dishes of them to cart.
     /// </summary>
     /// <param name="orderId"></param>
+    /// <param name="replaceCart">If true, clear cart and add dishes. Else only add dishes</param>
     /// <returns></returns>
     [HttpPost]
-    [Route("{orderId}/repeat")]
-    public ActionResult RepeatOrder([FromRoute] Guid orderId) {
+    [Route("order/{orderId}/repeat")]
+    public ActionResult RepeatOrder([FromRoute] Guid orderId, Boolean? replaceCart = false) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 }

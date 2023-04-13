@@ -13,12 +13,13 @@ namespace Delivery.BackendAPI.Controllers;
 [Route("api/restaurant/{restaurantId}/dish")]
 public class DishController : ControllerBase {
     /// <summary>
-    /// [Manager] Creates a new dish
+    /// [Manager] Creates a new dish in restaurant default menu
     /// </summary>
     /// <param name="restaurantId"></param>
+    /// <param name="dishCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult CreateRestaurantDish([FromRoute] Guid restaurantId) {
+    public ActionResult CreateRestaurantDish([FromRoute] Guid restaurantId, [FromBody] DishCreateDto dishCreateDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 
@@ -45,7 +46,7 @@ public class DishController : ControllerBase {
     }
 
     /// <summary>
-    /// [Anyone] Get information about dish. If dish is archived, it is available only for Manager and Administrator.
+    /// [Anyone] Get information about dish. If dish is archived, it is available only for Manager.
     /// </summary>
     /// <param name="dishId"></param>
     /// <returns></returns>
@@ -71,7 +72,7 @@ public class DishController : ControllerBase {
     /// [Manager] Archive dish
     /// </summary>
     /// <remarks>
-    /// Set dish archived. It becomes available only for Manager and Administrator
+    /// Set dish archived. It becomes available only for Manager.
     /// </remarks>
     /// <param name="dishId"></param>
     /// <returns></returns>

@@ -24,6 +24,10 @@ public static class JwtConfiguration {
     /// </summary>
     private static string _key = "An0th3rV3ryC0mpl3xS3cr3tKeyF0rJWTt0k3n";
 
+    /// <summary>
+    /// Get encoded symmetric security key
+    /// </summary>
+    /// <returns></returns>
     public static SymmetricSecurityKey GetSymmetricSecurityKey() {
         return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_key));
     }

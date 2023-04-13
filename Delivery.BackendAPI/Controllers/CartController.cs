@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Delivery.Common.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -14,7 +15,7 @@ public class CartController : ControllerBase {
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult GetCart() {
+    public ActionResult<CartDto> GetCart() {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
 

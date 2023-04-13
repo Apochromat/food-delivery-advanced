@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Delivery.Common.DTO; 
 
+/// <summary>
+/// Data transfer object for changing password
+/// </summary>
 public class ChangePasswordDto {
     /// <summary>
     /// Old password

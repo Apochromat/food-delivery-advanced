@@ -22,7 +22,7 @@ public class MenuController : ControllerBase {
     }
     
     /// <summary>
-    /// [Anyone] Get list of menus in restaurant. Restaurant has Default menu always.
+    /// [Anyone] Get list of unarchived menus in restaurant. Restaurant always has Default menu.
     /// </summary>
     /// <param name="name" example="Claude Monet">Name of menu for filter</param>
     /// <param name="restaurantId"></param>
@@ -34,7 +34,6 @@ public class MenuController : ControllerBase {
 
     /// <summary>
     /// [Anyone] Get information about menu, list of dishes. Default menu has all dishes from restaurant.
-    /// If menu is archived, it is available only for Manager and Administrator.
     /// </summary>
     /// <param name="menuId"></param>
     /// <returns></returns>

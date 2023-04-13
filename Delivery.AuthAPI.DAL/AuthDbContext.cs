@@ -4,17 +4,46 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Delivery.AuthAPI.DAL; 
+namespace Delivery.AuthAPI.DAL;
 
-public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>> {
+/// <summary>
+/// Auth database context
+/// </summary>
+public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>,
+    IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>> {
     private readonly IConfiguration? _configuration;
-    private readonly String? _connection = "Host=localhost;Database=delivery-auth-db;Username=postgres;Password=postgres";
-    
+
+    private readonly String? _connection =
+        "Host=localhost;Database=delivery-auth-db;Username=postgres;Password=postgres";
+
+    /// <summary>
+    /// Users table
+    /// </summary>
     public DbSet<User> Users { get; set; }
+
+    /// <summary>
+    /// Customers table
+    /// </summary>
     public DbSet<Customer> Customers { get; set; }
+
+    /// <summary>
+    /// Couriers table
+    /// </summary>
     public DbSet<Courier> Couriers { get; set; }
+
+    /// <summary>
+    /// Managers table
+    /// </summary>
     public DbSet<Manager> Managers { get; set; }
+
+    /// <summary>
+    /// Cooks table
+    /// </summary>
     public DbSet<Cook> Cooks { get; set; }
+
+    /// <summary>
+    /// Devices table
+    /// </summary>
     public DbSet<Device> Devices { get; set; }
 
     /// <inheritdoc />

@@ -24,16 +24,6 @@ public class RestaurantController : ControllerBase {
     }
 
     /// <summary>
-    /// [AdminPanel] Creates a new restaurant, his Default Menu.
-    /// </summary>
-    /// <param name="restaurantCreateDto"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public ActionResult CreateRestaurant([FromBody] RestaurantCreateDto restaurantCreateDto) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
-    }
-    
-    /// <summary>
     /// [Anyone] Get list of available restaurants (non-archived restaurants)
     /// </summary>
     /// <param name="name" example="Claude Monet">Name of restaurant for search</param>
@@ -57,7 +47,7 @@ public class RestaurantController : ControllerBase {
     }
 
     /// <summary>
-    /// [AdminPanel, Manager] Change information about restaurant.  
+    /// [Manager] Change information about restaurant.  
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <param name="restaurantUpdateDto"></param>
@@ -69,50 +59,10 @@ public class RestaurantController : ControllerBase {
     }
     
     /// <summary>
-    /// [AdminPanel] Archive restaurant.
+    /// [Manager] Get orders from specific restaurant. 
     /// </summary>
     /// <remarks>
-    /// Set restaurant archived. It becomes available only for Manager and Administrator
-    /// </remarks>
-    /// <param name="restaurantId"></param>
-    /// <returns></returns>
-    [HttpPut]
-    [Route("{restaurantId}/archive")]
-    public ActionResult ArchiveRestaurant([FromRoute] Guid restaurantId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
-    }
-    
-    /// <summary>
-    /// [AdminPanel] Get list of archived restaurants.
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    [Route("archived")]
-    public ActionResult<List<RestaurantShortDto>> ArchivedRestaurants() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
-    }
-
-    /// <summary>
-    /// [AdminPanel] Unarchive restaurant.
-    /// </summary>
-    /// <remarks>
-    /// Set restaurant unarchived. It becomes available for all users.
-    /// </remarks>
-    /// <param name="restaurantId"></param>
-    /// <returns></returns>
-    [HttpPut]
-    [Route("{restaurantId}/unarchive")]
-    public ActionResult UnarchiveRestaurant([FromRoute] Guid restaurantId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
-    }
-
-    /// <summary>
-    /// [AdminPanel, Manager, Cook] Get orders from specific restaurant. 
-    /// </summary>
-    /// <remarks>
-    /// Administrator see all the orders in restaurant.<br/>
     /// Manager see all the orders in restaurant.<br/>
-    /// Cook see orders in his restaurant with statuses: Created, Kitchen, Packaged, Delivered(history of cooked orders).<br/>
     /// </remarks>
     /// <param name="sort">Sort type</param>
     /// <param name="status">Order statuses for filter</param>
@@ -120,8 +70,26 @@ public class RestaurantController : ControllerBase {
     /// <param name="page">Page of list (natural number)</param>
     /// <returns></returns>
     [HttpGet]
-    [Route("{restaurantId}/order")]
-    public ActionResult<Pagination<OrderShortDto>> GetOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+    [Route("{restaurantId}/orders")]
+    public ActionResult<Pagination<OrderShortDto>> GetRestaurantOrders([FromQuery] [Optional] List<OrderStatus>? status, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    }
+    
+    /// <summary>
+    /// [Cook] Get cook orders from specific restaurant. 
+    /// </summary>
+    /// <remarks>
+    /// Cook see orders in his restaurant with statuses: Created, Kitchen, Packaged
+    /// </remarks>
+    /// <param name="sort">Sort type</param>
+    /// <param name="status">Order statuses for filter</param>
+    /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="page">Page of list (natural number)</param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("{restaurantId}/orders/cook")]
+    public ActionResult<Pagination<OrderShortDto>> GetCookRestaurantOrders([FromQuery] [Optional] List<OrderStatus>? status, 
         [FromQuery] [Optional] String? number, [FromQuery] int page = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }

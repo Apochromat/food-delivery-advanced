@@ -11,7 +11,7 @@ public class Courier {
     /// <summary>
     /// Link to user
     /// </summary>
-    public User User { get; set; }
+    public User? User { get; set; }
     
     /// <summary>
     /// Constructor
