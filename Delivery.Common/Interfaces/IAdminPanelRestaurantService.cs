@@ -46,7 +46,7 @@ public interface IAdminPanelRestaurantService {
     /// <param name="restaurantId"></param>
     /// <param name="restaurantUpdateDto"></param>
     /// <returns></returns>
-    RestaurantFullDto UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto);
+    Task UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto);
 
     /// <summary>
     /// Archive restaurant
@@ -103,4 +103,12 @@ public interface IAdminPanelRestaurantService {
     /// <param name="email"></param>
     /// <returns></returns>
     Task AddCookToRestaurant(Guid restaurantId, String email);
+
+    /// <summary>
+    /// Remove cook from restaurant
+    /// </summary>
+    /// <param name="restaurantId"></param>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    Task RemoveCookFromRestaurant(Guid restaurantId, string email);
 }

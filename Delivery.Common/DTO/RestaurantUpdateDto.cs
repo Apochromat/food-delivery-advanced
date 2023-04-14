@@ -10,17 +10,17 @@ public class RestaurantUpdateDto {
     /// Name of the restaurant
     /// </summary>
     [Required]
-    public string? Name { get; set; }
+    public string Name { get; set; }
     /// <summary>
     /// Image of restaurant (URL)
     /// </summary>
     [Required]
-    public String SmallImage { get; set; } = "";
+    public String SmallImage { get; set; }
     /// <summary>
     /// Image of restaurant (URL)
     /// </summary>
     [Required]
-    public String BigImage { get; set; } = "";
+    public String BigImage { get; set; }
     /// <summary>
     /// Short description of restaurant
     /// </summary>
@@ -28,5 +28,6 @@ public class RestaurantUpdateDto {
     /// <summary>
     /// Restaurant address
     /// </summary>
-    public String? Address { get; set; }
+    [Required]
+    public String Address { get; set; }
 }

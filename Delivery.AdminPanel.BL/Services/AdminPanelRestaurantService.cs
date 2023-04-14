@@ -2,7 +2,6 @@
 using Delivery.AuthAPI.DAL;
 using Delivery.AuthAPI.DAL.Entities;
 using Delivery.BackendAPI.DAL;
-using Delivery.BackendAPI.DAL.Entities;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
@@ -32,8 +31,8 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
     public Pagination<RestaurantShortDto> GetAllUnarchivedRestaurants(String? name, int page, int pageSize = 10) {
-        var allCount = _backendDbContext.Restaurants?.Where(x => x.IsArchived == false).Count();
-        if (allCount == null) {
+        var allCount = _backendDbContext.Restaurants.Count(x => x.IsArchived == false);
+        if (allCount == 0) {
             throw new NotFoundException("Restaurants not found");
         }
         // Calculate pages amount
@@ -53,7 +52,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     }
 
     public RestaurantFullDto GetRestaurant(Guid restaurantId) {
-        var restaurant = _backendDbContext.Restaurants?.FirstOrDefault(x => x.Id == restaurantId);
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
         if (restaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
@@ -63,25 +62,44 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     }
 
     public List<AccountProfileFullDto> GetRestaurantManagers(Guid restaurantId) {
-        var restaurant = _backendDbContext.Restaurants?.FirstOrDefault(x => x.Id == restaurantId);
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
         if (restaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
-        var managers = _authDbContext.Users?.Where(x => restaurant.Managers.Contains(x.Id)).ToList();
+        restaurant.Managers??= new List<Guid>();
+        var managers = _authDbContext.Users.Where(x => restaurant.Managers.Contains(x.Id)).ToList();
         var mapped = _mapper.Map<List<AccountProfileFullDto>>(managers);
         return mapped;
     }
 
     public List<AccountProfileFullDto> GetRestaurantCooks(Guid restaurantId) {
-        throw new NotImplementedException();
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        restaurant.Cooks??= new List<Guid>();
+        var cooks = _authDbContext.Users.Where(x => restaurant.Cooks.Contains(x.Id)).ToList();
+        var mapped = _mapper.Map<List<AccountProfileFullDto>>(cooks);
+        return mapped;
     }
 
     public RestaurantFullDto CreateRestaurant(RestaurantCreateDto restaurantCreateDto) {
         throw new NotImplementedException();
     }
 
-    public RestaurantFullDto UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto) {
-        throw new NotImplementedException();
+    public async Task UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto) {
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        
+        restaurant.Name = restaurantUpdateDto.Name;
+        restaurant.Description = restaurantUpdateDto.Description;
+        restaurant.Address = restaurantUpdateDto.Address;
+        restaurant.BigImage = restaurantUpdateDto.BigImage;
+        restaurant.SmallImage = restaurantUpdateDto.SmallImage;
+        
+        await _backendDbContext.SaveChangesAsync();
     }
 
     public RestaurantFullDto ArchiveRestaurant(Guid restaurantId) {
@@ -101,12 +119,12 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     }
 
     public async Task AddManagerToRestaurant(Guid restaurantId, string email) {
-        var restaurant = _backendDbContext.Restaurants?.FirstOrDefault(x => x.Id == restaurantId);
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
         if (restaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
         
-        var user = _authDbContext.Users?.Include(x=>x.Manager).FirstOrDefault(x => x.Email == email);
+        var user = _authDbContext.Users.Include(x=>x.Manager).FirstOrDefault(x => x.Email == email);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -128,12 +146,12 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     }
 
     public async Task RemoveManagerFromRestaurant(Guid restaurantId, string email) {
-        var restaurant = _backendDbContext.Restaurants?.FirstOrDefault(x => x.Id == restaurantId);
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
         if (restaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
         
-        var user = _authDbContext.Users?.AsNoTracking().Include(x=>x.Manager).FirstOrDefault(x => x.Email == email);
+        var user = _authDbContext.Users.AsNoTracking().Include(x=>x.Manager).FirstOrDefault(x => x.Email == email);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -148,7 +166,51 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         await _backendDbContext.SaveChangesAsync();
     }
 
-    public Task AddCookToRestaurant(Guid restaurantId, string email) {
-        throw new NotImplementedException();
+    public async Task AddCookToRestaurant(Guid restaurantId, string email) {
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        
+        var user = _authDbContext.Users.Include(x=>x.Cook).FirstOrDefault(x => x.Email == email);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        
+        user.Cook ??= new Cook() {
+            Id = Guid.NewGuid()
+        };
+        
+        restaurant.Cooks ??= new List<Guid>();
+        
+        if (restaurant.Cooks.Contains(user.Id)) {
+            throw new MethodNotAllowedException("User already is a cook of this restaurant");
+        }
+        
+        restaurant.Cooks ??= new List<Guid>();
+        restaurant.Cooks.Add(user.Id);
+        await _backendDbContext.SaveChangesAsync();
+        await _authDbContext.SaveChangesAsync();
+    }
+
+    public async Task RemoveCookFromRestaurant(Guid restaurantId, string email) {
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        
+        var user = _authDbContext.Users.AsNoTracking().Include(x=>x.Cook).FirstOrDefault(x => x.Email == email);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        
+        restaurant.Cooks ??= new List<Guid>();
+        
+        if (!restaurant.Cooks.Contains(user.Id)) {
+            throw new MethodNotAllowedException("User is not a manager of this restaurant");
+        }
+        
+        restaurant.Cooks.Remove(user.Id);
+        await _backendDbContext.SaveChangesAsync();
     }
 }

@@ -10,16 +10,35 @@
         <div class="position-relative">
             <img src="@Model.Restaurant.BigImage" class="d-block rounded-top card-img-top ibg" alt="...">
         </div>
-        <div class="card-header px-2">
-            <h3 class="card-title m-0 text">
-                @Model.Restaurant.Name
-            </h3>
+        <div class="card-header px-2 d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <h3 class="card-title m-0 text">
+                    @Model.Restaurant.Name
+                </h3>
+                <h6 class="ms-1 mb-0">
+                    @if (Model.Restaurant.IsArchived) {
+                        <span class="badge bg-danger">Archived</span>
+                    }
+                    else {
+                        <span class="badge bg-success">Unarchived</span>
+                    }
+                </h6>
+            </div>
+            <div>
+                @if (Model.Restaurant.IsArchived) {
+                    <button class="btn btn-outline-secondary btn-sm px-4">Unarchive</button>
+                }
+                else {
+                    <button class="btn btn-outline-secondary btn-sm px-4">Archive</button>
+                }
+                @await Html.PartialAsync("_RestaurantEditModal", Model.RestaurantEditModel)
+            </div>
         </div>
         <div class="col-12 card-body">
-            <p class="m-0">@Model.Restaurant.Description</p>
+            <textarea class="form-control bg-dark text-light m-0 p-0 border-0" readonly disabled>@Model.Restaurant.Description</textarea>
         </div>
         <div class="card-footer">
-            <p class="mb-1 text-muted">Address: @Model.Restaurant.Address</p>
+            <p class="mb-1 text-muted">@Model.Restaurant.Address</p>
         </div>
     </div>
     <nav>
@@ -33,12 +52,20 @@
             @await Html.PartialAsync("_AddManager", Model.Manager)
             @foreach (var manager in Model.Managers) {
                 @await Html.PartialAsync("_ManagerCard", new ManagerCardModel() {
-                    RestaurantId = Model.Restaurant.Id,
-                    Email = manager.Email
-                })
+                           RestaurantId = Model.Restaurant.Id,
+                           Email = manager.Email
+                       })
             }
         </div>
-        <div class="tab-pane fade" id="nav-cook" role="tabpanel" aria-labelledby="nav-cook-tab" tabindex="0">Cooks management</div>
+        <div class="tab-pane fade" id="nav-cook" role="tabpanel" aria-labelledby="nav-cook-tab" tabindex="0">
+            @await Html.PartialAsync("_AddCook", Model.Cook)
+            @foreach (var cook in Model.Cooks) {
+                @await Html.PartialAsync("_CookCard", new CookCardModel() {
+                           RestaurantId = Model.Restaurant.Id,
+                           Email = cook.Email
+                       })
+            }
+        </div>
     </div>
 
 </div>

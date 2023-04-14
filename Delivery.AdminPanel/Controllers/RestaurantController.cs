@@ -39,7 +39,7 @@ public class RestaurantController : Controller {
 
     [HttpGet]
     [Authorize]
-    public IActionResult ConcreteRestaurant(Guid restaurantId, AddManagerModel? manager = null) {
+    public IActionResult ConcreteRestaurant(Guid restaurantId, AddManagerModel? manager = null, AddCookModel? cook = null) {
         if (TempData["Errors"] is Dictionary<string, string> errors) {
             foreach (var (key, value) in errors) {
                 ModelState.AddModelError(key, value);
@@ -49,8 +49,22 @@ public class RestaurantController : Controller {
         var restaurant = _restaurantService.GetRestaurant(restaurantId);
         var model = new RestaurantViewModel() {
             Restaurant = restaurant,
+            RestaurantEditModel = new RestaurantUpdateModel() {
+                RestaurantId = restaurant.Id,
+                RestaurantUpdateDto = new RestaurantUpdateDto() {
+                    Name = restaurant.Name,
+                    Description = restaurant.Description,
+                    Address = restaurant.Address,
+                    BigImage = restaurant.BigImage,
+                    SmallImage = restaurant.SmallImage
+                }
+            },
             Managers = _restaurantService.GetRestaurantManagers(restaurantId),
             Manager = manager ?? new AddManagerModel() {
+                RestaurantId = restaurant.Id
+            },
+            Cooks = _restaurantService.GetRestaurantCooks(restaurantId),
+            Cook = cook ?? new AddCookModel() {
                 RestaurantId = restaurant.Id
             }
         };
@@ -86,8 +100,7 @@ public class RestaurantController : Controller {
         }
         catch (Exception ex) {
             _logger.LogError(ex.Message, ex);
-            errors.Add("", "Something Went Wrong");
-            _toastNotification.Error(ex.Message);
+            _toastNotification.Error("Something went wrong");
             ModelState.AddModelError("", "");
         }
         
@@ -115,11 +128,103 @@ public class RestaurantController : Controller {
         }
         catch (Exception ex) {
             _toastNotification.Error("Something went wrong");
-            _logger.LogError("Something went wrong", ex);
+            _logger.LogError(ex.Message, ex);
         }
 
         model.Email = "";
         
+        return RedirectToAction("ConcreteRestaurant", model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddCook(AddCookModel model) {
+        // Model validation
+        if (!ModelState.IsValid) { 
+            _toastNotification.Error(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
+            return RedirectToAction("ConcreteRestaurant", model);
+        } 
+        
+        var errors = new Dictionary<string, string>();
+
+        try {
+            await _restaurantService.AddCookToRestaurant(model.RestaurantId, model.Email);
+            _toastNotification.Success("Cook added successfully");
+            model.Email = "";
+        }
+        catch (NotFoundException ex) {
+            _logger.LogError(ex.Message, ex);
+            errors.Add("Email", ex.Message);
+            _toastNotification.Error(ex.Message);
+            ModelState.AddModelError("", "");
+        }
+        catch (MethodNotAllowedException ex) {
+            _logger.LogError(ex.Message, ex);
+            errors.Add("Email", ex.Message);
+            _toastNotification.Error(ex.Message);
+            ModelState.AddModelError("", "");
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex.Message, ex);
+            _toastNotification.Error("Something went wrong");
+        }
+        
+        if (!ModelState.IsValid) { 
+            TempData["Errors"] = errors;
+        }
+
+        return RedirectToAction("ConcreteRestaurant", model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> RemoveCook(CookCardModel model) {
+        try {
+            await _restaurantService.RemoveCookFromRestaurant(model.RestaurantId , model.Email);
+            _toastNotification.Success("Cook removed successfully");
+            model.Email = "";
+        }
+        catch (NotFoundException ex) {
+            _toastNotification.Error(ex.Message);
+            _logger.LogError(ex.Message, ex);
+        }
+        catch (MethodNotAllowedException ex) {
+            _toastNotification.Error(ex.Message);
+            _logger.LogError(ex.Message, ex);
+        }
+        catch (Exception ex) {
+            _toastNotification.Error("Something went wrong");
+            _logger.LogError(ex.Message, ex);
+        }
+
+        model.Email = "";
+        
+        return RedirectToAction("ConcreteRestaurant", model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> UpdateRestaurant(RestaurantUpdateModel model) {
+        // Model validation
+        if (!ModelState.IsValid) { 
+            _toastNotification.Error(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
+            return RedirectToAction("ConcreteRestaurant", model);
+        }
+
+        try {
+            await _restaurantService.UpdateRestaurant(model.RestaurantId, model.RestaurantUpdateDto);
+            _toastNotification.Success("Restaurant updated successfully");
+        }
+        catch (NotFoundException ex) {
+            _logger.LogError(ex.Message, ex);
+            _toastNotification.Error(ex.Message);
+        }
+        catch (MethodNotAllowedException ex) {
+            _logger.LogError(ex.Message, ex);
+            _toastNotification.Error(ex.Message);
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex.Message, ex);
+            _toastNotification.Error("Something went wrong");
+        }
+
         return RedirectToAction("ConcreteRestaurant", model);
     }
 }
