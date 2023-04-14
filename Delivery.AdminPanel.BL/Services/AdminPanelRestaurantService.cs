@@ -20,7 +20,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         _backendDbContext = backendDbContext;
         _mapper = mapper;
     }
-    
+
 
     /// <summary>
     /// Get all unarchived restaurants
@@ -28,10 +28,11 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     /// <param name="name"></param>
     /// <param name="page"></param>
     /// <param name="pageSize"></param>
+    /// <param name="isArchived"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
-    public Pagination<RestaurantShortDto> GetAllUnarchivedRestaurants(String? name, int page, int pageSize = 10) {
-        var allCount = _backendDbContext.Restaurants.Count(x => x.IsArchived == false);
+    public Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null) {
+        var allCount = _backendDbContext.Restaurants.Count(x => (isArchived == null || x.IsArchived == isArchived));
         if (allCount == 0) {
             throw new NotFoundException("Restaurants not found");
         }
@@ -42,7 +43,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         }
         // Get restaurants
         var raw = _backendDbContext.Restaurants?
-            .Where(x => x.IsArchived == false)
+            .Where(x => (isArchived == null || x.IsArchived == isArchived))
             .OrderBy(x=>x.Name)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
@@ -83,7 +84,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         return mapped;
     }
 
-    public RestaurantFullDto CreateRestaurant(RestaurantCreateDto restaurantCreateDto) {
+    public Task CreateRestaurant(RestaurantCreateDto restaurantCreateDto) {
         throw new NotImplementedException();
     }
 
@@ -102,12 +103,26 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         await _backendDbContext.SaveChangesAsync();
     }
 
-    public RestaurantFullDto ArchiveRestaurant(Guid restaurantId) {
-        throw new NotImplementedException();
+    public async Task ArchiveRestaurant(Guid restaurantId) {
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        
+        restaurant.IsArchived = true;
+        
+        await _backendDbContext.SaveChangesAsync();
     }
 
-    public RestaurantFullDto UnarchiveRestaurant(Guid restaurantId) {
-        throw new NotImplementedException();
+    public async Task UnarchiveRestaurant(Guid restaurantId) {
+        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        
+        restaurant.IsArchived = false;
+        
+        await _backendDbContext.SaveChangesAsync();
     }
 
     public List<RestaurantShortDto> GetArchivedRestaurants() {

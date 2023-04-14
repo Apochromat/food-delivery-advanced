@@ -1,14 +1,10 @@
-﻿using System.Text.Json;
-using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Delivery.AdminPanel.Models;
-using Delivery.AuthAPI.DAL.Entities;
 using Delivery.Common.DTO;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
 
 namespace Delivery.AdminPanel.Controllers;
 
@@ -27,7 +23,7 @@ public class RestaurantController : Controller {
     [HttpGet]
     [Authorize]
     public IActionResult Index(int page = 1) {
-        var restaurants = _restaurantService.GetAllUnarchivedRestaurants(null, page, 10);
+        var restaurants = _restaurantService.GetAllRestaurants(null, page, 10, null);
         var model = new RestaurantUnarchivedListViewModel() {
             Restaurants = restaurants.Content,
             Page = restaurants.Current,
@@ -226,5 +222,41 @@ public class RestaurantController : Controller {
         }
 
         return RedirectToAction("ConcreteRestaurant", model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> ArchiveRestaurant(GuidModel model) {
+        try {
+            await _restaurantService.ArchiveRestaurant(model.Id);
+            _toastNotification.Success("Restaurant archived successfully");
+        }
+        catch (NotFoundException ex) {
+            _logger.LogError(ex.Message, ex);
+            _toastNotification.Error(ex.Message);
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex.Message, ex);
+            _toastNotification.Error("Something went wrong");
+        }
+
+        return RedirectToAction("ConcreteRestaurant", new {restaurantId = model.Id});
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> UnarchiveRestaurant(GuidModel model) {
+        try {
+            await _restaurantService.UnarchiveRestaurant(model.Id);
+            _toastNotification.Success("Restaurant unarchived successfully");
+        }
+        catch (NotFoundException ex) {
+            _logger.LogError(ex.Message, ex);
+            _toastNotification.Error(ex.Message);
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex.Message, ex);
+            _toastNotification.Error("Something went wrong");
+        }
+
+        return RedirectToAction("ConcreteRestaurant", new {restaurantId = model.Id});
     }
 }

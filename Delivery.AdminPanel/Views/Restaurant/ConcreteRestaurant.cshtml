@@ -24,14 +24,16 @@
                     }
                 </h6>
             </div>
-            <div>
+            <div class="d-flex">
                 @if (Model.Restaurant.IsArchived) {
-                    <button class="btn btn-outline-secondary btn-sm px-4">Unarchive</button>
+                    @await Html.PartialAsync("_UnarchiveRestaurant", new GuidModel() { Id = Model.Restaurant.Id})
                 }
                 else {
-                    <button class="btn btn-outline-secondary btn-sm px-4">Archive</button>
+                    @await Html.PartialAsync("_ArchiveRestaurant", new GuidModel() { Id = Model.Restaurant.Id})
                 }
-                @await Html.PartialAsync("_RestaurantEditModal", Model.RestaurantEditModel)
+                <form class="ms-1">
+                    @await Html.PartialAsync("_RestaurantEditModal", Model.RestaurantEditModel)
+                </form>
             </div>
         </div>
         <div class="col-12 card-body">

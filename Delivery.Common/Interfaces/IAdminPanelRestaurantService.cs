@@ -11,7 +11,7 @@ public interface IAdminPanelRestaurantService {
     /// Get all restaurants
     /// </summary>
     /// <returns></returns>
-    Pagination<RestaurantShortDto> GetAllUnarchivedRestaurants(String? name, int page, int pageSize = 10);
+    Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null);
     /// <summary>
     /// Get Full restaurant info
     /// </summary>
@@ -38,7 +38,7 @@ public interface IAdminPanelRestaurantService {
     /// </summary>
     /// <param name="restaurantCreateDto"></param>
     /// <returns></returns>
-    RestaurantFullDto CreateRestaurant(RestaurantCreateDto restaurantCreateDto);
+    Task CreateRestaurant(RestaurantCreateDto restaurantCreateDto);
 
     /// <summary>
     /// Update restaurant info
@@ -53,14 +53,14 @@ public interface IAdminPanelRestaurantService {
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
-    RestaurantFullDto ArchiveRestaurant(Guid restaurantId);
+    Task ArchiveRestaurant(Guid restaurantId);
 
     /// <summary>
     /// Unarchive restaurant
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
-    RestaurantFullDto UnarchiveRestaurant(Guid restaurantId);
+    Task UnarchiveRestaurant(Guid restaurantId);
 
     /// <summary>
     /// Get list of archived restaurants
