@@ -30,4 +30,8 @@ public class AccountProfileFullDto {
     /// Date when user joined the system
     /// </summary>
     public DateTime JoinedAt { get; set; }
+    /// <summary>
+    /// User roles
+    /// </summary>
+    public List<String> Roles { get; set; }
 }

@@ -1,7 +1,24 @@
-﻿@{
+﻿@model UserListViewModel
+
+@{
     ViewData["Title"] = "Users";
 }
 
-<div class="text-center my-auto align-items-center">
-    <h1 class="display-4">User management</h1>
+<div class="">
+    @foreach( var user in Model.Users) {
+        <div class="card d-flex flex-row my-2 p-2 justify-content-between pointer">
+            <div class="d-flex pt-2 my-auto ms-2">
+                <h5 class="card-title">@user.FullName</h5>
+                <div class="card-text ms-2">@user.Email</div>
+            </div>
+            <div>
+                @await Html.PartialAsync("_UserEditModal", new UserEditModel() {
+                           Id = user.Id,
+                           FullName = user.FullName,
+                           Gender = user.Gender,
+                           Roles = user.Roles.Select(x => x.ToString()).ToList() 
+                       })
+            </div>
+        </div>
+    }
 </div>

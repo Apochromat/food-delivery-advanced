@@ -63,24 +63,6 @@ public interface IAdminPanelRestaurantService {
     Task UnarchiveRestaurant(Guid restaurantId);
 
     /// <summary>
-    /// Get list of archived restaurants
-    /// </summary>
-    /// <returns></returns>
-    List<RestaurantShortDto> GetArchivedRestaurants();
-
-    /// <summary>
-    /// Get restaurant orders
-    /// </summary>
-    /// <param name="restaurantId"></param>
-    /// <param name="sort"></param>
-    /// <param name="status"></param>
-    /// <param name="number"></param>
-    /// <param name="page"></param>
-    /// <returns></returns>
-    Pagination<OrderShortDto> GetRestaurantOrders(Guid restaurantId, OrderSort sort,
-        List<OrderStatus>? status, String? number, int page = 1);
-    
-    /// <summary>
     /// Add manager to restaurant
     /// </summary>
     /// <param name="restaurantId"></param>
