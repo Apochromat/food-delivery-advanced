@@ -34,7 +34,8 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
     public Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null, RestaurantSort? sort = RestaurantSort.NameAsc) {
-        var allCount = _backendDbContext.Restaurants.Count(x => (isArchived == null || x.IsArchived == isArchived));
+        var allCount = _backendDbContext.Restaurants
+            .Where(x => (isArchived == null || x.IsArchived == isArchived)).Count(x => name == null ? true : x.Name.Contains(name));
         if (allCount == 0) {
             return new Pagination<RestaurantShortDto>(new List<RestaurantShortDto>(), page, pageSize, 0);
         }
@@ -53,7 +54,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
                 .Take(pageSize)
                 .ToList();
             var mapped = _mapper.Map<List<RestaurantShortDto>>(raw);
-            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, pages);
+            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, mapped.Count());
         }
         else {
             var raw = _backendDbContext.Restaurants?
@@ -64,7 +65,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
                 .Take(pageSize)
                 .ToList();
             var mapped = _mapper.Map<List<RestaurantShortDto>>(raw);
-            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, pages);
+            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, mapped.Count());
         }
         
     }
