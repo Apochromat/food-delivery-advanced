@@ -11,7 +11,7 @@ public interface IAdminPanelRestaurantService {
     /// Get all restaurants
     /// </summary>
     /// <returns></returns>
-    Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null);
+    Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null, RestaurantSort? sort = null);
     /// <summary>
     /// Get Full restaurant info
     /// </summary>

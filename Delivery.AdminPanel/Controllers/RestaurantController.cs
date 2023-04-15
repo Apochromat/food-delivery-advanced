@@ -23,13 +23,15 @@ public class RestaurantController : Controller {
 
     [HttpGet]
     [Authorize]
-    public IActionResult Index(int page = 1) {
-        var restaurants = _restaurantService.GetAllRestaurants(null, page, 10, null);
+    public IActionResult Index(int page = 1, RestaurantSearchModel? searchModel = null) {
+        var restaurants = _restaurantService.GetAllRestaurants(
+            searchModel?.Name, searchModel?.Page ?? 1, 10, searchModel?.IsArchived, searchModel?.Sort);
         var model = new RestaurantListViewModel() {
             Restaurants = restaurants.Content,
             RestaurantCreateModel = new RestaurantCreateModel() {
                 RestaurantCreateDto = new RestaurantCreateDto()
             },
+            RestaurantSearchModel = searchModel ?? new RestaurantSearchModel(),
             Page = restaurants.Current,
             Pages = restaurants.Pages,
             PageSize = restaurants.Items

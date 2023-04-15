@@ -30,12 +30,13 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
     /// <param name="page"></param>
     /// <param name="pageSize"></param>
     /// <param name="isArchived"></param>
+    /// <param name="sort"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
-    public Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null) {
+    public Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null, RestaurantSort? sort = RestaurantSort.NameAsc) {
         var allCount = _backendDbContext.Restaurants.Count(x => (isArchived == null || x.IsArchived == isArchived));
         if (allCount == 0) {
-            throw new NotFoundException("Restaurants not found");
+            return new Pagination<RestaurantShortDto>(new List<RestaurantShortDto>(), page, pageSize, 0);
         }
         // Calculate pages amount
         var pages = (int) Math.Ceiling((double) allCount / pageSize);
@@ -43,14 +44,29 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
             throw new NotFoundException("Restaurants not found");
         }
         // Get restaurants
-        var raw = _backendDbContext.Restaurants?
-            .Where(x => (isArchived == null || x.IsArchived == isArchived))
-            .OrderBy(x=>x.Name)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-        var mapped = _mapper.Map<List<RestaurantShortDto>>(raw);
-        return new Pagination<RestaurantShortDto>(mapped, page, pageSize, pages);
+        if (sort == RestaurantSort.NameAsc) {
+            var raw = _backendDbContext.Restaurants?
+                .Where(x => (isArchived == null || x.IsArchived == isArchived))
+                .Where(x => name == null ? true : x.Name.Contains(name))
+                .OrderBy(x => x.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            var mapped = _mapper.Map<List<RestaurantShortDto>>(raw);
+            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, pages);
+        }
+        else {
+            var raw = _backendDbContext.Restaurants?
+                .Where(x => (isArchived == null || x.IsArchived == isArchived))
+                .Where(x => name == null ? true : x.Name.Contains(name))
+                .OrderByDescending(x => x.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            var mapped = _mapper.Map<List<RestaurantShortDto>>(raw);
+            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, pages);
+        }
+        
     }
 
     public RestaurantFullDto GetRestaurant(Guid restaurantId) {
