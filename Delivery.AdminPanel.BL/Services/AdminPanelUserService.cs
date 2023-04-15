@@ -25,8 +25,8 @@ public class AdminPanelUserService : IAdminPanelUserService {
     }
 
     public async Task<Pagination<AccountProfileFullDto>> GetAllUsers(string? name, int page, int pageSize = 10) {
-        var allCount = _backendDbContext.Restaurants
-            .Count(x => name == null ? true : x.Name.Contains(name));
+        var allCount = _authDbContext.Users
+            .Count(x => name == null ? true : x.FullName.Contains(name));
         if (allCount == 0) {
             return new Pagination<AccountProfileFullDto>(new List<AccountProfileFullDto>(), page, pageSize, 0);
         }
@@ -50,7 +50,7 @@ public class AdminPanelUserService : IAdminPanelUserService {
             var roles = await _userManager.GetRolesAsync(dbUser);
             user.Roles = roles.ToList();
         }
-        return new Pagination<AccountProfileFullDto>(mapped, page, pageSize, mapped.Count());
+        return new Pagination<AccountProfileFullDto>(mapped, page, pageSize, pages);
     }
 
     public async Task EditUser(Guid userId, AdminPanelAccountProfileEditDto model) {

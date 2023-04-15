@@ -18,8 +18,8 @@ public class UserController : Controller {
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index() {
-        var users = await _adminPanelUserService.GetAllUsers(null, 1);
+    public async Task<IActionResult> Index(int page = 1) {
+        var users = await _adminPanelUserService.GetAllUsers(null, page, 10);
         
         var model = new UserListViewModel() {
             Users = users.Content,
