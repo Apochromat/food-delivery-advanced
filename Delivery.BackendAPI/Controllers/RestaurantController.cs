@@ -80,7 +80,7 @@ public class RestaurantController : ControllerBase {
     /// [Cook] Get cook orders from specific restaurant. 
     /// </summary>
     /// <remarks>
-    /// Cook see orders in his restaurant with statuses: Created, Kitchen, Packaged
+    /// Cook see orders in his restaurant with statuses: Created
     /// </remarks>
     /// <param name="sort">Sort type</param>
     /// <param name="status">Order statuses for filter</param>
