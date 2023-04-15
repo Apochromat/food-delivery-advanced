@@ -31,9 +31,9 @@
                 else {
                     @await Html.PartialAsync("_ArchiveRestaurant", new GuidModel() { Id = Model.Restaurant.Id})
                 }
-                <form class="ms-1">
+                <div class="ms-1">
                     @await Html.PartialAsync("_RestaurantEditModal", Model.RestaurantEditModel)
-                </form>
+                </div>
             </div>
         </div>
         <div class="col-12 card-body">

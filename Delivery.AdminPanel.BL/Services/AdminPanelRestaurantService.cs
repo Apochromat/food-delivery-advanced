@@ -2,6 +2,7 @@
 using Delivery.AuthAPI.DAL;
 using Delivery.AuthAPI.DAL.Entities;
 using Delivery.BackendAPI.DAL;
+using Delivery.BackendAPI.DAL.Entities;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
@@ -84,8 +85,12 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         return mapped;
     }
 
-    public Task CreateRestaurant(RestaurantCreateDto restaurantCreateDto) {
-        throw new NotImplementedException();
+    public async Task CreateRestaurant(RestaurantCreateDto restaurantCreateDto) {
+        var restaurant = _mapper.Map<Restaurant>(restaurantCreateDto);
+        restaurant.CreatedAt = DateTime.UtcNow;
+        restaurant.UpdatedAt = DateTime.UtcNow;
+        _backendDbContext.Restaurants.Add(restaurant);
+        await _backendDbContext.SaveChangesAsync();
     }
 
     public async Task UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto) {
@@ -99,6 +104,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         restaurant.Address = restaurantUpdateDto.Address;
         restaurant.BigImage = restaurantUpdateDto.BigImage;
         restaurant.SmallImage = restaurantUpdateDto.SmallImage;
+        restaurant.UpdatedAt = DateTime.UtcNow;
         
         await _backendDbContext.SaveChangesAsync();
     }

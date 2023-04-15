@@ -27,5 +27,6 @@ public class RestaurantCreateDto {
     /// <summary>
     /// Restaurant address
     /// </summary>
-    public String? Address { get; set; }
+    [Required]
+    public String Address { get; set; }
 }
