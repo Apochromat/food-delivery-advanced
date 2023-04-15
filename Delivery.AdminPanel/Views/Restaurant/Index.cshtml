@@ -36,5 +36,13 @@
             </div>
         }
     </div>
-    <div class="col-12">Page: @Model.Page Pages: @Model.Pages PageSize: @Model.PageSize</div>
+    <nav class=" mx-auto mt-2">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.Pages; i++) {
+                <li class="@(i == Model.Page ? "page-item active" : "page-item")">
+                    <a class="page-link" href="@Url.Action("Index", new { page = i, searchModel = Model.RestaurantSearchModel })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>

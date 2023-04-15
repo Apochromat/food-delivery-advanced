@@ -25,7 +25,7 @@ public class RestaurantController : Controller {
     [Authorize]
     public IActionResult Index(int page = 1, RestaurantSearchModel? searchModel = null) {
         var restaurants = _restaurantService.GetAllRestaurants(
-            searchModel?.Name, searchModel?.Page ?? 1, 10, searchModel?.IsArchived, searchModel?.Sort);
+            searchModel?.Name, page, 2, searchModel?.IsArchived, searchModel?.Sort);
         var model = new RestaurantListViewModel() {
             Restaurants = restaurants.Content,
             RestaurantCreateModel = new RestaurantCreateModel() {
