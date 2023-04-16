@@ -2,6 +2,7 @@
 using Delivery.AdminPanel.Models;
 using Delivery.Common.DTO;
 using Delivery.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.AdminPanel.Controllers;
@@ -18,6 +19,7 @@ public class UserController : Controller {
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Index(int page = 1) {
         var users = await _adminPanelUserService.GetAllUsers(null, page, 10);
         
@@ -31,6 +33,7 @@ public class UserController : Controller {
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> EditUser(UserEditModel model) {
         try {
             await _adminPanelUserService.EditUser(model.Id, new AdminPanelAccountProfileEditDto() {
@@ -48,6 +51,7 @@ public class UserController : Controller {
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> BanUser(GuidModel model) {
         try {
             await _adminPanelUserService.BanUser(model.Id);
@@ -61,6 +65,7 @@ public class UserController : Controller {
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> UnbanUser(GuidModel model) {
         try {
             await _adminPanelUserService.UnbanUser(model.Id);

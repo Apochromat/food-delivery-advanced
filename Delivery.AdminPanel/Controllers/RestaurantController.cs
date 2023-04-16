@@ -75,6 +75,7 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> AddManager(AddManagerModel model) {
         // Model validation
         if (!ModelState.IsValid) {
@@ -116,6 +117,7 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> RemoveManager(ManagerCardModel model) {
         try {
             await _restaurantService.RemoveManagerFromRestaurant(model.RestaurantId, model.Email);
@@ -141,6 +143,7 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> AddCook(AddCookModel model) {
         // Model validation
         if (!ModelState.IsValid) {
@@ -181,6 +184,7 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> RemoveCook(CookCardModel model) {
         try {
             await _restaurantService.RemoveCookFromRestaurant(model.RestaurantId, model.Email);
@@ -206,6 +210,7 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateRestaurant(RestaurantCreateModel model) {
         // Model validation
         if (!ModelState.IsValid) {
@@ -226,6 +231,7 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> UpdateRestaurant(RestaurantUpdateModel model) {
         // Model validation
         if (!ModelState.IsValid) { 
@@ -254,6 +260,7 @@ public class RestaurantController : Controller {
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> ArchiveRestaurant(GuidModel model) {
         try {
             await _restaurantService.ArchiveRestaurant(model.Id);
@@ -272,6 +279,7 @@ public class RestaurantController : Controller {
     }
     
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> UnarchiveRestaurant(GuidModel model) {
         try {
             await _restaurantService.UnarchiveRestaurant(model.Id);

@@ -1,6 +1,7 @@
 ﻿using Delivery.AdminPanel.Models;
 using Delivery.Common.DTO;
 using Delivery.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.AdminPanel.Controllers;
@@ -39,6 +40,7 @@ public class AccountController : Controller {
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Logout() {
         await _accountService.Logout();
         return RedirectToAction("Index", "Home");
