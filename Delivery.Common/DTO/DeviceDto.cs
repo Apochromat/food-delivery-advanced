@@ -9,10 +9,6 @@ public class DeviceDto {
     /// </summary>
     public Guid Id { get; set; }
     /// <summary>
-    /// Ip address
-    /// </summary>
-    public String? IpAddress { get; set; }
-    /// <summary>
     /// User agent
     /// </summary>
     public String? UserAgent { get; set; }

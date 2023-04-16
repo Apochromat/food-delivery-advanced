@@ -99,11 +99,10 @@ public class AuthService : IAuthService {
         }
 
         var device =
-            user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
+            user.Devices.FirstOrDefault(x => x.UserAgent == httpContext.Request.Headers["User-Agent"]);
 
         if (device == null) {
             device = new Device() {
-                IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
                 User = user,
                 RefreshToken = $"{Guid.NewGuid()}-{Guid.NewGuid()}",
                 UserAgent = httpContext.Request.Headers["User-Agent"],
@@ -150,7 +149,7 @@ public class AuthService : IAuthService {
         }
 
         var device =
-            user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
+            user.Devices.FirstOrDefault(x => x.UserAgent == httpContext.Request.Headers["User-Agent"]);
 
         if (device == null) {
             throw new MethodNotAllowedException("You can`t logout from this device");
@@ -180,7 +179,7 @@ public class AuthService : IAuthService {
         }
 
         var device =
-            user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
+            user.Devices.FirstOrDefault(x => x.UserAgent == httpContext.Request.Headers["User-Agent"]);
 
         if (device == null) {
             throw new MethodNotAllowedException("You can't refresh token from another device. Re-login needed");

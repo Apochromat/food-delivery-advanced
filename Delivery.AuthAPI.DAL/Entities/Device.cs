@@ -16,10 +16,6 @@ public class Device {
     /// </summary>
     public User? User { get; set; }
     /// <summary>
-    /// Ip address
-    /// </summary>
-    public String? IpAddress { get; set; }
-    /// <summary>
     /// User agent
     /// </summary>
     public String? UserAgent { get; set; }
