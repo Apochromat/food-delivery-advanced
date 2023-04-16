@@ -179,6 +179,10 @@ public class AuthService : IAuthService {
             throw new NotFoundException("User not found");
         }
 
+        if (await _userManager.IsLockedOutAsync(user)) {
+            throw new UnauthorizedException("User is banned");
+        }
+        
         var device =
             user.Devices.FirstOrDefault(x => x.IpAddress == httpContext.Connection.RemoteIpAddress?.ToString());
 

@@ -64,7 +64,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
                 .Take(pageSize)
                 .ToList();
             var mapped = _mapper.Map<List<RestaurantShortDto>>(raw);
-            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, mapped.Count());
+            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, pages);
         }
         else {
             var raw = _backendDbContext.Restaurants?
@@ -75,7 +75,7 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
                 .Take(pageSize)
                 .ToList();
             var mapped = _mapper.Map<List<RestaurantShortDto>>(raw);
-            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, mapped.Count());
+            return new Pagination<RestaurantShortDto>(mapped, page, pageSize, pages);
         }
     }
 

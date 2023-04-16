@@ -46,4 +46,30 @@ public class UserController : Controller {
         }
         return RedirectToAction("Index");
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> BanUser(GuidModel model) {
+        try {
+            await _adminPanelUserService.BanUser(model.Id);
+            _toastNotification.Success("User banned successfully");
+        }
+        catch (Exception e) {
+            _logger.LogError(e, "Error while banning user");
+            _toastNotification.Error("Something went wrong");
+        }
+        return RedirectToAction("Index");
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> UnbanUser(GuidModel model) {
+        try {
+            await _adminPanelUserService.UnbanUser(model.Id);
+            _toastNotification.Success("User unbanned successfully");
+        }
+        catch (Exception e) {
+            _logger.LogError(e, "Error while banning user");
+            _toastNotification.Error("Something went wrong");
+        }
+        return RedirectToAction("Index");
+    }
 }

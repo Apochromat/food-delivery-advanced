@@ -27,6 +27,10 @@ public class AccountProfileFullDto {
     /// </summary>
     public Gender Gender { get; set; }
     /// <summary>
+    /// Is user banned
+    /// </summary>
+    public Boolean IsBanned { get; set; }
+    /// <summary>
     /// Date when user joined the system
     /// </summary>
     public DateTime JoinedAt { get; set; }

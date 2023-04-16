@@ -20,4 +20,25 @@ public interface IAdminPanelUserService {
     /// <param name="model"></param>
     /// <returns></returns>
     Task EditUser(Guid userId, AdminPanelAccountProfileEditDto model);
+    
+    /// <summary>
+    /// Is user banned
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<bool> IsUserBanned(Guid userId);
+
+    /// <summary>
+    /// Ban user
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task BanUser(Guid userId);
+    
+    /// <summary>
+    /// Unban user
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task UnbanUser(Guid userId);
 }

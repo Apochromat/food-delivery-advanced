@@ -49,6 +49,7 @@ public class AdminPanelUserService : IAdminPanelUserService {
             var dbUser = await _userManager.FindByIdAsync(user.Id.ToString());
             var roles = await _userManager.GetRolesAsync(dbUser);
             user.Roles = roles.ToList();
+            user.IsBanned = await IsUserBanned(user.Id);
         }
         return new Pagination<AccountProfileFullDto>(mapped, page, pageSize, pages);
     }
@@ -76,5 +77,32 @@ public class AdminPanelUserService : IAdminPanelUserService {
         var roled = await _userManager.GetRolesAsync(user);
 
         await _userManager.UpdateAsync(user);
+    }
+
+    public async Task<bool> IsUserBanned(Guid userId) {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        return await _userManager.IsLockedOutAsync(user);
+    }
+
+    public async Task BanUser(Guid userId) {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddYears(100).ToUniversalTime());
+    }
+
+    public async Task UnbanUser(Guid userId) {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        await _userManager.SetLockoutEndDateAsync(user, null);
     }
 }
