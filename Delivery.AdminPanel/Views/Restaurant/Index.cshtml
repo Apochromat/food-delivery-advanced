@@ -1,0 +1,48 @@
+﻿@model RestaurantListViewModel
+
+@{
+    ViewData["Title"] = "Restaurants";
+}
+
+<div class="mx-5 mb-4 container bg-dark mx-auto shadow rounded pb-2">
+    @await Html.PartialAsync("_RestaurantSearch", Model.RestaurantSearchModel)
+    <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-1">
+        <div class="col py-2">
+            <div class="card rounded-1 h-100">
+                <div class="position-relative">
+                    <img src="restaurant-icon.webp" class="d-block rounded-top card-img-top ibg" alt="...">
+                </div>
+                <div class="card-header px-1">
+                    @await Html.PartialAsync("_RestaurantCreateModal", Model.RestaurantCreateModel)
+                </div>
+            </div>
+        </div>
+        @foreach (var restaurantShortDto in Model.Restaurants) {
+            <div class="col py-2">
+                <div class="card rounded-1 h-100">
+                    <div class="position-relative">
+                        <img src="@restaurantShortDto.SmallImage" class="d-block rounded-top card-img-top ibg" alt="...">
+                    </div>
+                    <div class="card-header px-1">
+                        <h3 class="card-title m-0">
+                            <a asp-controller="Restaurant" asp-action="ConcreteRestaurant"
+                               asp-route-restaurantId="@restaurantShortDto.Id"
+                               class="title text-decoration-none">
+                                @restaurantShortDto.Name
+                            </a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <nav class=" mx-auto mt-2">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.Pages; i++) {
+                <li class="@(i == Model.Page ? "page-item active" : "page-item")">
+                    <a class="page-link" href="@Url.Action("Index", new { page = i, searchModel = Model.RestaurantSearchModel })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,14 @@
+﻿@model AddManagerModel
+
+<form class="card" asp-controller="Restaurant" asp-action="AddManager" method="Post">
+    <div class="card-body d-flex">
+        <div class="col">
+            @Html.TextBoxFor(m=> m.Email, new { @type = "text", @class = "form-control mb-1", @placeholder = "user@example.com"})
+            @Html.TextBoxFor(m => m.RestaurantId, new { @type = "hidden", @value = @Model.RestaurantId })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+        <div class="">
+            <button type="submit" class="btn btn-primary ms-1 px-5">Add</button>
+        </div>
+    </div>
+</form>

@@ -10,4 +10,23 @@ public class RestaurantCreateDto {
     /// </summary>
     [Required]
     public String Name { get; set; } = "";
+    /// <summary>
+    /// Small Image of restaurant (URL)
+    /// </summary>
+    [Required]
+    public String SmallImage { get; set; } = "";
+    /// <summary>
+    /// Big image of restaurant (URL)
+    /// </summary>
+    [Required]
+    public String BigImage { get; set; } = "";
+    /// <summary>
+    /// Short description of restaurant
+    /// </summary>
+    public String? Description { get; set; }
+    /// <summary>
+    /// Restaurant address
+    /// </summary>
+    [Required]
+    public String Address { get; set; }
 }

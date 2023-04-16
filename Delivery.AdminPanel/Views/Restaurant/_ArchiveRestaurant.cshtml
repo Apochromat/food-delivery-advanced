@@ -1,0 +1,6 @@
+﻿@model GuidModel
+
+<form asp-controller="Restaurant" asp-action="ArchiveRestaurant" method="Post">
+    @Html.TextBoxFor(m => m.Id, new { @type = "hidden", @value = @Model.Id })
+    <button type="submit" class="btn btn-outline-secondary btn-sm px-4">Archive</button>
+</form>

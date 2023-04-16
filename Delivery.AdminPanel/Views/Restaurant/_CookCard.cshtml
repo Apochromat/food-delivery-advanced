@@ -1,0 +1,13 @@
+﻿@model CookCardModel
+
+<form class="card" asp-controller="Restaurant" asp-action="RemoveCook" method="Post">
+    <div class="card-body d-flex">
+        <div class="col">
+            <input type="text" class="form-control" readonly value=@Model.Email asp-for="Email">
+            <input type="hidden" class="form-control" readonly value=@Model.RestaurantId asp-for="RestaurantId">
+        </div>
+        <div class="">
+            <button type="submit" class="btn btn-danger ms-1 px-5">Delete</button>
+        </div>
+    </div>
+</form>

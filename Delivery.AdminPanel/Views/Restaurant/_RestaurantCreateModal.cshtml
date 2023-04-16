@@ -1,0 +1,38 @@
+﻿@model RestaurantCreateModel
+
+<button class="btn btn-outline-primary btn-sm px-4 w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">Add restaurant</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content bg-dark" asp-controller="Restaurant" asp-action="CreateRestaurant" method="Post">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Restaurant creating</h1>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating mb-3">
+                    <input type="text" asp-for="RestaurantCreateDto.Name" class="form-control" id="editName">
+                    <label for="editName" class="text-black">Name<span class="text-danger">*</span></label>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea type="text" asp-for="RestaurantCreateDto.Description" class="form-control h-100" id="editDescription"></textarea>
+                    <label for="editDescription" class="text-black">Description</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" asp-for="RestaurantCreateDto.Address" class="form-control" id="editAddress">
+                    <label for="editAddress" class="text-black">Address<span class="text-danger">*</span></label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" asp-for="RestaurantCreateDto.BigImage" class="form-control" id="editBigImage">
+                    <label for="editBigImage" class="text-black">Big image link<span class="text-danger">*</span></label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" asp-for="RestaurantCreateDto.SmallImage" class="form-control" id="editSmallImage">
+                    <label for="editSmallImage" class="text-black">Small image link<span class="text-danger">*</span></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>

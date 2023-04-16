@@ -12,4 +12,8 @@ public class RestaurantShortDto {
     /// Restaurant name
     /// </summary>
     public String? Name { get; set; }
+    /// <summary>
+    /// Image of restaurant (URL)
+    /// </summary>
+    public String SmallImage { get; set; } = "";
 }

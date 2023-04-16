@@ -7,6 +7,10 @@ namespace Delivery.Common.DTO;
 /// </summary>
 public class AccountProfileFullDto {
     /// <summary>
+    /// Profile Identifier
+    /// </summary>
+    public Guid Id { get; set; }
+    /// <summary>
     /// User email
     /// </summary>
     public String? Email { get; set; }
@@ -23,7 +27,15 @@ public class AccountProfileFullDto {
     /// </summary>
     public Gender Gender { get; set; }
     /// <summary>
+    /// Is user banned
+    /// </summary>
+    public Boolean IsBanned { get; set; }
+    /// <summary>
     /// Date when user joined the system
     /// </summary>
     public DateTime JoinedAt { get; set; }
+    /// <summary>
+    /// User roles
+    /// </summary>
+    public List<String> Roles { get; set; }
 }

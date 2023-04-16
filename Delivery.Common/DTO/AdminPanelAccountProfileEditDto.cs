@@ -3,13 +3,9 @@
 namespace Delivery.Common.DTO; 
 
 /// <summary>
-/// Account profile DTO
+/// Data transfer object for admin panel user profile edit
 /// </summary>
-public class AccountCourierProfileDto {
-    /// <summary>
-    /// Profile Identifier
-    /// </summary>
-    public Guid Id { get; set; }
+public class AdminPanelAccountProfileEditDto {
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
@@ -18,4 +14,8 @@ public class AccountCourierProfileDto {
     /// User`s gender
     /// </summary>
     public Gender? Gender { get; set; }
+    /// <summary>
+    /// User roles
+    /// </summary>
+    public List<String> Roles { get; set; } = new List<String>();
 }
