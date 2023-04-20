@@ -14,10 +14,10 @@ public class MenuController : ControllerBase {
     /// [Manager] Creates a new menu. You shouldn`t create menu for new Restaurant, It always has Default one. 
     /// </summary>
     /// <param name="restaurantId"></param>
-    /// <param name="restaurantCreateDto"></param>
+    /// <param name="menuCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult CreateRestaurantMenu([FromRoute] Guid restaurantId, [FromBody] RestaurantCreateDto restaurantCreateDto) {
+    public ActionResult CreateRestaurantMenu([FromRoute] Guid restaurantId, [FromBody] MenuCreateDto menuCreateDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
     
