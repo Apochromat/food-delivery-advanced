@@ -33,17 +33,17 @@ public class User : IdentityUser<Guid> {
     /// <summary>
     /// Link to customer
     /// </summary>
-    public Customer? Customer { get; set; }
+    public Customer Customer { get; set; }
     /// <summary>
     /// Link to courier
     /// </summary>
-    public Courier? Courier { get; set; }
+    public Courier Courier { get; set; }
     /// <summary>
     /// Link to manager
     /// </summary>
-    public Manager? Manager { get; set; }
+    public Manager Manager { get; set; }
     /// <summary>
     /// Link to cook
     /// </summary>
-    public Cook? Cook { get; set; }
+    public Cook Cook { get; set; }
 }

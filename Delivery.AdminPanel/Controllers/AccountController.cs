@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.AdminPanel.Controllers;
 
+[Controller]
 public class AccountController : Controller {
     private readonly IAdminPanelAccountService _accountService;
     private readonly ILogger<AccountController> _logger;

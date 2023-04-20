@@ -66,6 +66,9 @@ public class AuthService : IAuthService {
         user.Customer = new Customer(user) {
             Address = accountRegisterDto.Address
         };
+        user.Manager = new Manager(user);
+        user.Cook = new Cook(user);
+        user.Customer = new Customer(user);
 
         var result = await _userManager.CreateAsync(user, accountRegisterDto.Password);
         

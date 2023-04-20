@@ -170,10 +170,6 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
             throw new NotFoundException("User not found");
         }
 
-        user.Manager ??= new Manager() {
-            Id = Guid.NewGuid()
-        };
-
         if (!await _userManager.IsInRoleAsync(user, RoleType.Manager.ToString())){
             await _userManager.AddToRoleAsync(user, RoleType.Manager.ToString());
         }
@@ -225,10 +221,6 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-
-        user.Cook ??= new Cook() {
-            Id = Guid.NewGuid()
-        };
 
         if (!await _userManager.IsInRoleAsync(user, RoleType.Cook.ToString())){
             await _userManager.AddToRoleAsync(user, RoleType.Cook.ToString());

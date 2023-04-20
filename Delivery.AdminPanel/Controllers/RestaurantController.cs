@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Delivery.AdminPanel.Controllers;
 
 [Controller]
+[Authorize]
 public class RestaurantController : Controller {
     private readonly ILogger<RestaurantController> _logger;
     private readonly IAdminPanelRestaurantService _restaurantService;
@@ -22,7 +23,6 @@ public class RestaurantController : Controller {
     }
 
     [HttpGet]
-    [Authorize]
     public IActionResult Index(int page = 1, RestaurantSearchModel? searchModel = null) {
         var restaurants = _restaurantService.GetAllRestaurants(
             searchModel?.Name, page, 10, searchModel?.IsArchived, searchModel?.Sort);
@@ -40,7 +40,6 @@ public class RestaurantController : Controller {
     }
 
     [HttpGet]
-    [Authorize]
     public IActionResult ConcreteRestaurant(Guid restaurantId, AddManagerModel? manager = null,
         AddCookModel? cook = null) {
         if (TempData["Errors"] is Dictionary<string, string> errors) {
@@ -75,7 +74,6 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> AddManager(AddManagerModel model) {
         // Model validation
         if (!ModelState.IsValid) {
@@ -117,7 +115,6 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> RemoveManager(ManagerCardModel model) {
         try {
             await _restaurantService.RemoveManagerFromRestaurant(model.RestaurantId, model.Email);
@@ -143,7 +140,6 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> AddCook(AddCookModel model) {
         // Model validation
         if (!ModelState.IsValid) {
@@ -184,7 +180,6 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> RemoveCook(CookCardModel model) {
         try {
             await _restaurantService.RemoveCookFromRestaurant(model.RestaurantId, model.Email);
@@ -210,7 +205,6 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> CreateRestaurant(RestaurantCreateModel model) {
         // Model validation
         if (!ModelState.IsValid) {
@@ -231,7 +225,6 @@ public class RestaurantController : Controller {
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> UpdateRestaurant(RestaurantUpdateModel model) {
         // Model validation
         if (!ModelState.IsValid) { 
@@ -260,7 +253,6 @@ public class RestaurantController : Controller {
     }
     
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> ArchiveRestaurant(GuidModel model) {
         try {
             await _restaurantService.ArchiveRestaurant(model.Id);
@@ -279,7 +271,6 @@ public class RestaurantController : Controller {
     }
     
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> UnarchiveRestaurant(GuidModel model) {
         try {
             await _restaurantService.UnarchiveRestaurant(model.Id);
