@@ -14,12 +14,27 @@ public interface IAccountService {
     Task<AccountProfileFullDto> GetProfileAsync(string userId);
     
     /// <summary>
+    /// Get customer full profile
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    Task<AccountCustomerProfileFullDto> GetCustomerFullProfileAsync(string userId);
+    
+    /// <summary>
     /// Edit current user profile
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="accountProfileEditDto"></param>
     /// <returns></returns>
     Task UpdateProfileAsync(string userId, AccountProfileEditDto accountProfileEditDto);
+    
+    /// <summary>
+    /// Edit customer profile
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="accountCustomerProfileEditDto"></param>
+    /// <returns></returns>
+    Task UpdateCustomerProfileAsync(string userId, AccountCustomerProfileEditDto accountCustomerProfileEditDto);
     
     /// <summary>
     /// Get courier short profile

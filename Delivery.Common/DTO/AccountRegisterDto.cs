@@ -30,11 +30,19 @@ public class AccountRegisterDto {
     /// </summary>
     [Required]
     public string? FullName { get; set; }
+    
+    /// <summary>
+    /// User`s phone number
+    /// </summary>
+    [Required]
+    [Phone]
+    public string? PhoneNumber { get; set; }
 
     /// <summary>
     /// User`s birth date
     /// </summary>
     [Required]
+    [Range(typeof(DateTime), "01/01/1900", "01/01/2023")]
     public DateTime BirthDate { get; set; }
 
     /// <summary>
@@ -44,7 +52,7 @@ public class AccountRegisterDto {
     public Gender Gender { get; set; }
     
     /// <summary>
-    /// User`s phone number
+    /// User`s address
     /// </summary>
     public String? Address { get; set; }
 }

@@ -53,6 +53,28 @@ public class AccountService : IAccountService {
         }
 
         var profile = _mapper.Map<AccountProfileFullDto>(user);
+        profile.Roles = (await _userManager.GetRolesAsync(user)).ToList();
+        return profile;
+    }
+
+    /// <summary>
+    /// Return full information about customer
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="NotFoundException"></exception>
+    public async Task<AccountCustomerProfileFullDto> GetCustomerFullProfileAsync(string userId) {
+        if (userId == null) {
+            throw new ArgumentException("User id is empty");
+        }
+
+        var user = await _userManager.Users.Include(u => u.Customer).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        
+        var profile = _mapper.Map<AccountCustomerProfileFullDto>(user.Customer);
         return profile;
     }
 
@@ -80,6 +102,27 @@ public class AccountService : IAccountService {
         if (!result.Succeeded) {
             throw new InvalidOperationException("User update failed");
         }
+    }
+
+    /// <summary>
+    /// Update current user customer profile
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="accountCustomerProfileEditDto"></param>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="NotFoundException"></exception>
+    public async Task UpdateCustomerProfileAsync(string userId, AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
+        if (userId == null) {
+            throw new ArgumentException("User id is empty");
+        }
+
+        var user = await _userManager.Users.Include(u => u.Customer).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        
+        user.Customer.Address = accountCustomerProfileEditDto.Address ?? user.Customer.Address;
+        await _userManager.UpdateAsync(user);
     }
 
     /// <summary>

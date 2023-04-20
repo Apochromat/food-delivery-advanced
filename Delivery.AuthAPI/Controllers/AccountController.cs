@@ -1,4 +1,5 @@
 ﻿using Delivery.Common.DTO;
+using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -36,6 +37,21 @@ public class AccountController : ControllerBase {
 
         return Ok(await _accountService.GetProfileAsync(User.Identity.Name));
     }
+    
+    /// <summary>
+    /// Get information about Customer of current authenticated user
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
+    [Route("account/customer")]
+    public async Task<ActionResult<AccountCustomerProfileFullDto>> GetCurrentCustomerProfile() {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+
+        return Ok(await _accountService.GetCustomerFullProfileAsync(User.Identity.Name));
+    }
 
     /// <summary>   
     /// Edit current authenticated user`s profile
@@ -52,6 +68,22 @@ public class AccountController : ControllerBase {
         await _accountService.UpdateProfileAsync(User.Identity.Name, accountProfileEditDto);
         return Ok();
     }
+    
+    /// <summary>   
+    /// Edit current authenticated user`s customer profile
+    /// </summary>
+    /// <returns></returns>
+    [HttpPut]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
+    [Route("account/customer")]
+    public async Task<ActionResult> UpdateCustomerProfile([FromBody] AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
+        if (User.Identity == null || User.Identity.Name == null) {
+            throw new UnauthorizedException("Invalid authorisation");
+        }
+
+        await _accountService.UpdateCustomerProfileAsync(User.Identity.Name, accountCustomerProfileEditDto);
+        return Ok();
+    }
 
     /// <summary>
     /// Get general information about courier
@@ -59,6 +91,7 @@ public class AccountController : ControllerBase {
     /// <param name="courierId"></param>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("courier-profile/{courierId}")]
     public async Task<ActionResult<AccountCourierProfileDto>> GetCourierProfile([FromRoute] Guid courierId) {
         return Ok(await _accountService.GetCourierProfileAsync(courierId.ToString()));
@@ -70,6 +103,7 @@ public class AccountController : ControllerBase {
     /// <param name="customerId"></param>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("customer-profile/{customerId}")]
     public async Task<ActionResult<AccountCustomerProfileDto>> GetCustomerProfile([FromRoute] Guid customerId) {
         return Ok(await _accountService.GetCustomerProfileAsync(customerId.ToString()));
@@ -81,6 +115,7 @@ public class AccountController : ControllerBase {
     /// <param name="cookId"></param>
     /// <returns></returns>
     [HttpGet]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("cook-profile/{cookId}")]
     public async Task<ActionResult<AccountCustomerProfileDto>> GetCookProfile([FromRoute] Guid cookId) {
         return Ok(await _accountService.GetCookProfileAsync(cookId.ToString()));
