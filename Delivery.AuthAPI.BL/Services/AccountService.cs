@@ -2,6 +2,7 @@
 using Delivery.AuthAPI.DAL;
 using Delivery.AuthAPI.DAL.Entities;
 using Delivery.Common.DTO;
+using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -140,7 +141,7 @@ public class AccountService : IAccountService {
             throw new NotFoundException("User not found");
         }
 
-        if (user.Courier == null) {
+        if (!await _userManager.IsInRoleAsync(user, RoleType.Courier.ToString())) {
             throw new NotFoundException("Courier not found");
         }
         
@@ -163,7 +164,7 @@ public class AccountService : IAccountService {
             throw new NotFoundException("User not found");
         }
 
-        if (user.Cook == null) {
+        if (!await _userManager.IsInRoleAsync(user, RoleType.Cook.ToString())) {
             throw new NotFoundException("Cook not found");
         }
         
@@ -186,7 +187,7 @@ public class AccountService : IAccountService {
             throw new NotFoundException("User not found");
         }
 
-        if (user.Customer == null) {
+        if (!await _userManager.IsInRoleAsync(user, RoleType.Customer.ToString())) {
             throw new NotFoundException("Customer not found");
         }
         
