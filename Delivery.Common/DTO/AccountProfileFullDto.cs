@@ -13,11 +13,11 @@ public class AccountProfileFullDto {
     /// <summary>
     /// User email
     /// </summary>
-    public String? Email { get; set; }
+    public String Email { get; set; } = "";
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
-    public string? FullName { get; set; }
+    public string FullName { get; set; } = "";
     /// <summary>
     /// User`s birth date
     /// </summary>
@@ -37,5 +37,5 @@ public class AccountProfileFullDto {
     /// <summary>
     /// User roles
     /// </summary>
-    public List<String> Roles { get; set; }
+    public List<String> Roles { get; set; } = new();
 }

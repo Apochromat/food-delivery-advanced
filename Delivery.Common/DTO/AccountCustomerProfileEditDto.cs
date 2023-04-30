@@ -1,4 +1,6 @@
-﻿namespace Delivery.Common.DTO; 
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Delivery.Common.DTO; 
 
 /// <summary>
 /// Account customer profile edit DTO
@@ -7,5 +9,6 @@ public class AccountCustomerProfileEditDto {
     /// <summary>
     /// User`s address
     /// </summary>
-    public String? Address { get; set; }
+    [Required]
+    public String Address { get; set; } = "";
 }

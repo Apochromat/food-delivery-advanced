@@ -95,9 +95,9 @@ public class AccountService : IAccountService {
             throw new NotFoundException("User not found");
         }
 
-        user.FullName = accountProfileEditDto.FullName ?? user.FullName;
-        user.BirthDate = accountProfileEditDto.BirthDate ?? user.BirthDate;
-        user.Gender = accountProfileEditDto.Gender ?? user.Gender;
+        user.FullName = accountProfileEditDto.FullName;
+        user.BirthDate = accountProfileEditDto.BirthDate;
+        user.Gender = accountProfileEditDto.Gender;
 
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded) {
@@ -122,7 +122,7 @@ public class AccountService : IAccountService {
             throw new NotFoundException("User not found");
         }
         
-        user.Customer.Address = accountCustomerProfileEditDto.Address ?? user.Customer.Address;
+        user.Customer.Address = accountCustomerProfileEditDto.Address;
         await _userManager.UpdateAsync(user);
     }
 

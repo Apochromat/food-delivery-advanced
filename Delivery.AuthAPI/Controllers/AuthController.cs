@@ -64,7 +64,7 @@ public class AuthController : ControllerBase {
     [HttpPost]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("logout")]
-    public async Task<ActionResult<TokenResponseDto>> Logout() {
+    public async Task<ActionResult> Logout() {
         if (User.Identity == null || User.Identity.Name == null) {
             throw new UnauthorizedException("Invalid authorisation");
         }

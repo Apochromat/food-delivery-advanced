@@ -14,7 +14,7 @@ public class AccountRegisterDto {
     [Required]
     [EmailAddress]
     [DisplayName("email")]
-    public string? Email { get; set; } = "";
+    public string Email { get; set; } = "";
 
     /// <summary>
     /// User`s password
@@ -23,13 +23,13 @@ public class AccountRegisterDto {
     [DefaultValue("P@ssw0rd")]
     [DisplayName("password")]
     [MinLength(8)]
-    public string? Password { get; set; } = "";
+    public string Password { get; set; } = "";
 
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
     [Required]
-    public string? FullName { get; set; }
+    public string FullName { get; set; } = "";
     
     /// <summary>
     /// User`s phone number
