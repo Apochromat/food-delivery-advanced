@@ -37,7 +37,12 @@ public class AdminPanelAccountService : IAdminPanelAccountService {
     public async Task Login(LoginViewDto model) {
         var user = await _userManager.FindByEmailAsync(model.Email);
         if (user == null) {
-            throw new KeyNotFoundException($"User with email {model.Email} does not found");
+            throw new BadRequestException("Invalid email or password password");
+        }
+        
+        var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+        if (!result.Succeeded) {
+            throw new BadRequestException("Invalid email or password password");
         }
 
         var claims = new List<Claim> {
