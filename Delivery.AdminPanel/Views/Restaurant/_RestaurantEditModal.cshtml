@@ -10,23 +10,23 @@
             <div class="modal-body">
                 <input type="hidden" asp-for="RestaurantId" value="@Model.RestaurantId">
                 <div class="form-floating mb-3">
-                    <input type="text" asp-for="RestaurantUpdateDto.Name" value="@Model.RestaurantUpdateDto.Name" class="form-control" id="editName">
+                    <input type="text" asp-for="RestaurantEditDto.Name" value="@Model.RestaurantEditDto.Name" class="form-control" id="editName">
                     <label for="editName" class="text-black">Name<span class="text-danger">*</span></label>
                 </div>
                 <div class="form-floating mb-3">
-                    <textarea type="text" asp-for="RestaurantUpdateDto.Description" class="form-control h-100" id="editDescription">@Model.RestaurantUpdateDto.Description</textarea>
+                    <textarea type="text" asp-for="RestaurantEditDto.Description" class="form-control h-100" id="editDescription">@Model.RestaurantEditDto.Description</textarea>
                     <label for="editDescription" class="text-black">Description</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" asp-for="RestaurantUpdateDto.Address" value="@Model.RestaurantUpdateDto.Address" class="form-control" id="editAddress">
+                    <input type="text" asp-for="RestaurantEditDto.Address" value="@Model.RestaurantEditDto.Address" class="form-control" id="editAddress">
                     <label for="editAddress" class="text-black">Address<span class="text-danger">*</span></label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" asp-for="RestaurantUpdateDto.BigImage" value="@Model.RestaurantUpdateDto.BigImage" class="form-control" id="editBigImage">
+                    <input type="text" asp-for="RestaurantEditDto.BigImage" value="@Model.RestaurantEditDto.BigImage" class="form-control" id="editBigImage">
                     <label for="editBigImage" class="text-black">Big image link<span class="text-danger">*</span></label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" asp-for="RestaurantUpdateDto.SmallImage" value="@Model.RestaurantUpdateDto.SmallImage" class="form-control" id="editSmallImage">
+                    <input type="text" asp-for="RestaurantEditDto.SmallImage" value="@Model.RestaurantEditDto.SmallImage" class="form-control" id="editSmallImage">
                     <label for="editSmallImage" class="text-black">Small image link<span class="text-danger">*</span></label>
                 </div>
             </div>

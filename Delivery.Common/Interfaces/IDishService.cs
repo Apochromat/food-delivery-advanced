@@ -38,7 +38,7 @@ public interface IDishService {
     /// <param name="dishId"></param>
     /// <param name="dishUpdateDto"></param>
     /// <returns></returns>
-    DishFullDto UpdateDish(Guid dishId, DishUpdateDto dishUpdateDto);
+    DishFullDto EditDish(Guid dishId, DishEditDto dishUpdateDto);
     /// <summary>
     /// Archive dish
     /// </summary>

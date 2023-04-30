@@ -6,5 +6,5 @@ namespace Delivery.AdminPanel.Models;
 public class RestaurantUpdateModel {
     public Guid RestaurantId { get; set; }
     [ValidateComplexType]
-    public RestaurantUpdateDto RestaurantUpdateDto { get; set; } = new();
+    public RestaurantEditDto RestaurantEditDto { get; set; } = new();
 }

@@ -1,4 +1,5 @@
-﻿using Delivery.Common.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Delivery.Common.Enums;
 
 namespace Delivery.Common.DTO; 
 
@@ -9,7 +10,8 @@ public class DishEditDto {
     /// <summary>
     /// Name of the dish
     /// </summary>
-    public string? Name { get; set; }
+    [Required]
+    public string Name { get; set; } = "";
     /// <summary>
     /// Description of the dish
     /// </summary>
@@ -17,13 +19,19 @@ public class DishEditDto {
     /// <summary>
     /// Dish price
     /// </summary>
+    [Required]
     public decimal Price { get; set; }
     /// <summary>
     /// Image url
     /// </summary>
-    public string? ImageUrl { get; set; }
+    [Required]
+    public string ImageUrl { get; set; } = "";
     /// <summary>
     /// Categories of the dish
     /// </summary>
     public List<DishCategory>? DishCategories { get; set; }
+    /// <summary>
+    /// Is dish vegetarian
+    /// </summary>
+    public Boolean IsVegetarian { get; set; }
 }

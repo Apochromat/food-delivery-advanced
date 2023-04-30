@@ -1,4 +1,5 @@
-﻿using Delivery.Common.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Delivery.Common.Enums;
 
 namespace Delivery.Common.DTO; 
 
@@ -9,5 +10,6 @@ public class OrderChangeStatusDto {
     /// <summary>
     /// New order status
     /// </summary>
+    [Required]
     public OrderStatus Status { get; set; }
 }

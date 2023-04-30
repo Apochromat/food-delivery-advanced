@@ -61,20 +61,20 @@ public static class ConfigureIdentityRoles {
         }
 
         // Try to create Administrator user
-        var adminUser = await userManager.FindByEmailAsync(config["AdminEmail"] ?? "");
+        var adminUser = await userManager.FindByEmailAsync(config["AdminEmail"] ?? throw new ArgumentNullException(nameof(config)));
         if (adminUser == null) {
             var userResult = await userManager.CreateAsync(new User {
-                FullName = config["AdminFullName"],
-                UserName = config["AdminUserName"],
-                Email = config["AdminEmail"],
+                FullName = config["AdminFullName"] ?? throw new ArgumentNullException(nameof(config)),
+                UserName = config["AdminUserName"] ?? throw new ArgumentNullException(nameof(config)),
+                Email = config["AdminEmail"] ?? throw new ArgumentNullException(nameof(config)),
                 JoinedAt = DateTime.Now.ToUniversalTime(),
                 BirthDate = DateTime.Today.ToUniversalTime()
-            }, config["AdminPassword"] ?? "");
+            }, config["AdminPassword"] ?? throw new ArgumentNullException(nameof(config)));
             if (!userResult.Succeeded) {
                 throw new InvalidOperationException($"Unable to create administrator user");
             }
             
-            adminUser = await userManager.FindByNameAsync(config["AdminUserName"] ?? "");
+            adminUser = await userManager.FindByNameAsync(config["AdminUserName"] ?? throw new ArgumentNullException(nameof(config)));
         }
 
         if (adminUser == null) {

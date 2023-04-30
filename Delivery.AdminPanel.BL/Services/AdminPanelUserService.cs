@@ -43,6 +43,7 @@ public class AdminPanelUserService : IAdminPanelUserService {
         var mapped = _mapper.Map<List<AccountProfileFullDto>>(raw);
         foreach (var user in mapped) {
             var dbUser = await _userManager.FindByIdAsync(user.Id.ToString());
+            if (dbUser == null) throw new ArgumentNullException(nameof(dbUser));
             var roles = await _userManager.GetRolesAsync(dbUser);
             user.Roles = roles.ToList();
             user.IsBanned = await IsUserBanned(user.Id);
@@ -57,7 +58,7 @@ public class AdminPanelUserService : IAdminPanelUserService {
         }
         
         user.FullName = model.FullName;
-        user.Gender = model.Gender ?? user.Gender;
+        user.Gender = model.Gender;
         
         var removeResult = await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
         if (!removeResult.Succeeded) {

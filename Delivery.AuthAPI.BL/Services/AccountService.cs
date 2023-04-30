@@ -85,7 +85,7 @@ public class AccountService : IAccountService {
     /// <param name="userId"></param>
     /// <param name="accountProfileEditDto"></param>
     /// <returns></returns>
-    public async Task UpdateProfileAsync(string userId, AccountProfileEditDto accountProfileEditDto) {
+    public async Task EditProfileAsync(string userId, AccountProfileEditDto accountProfileEditDto) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
         }
@@ -112,7 +112,7 @@ public class AccountService : IAccountService {
     /// <param name="accountCustomerProfileEditDto"></param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="NotFoundException"></exception>
-    public async Task UpdateCustomerProfileAsync(string userId, AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
+    public async Task EditCustomerProfileAsync(string userId, AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
         }
@@ -122,6 +122,9 @@ public class AccountService : IAccountService {
             throw new NotFoundException("User not found");
         }
         
+        if (user.Customer == null) {
+            throw new NotFoundException("Customer not found");
+        }
         user.Customer.Address = accountCustomerProfileEditDto.Address;
         await _userManager.UpdateAsync(user);
     }

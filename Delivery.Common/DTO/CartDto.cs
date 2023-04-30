@@ -4,7 +4,16 @@
 /// Data transfer object for cart
 /// </summary>
 public class CartDto {
-    List<CartDishDto> Dishes { get; set; } = new List<CartDishDto>();
-    int TotalPrice { get; set; }
-    RestaurantShortDto? Restaurant { get; set; }
+    /// <summary>
+    /// List of dishes in cart
+    /// </summary>
+    public List<CartDishDto> Dishes { get; set; } = new List<CartDishDto>();
+    /// <summary>
+    /// Total price of dishes in cart
+    /// </summary>
+    public int TotalPrice { get; set; }
+    /// <summary>
+    /// Information about restaurant
+    /// </summary>
+    public RestaurantShortDto? Restaurant { get; set; }
 }

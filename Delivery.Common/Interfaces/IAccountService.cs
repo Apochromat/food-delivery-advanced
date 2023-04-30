@@ -26,7 +26,7 @@ public interface IAccountService {
     /// <param name="userId"></param>
     /// <param name="accountProfileEditDto"></param>
     /// <returns></returns>
-    Task UpdateProfileAsync(string userId, AccountProfileEditDto accountProfileEditDto);
+    Task EditProfileAsync(string userId, AccountProfileEditDto accountProfileEditDto);
     
     /// <summary>
     /// Edit customer profile
@@ -34,7 +34,7 @@ public interface IAccountService {
     /// <param name="userId"></param>
     /// <param name="accountCustomerProfileEditDto"></param>
     /// <returns></returns>
-    Task UpdateCustomerProfileAsync(string userId, AccountCustomerProfileEditDto accountCustomerProfileEditDto);
+    Task EditCustomerProfileAsync(string userId, AccountCustomerProfileEditDto accountCustomerProfileEditDto);
     
     /// <summary>
     /// Get courier short profile

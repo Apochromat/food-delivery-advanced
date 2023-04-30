@@ -9,11 +9,12 @@ public class UserEditModel {
     /// User`s full name (surname, name, patronymic)
     /// </summary>
     [Required]
-    public string? FullName { get; set; }
+    public string FullName { get; set; } = "";
     /// <summary>
     /// User`s gender
     /// </summary>
-    public Gender? Gender { get; set; }
+    [Required]
+    public Gender Gender { get; set; }
     /// <summary>
     /// User roles
     /// </summary>

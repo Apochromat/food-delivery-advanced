@@ -64,5 +64,5 @@ public interface IMenuService {
     /// <param name="menuId"></param>
     /// <param name="menuEditDto"></param>
     /// <returns></returns>
-    Task UpdateMenu(Guid menuId, MenuEditDto menuEditDto);
+    Task EditMenu(Guid menuId, MenuEditDto menuEditDto);
 }

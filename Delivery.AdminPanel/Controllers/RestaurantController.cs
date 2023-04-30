@@ -53,7 +53,7 @@ public class RestaurantController : Controller {
             Restaurant = restaurant,
             RestaurantEditModel = new RestaurantUpdateModel() {
                 RestaurantId = restaurant.Id,
-                RestaurantUpdateDto = new RestaurantUpdateDto() {
+                RestaurantEditDto = new RestaurantEditDto() {
                     Name = restaurant.Name,
                     Description = restaurant.Description,
                     Address = restaurant.Address,
@@ -233,7 +233,7 @@ public class RestaurantController : Controller {
         }
 
         try {
-            await _restaurantService.UpdateRestaurant(model.RestaurantId, model.RestaurantUpdateDto);
+            await _restaurantService.UpdateRestaurant(model.RestaurantId, model.RestaurantEditDto);
             _toastNotification.Success("Restaurant updated successfully");
         }
         catch (NotFoundException ex) {

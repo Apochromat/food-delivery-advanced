@@ -80,10 +80,10 @@ public class RestaurantService : IRestaurantService {
     /// Update existing restaurant info
     /// </summary>
     /// <param name="restaurantId"></param>
-    /// <param name="restaurantUpdateDto"></param>
+    /// <param name="restaurantEditDto"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public RestaurantFullDto UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto) {
+    public RestaurantFullDto EditRestaurant(Guid restaurantId, RestaurantEditDto restaurantEditDto) {
         throw new NotImplementedException();
     }
 

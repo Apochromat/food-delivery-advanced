@@ -65,7 +65,7 @@ public class AccountController : ControllerBase {
             throw new UnauthorizedException("Invalid authorisation");
         }
 
-        await _accountService.UpdateProfileAsync(User.Identity.Name, accountProfileEditDto);
+        await _accountService.EditProfileAsync(User.Identity.Name, accountProfileEditDto);
         return Ok();
     }
     
@@ -81,7 +81,7 @@ public class AccountController : ControllerBase {
             throw new UnauthorizedException("Invalid authorisation");
         }
 
-        await _accountService.UpdateCustomerProfileAsync(User.Identity.Name, accountCustomerProfileEditDto);
+        await _accountService.EditCustomerProfileAsync(User.Identity.Name, accountCustomerProfileEditDto);
         return Ok();
     }
 

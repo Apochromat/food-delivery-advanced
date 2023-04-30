@@ -31,9 +31,9 @@ public interface IRestaurantService {
     /// Update restaurant info
     /// </summary>
     /// <param name="restaurantId"></param>
-    /// <param name="restaurantUpdateDto"></param>
+    /// <param name="restaurantEditDto"></param>
     /// <returns></returns>
-    RestaurantFullDto UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto);
+    RestaurantFullDto EditRestaurant(Guid restaurantId, RestaurantEditDto restaurantEditDto);
 
     /// <summary>
     /// Archive restaurant

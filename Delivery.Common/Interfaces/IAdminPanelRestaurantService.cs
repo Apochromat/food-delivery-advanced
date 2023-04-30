@@ -44,9 +44,9 @@ public interface IAdminPanelRestaurantService {
     /// Update restaurant info
     /// </summary>
     /// <param name="restaurantId"></param>
-    /// <param name="restaurantUpdateDto"></param>
+    /// <param name="restaurantEditDto"></param>
     /// <returns></returns>
-    Task UpdateRestaurant(Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto);
+    Task UpdateRestaurant(Guid restaurantId, RestaurantEditDto restaurantEditDto);
 
     /// <summary>
     /// Archive restaurant

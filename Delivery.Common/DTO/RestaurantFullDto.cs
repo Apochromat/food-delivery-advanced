@@ -11,7 +11,7 @@ public class RestaurantFullDto {
     /// <summary>
     /// Name of the restaurant
     /// </summary>
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
     /// <summary>
     /// Is restaurant archived
     /// </summary>
@@ -31,7 +31,7 @@ public class RestaurantFullDto {
     /// <summary>
     /// Restaurant address
     /// </summary>
-    public String? Address { get; set; }
+    public String Address { get; set; } = "";
     /// <summary>
     /// List of menus in restaurant
     /// </summary>

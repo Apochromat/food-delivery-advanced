@@ -7,10 +7,10 @@ public class LoginViewModel {
     [DataType(DataType.EmailAddress)]
     [EmailAddress]
     [Display(Name = "Email")]
-    public string Email { get; set; }
+    public string Email { get; set; } = "";
 
     [Required(ErrorMessage = "Пароль обязателен для заполнения")]
     [DataType(DataType.Password)]
     [Display(Name = "Пароль")]
-    public string Password { get; set; }
+    public string Password { get; set; } = "";
 }

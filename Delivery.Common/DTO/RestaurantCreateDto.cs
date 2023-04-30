@@ -28,5 +28,5 @@ public class RestaurantCreateDto {
     /// Restaurant address
     /// </summary>
     [Required]
-    public String Address { get; set; }
+    public String Address { get; set; } = "";
 }

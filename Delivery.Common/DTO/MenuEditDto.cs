@@ -1,4 +1,6 @@
-﻿namespace Delivery.Common.DTO; 
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Delivery.Common.DTO; 
 
 /// <summary>
 /// Menu DTO for editing
@@ -7,5 +9,6 @@ public class MenuEditDto {
     /// <summary>
     /// Name of the menu
     /// </summary>
-    public string? Name { get; set; }
+    [Required]
+    public string Name { get; set; } = "";
 }

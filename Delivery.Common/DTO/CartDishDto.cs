@@ -4,6 +4,12 @@
 /// Data transfer object for dish in cart
 /// </summary>
 public class CartDishDto {
-    DishShortDto? Dish { get; set; }
-    int Amount { get; set; }
+    /// <summary>
+    /// Dish
+    /// </summary>
+    public DishShortDto? Dish { get; set; }
+    /// <summary>
+    /// Dish amount
+    /// </summary>
+    public int Amount { get; set; }
 }

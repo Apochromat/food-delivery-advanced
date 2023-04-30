@@ -50,11 +50,11 @@ public class RestaurantController : ControllerBase {
     /// [Manager] Change information about restaurant.  
     /// </summary>
     /// <param name="restaurantId"></param>
-    /// <param name="restaurantUpdateDto"></param>
+    /// <param name="restaurantEditDto"></param>
     /// <returns></returns>
     [HttpPut]
     [Route("{restaurantId}")]
-    public ActionResult EditRestaurant([FromRoute] Guid restaurantId, RestaurantUpdateDto restaurantUpdateDto) {
+    public ActionResult EditRestaurant([FromRoute] Guid restaurantId, RestaurantEditDto restaurantEditDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
     
