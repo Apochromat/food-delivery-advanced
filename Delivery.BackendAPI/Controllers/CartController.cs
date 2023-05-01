@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Delivery.Common.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -8,13 +9,14 @@ namespace Delivery.BackendAPI.Controllers;
 /// Controller for Customer`s cart management
 /// </summary>
 [ApiController]
+[Authorize(AuthenticationSchemes = "Bearer")]
 [Route("api/cart")]
 public class CartController : ControllerBase {
     /// <summary>
     /// [Customer] Get user`s cart
     /// </summary>
     /// <returns></returns>
-    [HttpGet]
+    [HttpGet] 
     public ActionResult<CartDto> GetCart() {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }

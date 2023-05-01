@@ -14,11 +14,11 @@ public static class JwtConfiguration {
     /// <summary>
     /// JWT issuer
     /// </summary>
-    public static string Issuer = "http://localhost:5000";
+    public static string Issuer = "DefaultIssuer";
     /// <summary>
     /// JWT audience
     /// </summary>
-    public static string Audience = "http://localhost:5000";
+    public static string Audience = "DefaultAudience";
     /// <summary>
     /// JWT key
     /// </summary>
