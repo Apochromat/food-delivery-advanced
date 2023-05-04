@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using System.Text.Json;
+using Delivery.Common.DTO;
 using Delivery.Notification.DAL;
 using Delivery.Notification.DAL.Entities;
 using Microsoft.Extensions.Configuration;
@@ -38,13 +40,17 @@ public class RabbitMqService : BackgroundService {
         var consumer = new EventingBasicConsumer(_channel);
         consumer.Received += (model, ea) => {
             try {
-                var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+                var rawMessage = Encoding.UTF8.GetString(ea.Body.ToArray());
+                var message = JsonSerializer.Deserialize<MessageDto>(rawMessage);
+                if (message == null) throw new InvalidOperationException();
 
                 // TODO: добавить логику записи сообщения в базу данных и отправки через SignalR
                 
                 _dbContext.Messages.Add(new Message() {
                     Id = Guid.NewGuid(),
-                    Text = message,
+                    ReceiverId = message.ReceiverId,
+                    Text = message.Text,
+                    Title = message.Title,
                     CreatedAt = DateTime.UtcNow
                 });
                 

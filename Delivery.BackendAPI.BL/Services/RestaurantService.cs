@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using System.Text.Json;
+using AutoMapper;
 using Delivery.BackendAPI.DAL;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 
 namespace Delivery.BackendAPI.BL.Services; 
 
@@ -37,6 +40,28 @@ public class RestaurantService : IRestaurantService {
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
     public Pagination<RestaurantShortDto> GetAllUnarchivedRestaurants(String name, int page, int pageSize = 10) {
+        // TODO: тест очереди
+        var factory = new ConnectionFactory() { HostName = "localhost" };
+        using (var connection = factory.CreateConnection())
+        using (var channel = connection.CreateModel()) {
+            channel.ExchangeDeclare(exchange: "notifications", type: ExchangeType.Fanout);
+
+            var obj = new MessageDto() {
+                Title = "Тестим очередь",
+                Text = "Хотим увидеть это сообщение в RabbitMQ и бд",
+                ReceiverId = Guid.NewGuid()
+            };
+
+            string message = JsonSerializer.Serialize(obj);
+
+            var body = Encoding.UTF8.GetBytes(message);
+
+            channel.BasicPublish(exchange: "notifications",
+                routingKey: "",
+                basicProperties: null,
+                body: body);
+        }
+
         var allCount = _backendDbContext.Restaurants?.Where(x => x.IsArchived == false).Count();
         if (allCount == null) {
             throw new NotFoundException("Restaurants not found");

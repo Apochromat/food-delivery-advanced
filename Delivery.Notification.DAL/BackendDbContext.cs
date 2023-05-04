@@ -24,7 +24,7 @@ public class NotificationDbContext : DbContext {
     public NotificationDbContext(DbContextOptions<NotificationDbContext> options, String connection) : base(options) {
         _connection = connection;
     }
-
+    
     /// <inheritdoc />
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (_configuration == null) {

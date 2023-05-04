@@ -1,35 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
-namespace Delivery.Notification.DAL.Entities; 
+namespace Delivery.Common.DTO; 
 
 /// <summary>
-/// Message entity
+/// Message DTO
 /// </summary>
-public class Message {
-    /// <summary>
-    /// Message Identifier
-    /// </summary>
-    [Key]
-    public Guid Id { get; set; }
+public class MessageDto {
     /// <summary>
     /// User identifier
     /// </summary>
+    [DisplayName("receiverId")]
     public Guid ReceiverId { get; set; }
     /// <summary>
     /// Message title
     /// </summary>
-    public string Title { get; set; }
+    [DisplayName("title")]
+    public required string Title { get; set; }
     /// <summary>
     /// Message text
     /// </summary>
+    [DisplayName("text")]
     public string Text { get; set; } = string.Empty;
     /// <summary>
     /// Message creation date
     /// </summary>
+    [DisplayName("createdAt")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     /// <summary>
     /// Message delivery date
     /// </summary>
+    [DisplayName("deliveredAt")]
     public DateTime? DeliveredAt { get; set; }
-    
 }
