@@ -1,6 +1,8 @@
 using Delivery.Common.Extensions;
+using Delivery.Common.Interfaces;
 using Delivery.Notification.BL.Extensions;
 using Delivery.Notification.Hubs;
+using Delivery.Notification.Services;
 using Microsoft.AspNetCore.SignalR;
 using Serilog;
 
@@ -30,6 +32,12 @@ builder.Services.AddSwaggerGen(options => {
 builder.Services.AddAuthorization();
 builder.Services.AddJwtAuthorisation();
 
+// Add Notification dependencies
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
+// Add Quartz
+builder.Services.ConfigureQuartz();
+
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
@@ -41,7 +49,7 @@ builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
 builder.Services.AddSignalR();
 
-builder.Services.AddNotificationServiceDependencies();
+builder.Services.AddNotificationServiceDependencies(builder.Configuration);
 
 var app = builder.Build();
 app.UseCors();

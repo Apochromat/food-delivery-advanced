@@ -3,7 +3,9 @@ using System.Text.Json;
 using Delivery.Common.DTO;
 using Delivery.Notification.DAL;
 using Delivery.Notification.DAL.Entities;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -11,17 +13,26 @@ using RabbitMQ.Client.Events;
 
 namespace Delivery.Notification.BL.Services;
 
+/// <summary>
+/// RabbitMQ service for receiving notifications from other services
+/// </summary>
 public class RabbitMqService : BackgroundService {
     private readonly IConnection _connection;
     private readonly IModel _channel;
     private readonly IConfiguration _configuration;
     private readonly ILogger<RabbitMqService> _logger;
-    private readonly NotificationDbContext _dbContext;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public RabbitMqService(IConfiguration configuration, ILogger<RabbitMqService> logger, NotificationDbContext dbContext) {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="configuration"></param>
+    /// <param name="logger"></param>
+    /// <param name="serviceScopeFactory"></param>
+    public RabbitMqService(IConfiguration configuration, ILogger<RabbitMqService> logger, IServiceScopeFactory serviceScopeFactory) {
         _configuration = configuration;
         _logger = logger;
-        _dbContext = dbContext;
+        _serviceScopeFactory = serviceScopeFactory;
 
         var factory = new ConnectionFactory() { HostName = _configuration["RabbitMQ:HostName"] };
         _connection = factory.CreateConnection();
@@ -34,29 +45,35 @@ public class RabbitMqService : BackgroundService {
             routingKey: string.Empty);
     }
 
+    /// <summary>
+    /// Executes service
+    /// </summary>
+    /// <param name="stoppingToken"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     protected override Task ExecuteAsync(CancellationToken stoppingToken) {
         stoppingToken.ThrowIfCancellationRequested();
 
         var consumer = new EventingBasicConsumer(_channel);
-        consumer.Received += (model, ea) => {
+        consumer.Received += async (model, ea) => {
             try {
                 var rawMessage = Encoding.UTF8.GetString(ea.Body.ToArray());
                 var message = JsonSerializer.Deserialize<MessageDto>(rawMessage);
                 if (message == null) throw new InvalidOperationException();
 
-                // TODO: добавить логику записи сообщения в базу данных и отправки через SignalR
+                using (var scope = _serviceScopeFactory.CreateScope()) {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<NotificationDbContext>();
+                    await dbContext.Messages.AddAsync(new Message() {
+                        Id = Guid.NewGuid(),
+                        ReceiverId = message.ReceiverId,
+                        Text = message.Text,
+                        Title = message.Title,
+                        CreatedAt = DateTime.UtcNow
+                    });
                 
-                _dbContext.Messages.Add(new Message() {
-                    Id = Guid.NewGuid(),
-                    ReceiverId = message.ReceiverId,
-                    Text = message.Text,
-                    Title = message.Title,
-                    CreatedAt = DateTime.UtcNow
-                });
-                
-                _dbContext.SaveChangesAsync(stoppingToken);
-                
-                _logger.LogInformation($"Received message: {message}");
+                    await dbContext.SaveChangesAsync(stoppingToken);
+                }
+                _logger.LogInformation($"Received message");
             }
             catch (Exception ex) {
                 _logger.LogError(ex, "Error processing message");
@@ -68,6 +85,9 @@ public class RabbitMqService : BackgroundService {
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Disposes service
+    /// </summary>
     public override void Dispose() {
         _channel.Close();
         _connection.Close();

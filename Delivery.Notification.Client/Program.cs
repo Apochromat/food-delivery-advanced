@@ -1,28 +1,38 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
+using Delivery.Common.DTO;
 using Microsoft.AspNetCore.SignalR.Client;
 
-var loginCredentials = new Dictionary<string, string?>() { {"email", "user@example.com"}, {"password", "P@ssw0rd"} };
+var loginCredentials = new Dictionary<string, string?>()
+    { { "email", "user@example.com" }, { "password", "P@ssw0rd" } };
 
 Console.WriteLine("Do you want to login with your credentials? (y/n)");
 if (Console.ReadKey().Key == ConsoleKey.Y) {
     Console.WriteLine();
     Console.Write("email >> ");
     loginCredentials["email"] = Console.ReadLine();
-    Console.Write("password >> ");    
+    Console.Write("password >> ");
     loginCredentials["password"] = Console.ReadLine();
 }
+
 Console.WriteLine();
 
 var connection = new HubConnectionBuilder()
-    .WithUrl("http://localhost:5144/api/notifications", options =>
-    { 
-        options.AccessTokenProvider = () => Login();
-    })
+    .WithUrl("http://localhost:5144/api/notifications", options => { options.AccessTokenProvider = () => Login(); })
     .WithAutomaticReconnect()
     .Build();
-    
-connection.On<string>("ReceiveMessage", Console.WriteLine);
+
+Action<string> Print = (string message) => {
+    var obj = JsonSerializer.Deserialize<MessageDto>(message);
+    if (obj == null) {
+        Console.WriteLine("Error deserializing message");
+        return;
+    }
+
+    Console.WriteLine($"Title: {obj.Title}  Text: {obj.Text}  CreatedAt: {obj.CreatedAt}");
+};
+
+connection.On<string>("ReceiveMessage", Print);
 
 async Task<string?> Login() {
     HttpClient client = new HttpClient();
@@ -32,6 +42,7 @@ async Task<string?> Login() {
         var token = JsonSerializer.Deserialize<Dictionary<string, string>>(content)?["accessToken"];
         return token;
     }
+
     return null;
 }
 
