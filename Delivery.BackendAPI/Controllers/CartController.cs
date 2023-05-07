@@ -1,5 +1,8 @@
 ﻿using System.Net;
 using Delivery.Common.DTO;
+using Delivery.Common.Exceptions;
+using Delivery.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -8,15 +11,29 @@ namespace Delivery.BackendAPI.Controllers;
 /// Controller for Customer`s cart management
 /// </summary>
 [ApiController]
+[Authorize(AuthenticationSchemes = "Bearer")]
 [Route("api/cart")]
 public class CartController : ControllerBase {
+    private readonly ICartService _cartService;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="cartService"></param>
+    public CartController(ICartService cartService) {
+        _cartService = cartService;
+    }
+
     /// <summary>
     /// [Customer] Get user`s cart
     /// </summary>
     /// <returns></returns>
-    [HttpGet]
-    public ActionResult<CartDto> GetCart() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    [HttpGet] 
+    public async Task<ActionResult<CartDto>> GetCart() {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+        return Ok(await _cartService.GetCart(userId));
     }
 
     /// <summary>
