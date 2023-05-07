@@ -13,5 +13,6 @@ public class MappingProfile : Profile {
     /// </summary>
     public MappingProfile() {
         CreateMap<Restaurant, RestaurantShortDto>();
+        CreateMap<Restaurant, RestaurantFullDto>();
     }
 }

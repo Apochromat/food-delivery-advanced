@@ -11,21 +11,14 @@ public interface IRestaurantService {
     /// Get all restaurants
     /// </summary>
     /// <returns></returns>
-    Pagination<RestaurantShortDto> GetAllUnarchivedRestaurants(String name, int page, int pageSize = 10);
+    Task<Pagination<RestaurantShortDto>>GetAllUnarchivedRestaurants(int page, int pageSize = 10, RestaurantSort sort = RestaurantSort.NameAsc, String? name = null);
 
     /// <summary>
     /// Get Full restaurant info
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
-    RestaurantFullDto GetRestaurant(Guid restaurantId);
-
-    /// <summary>
-    /// Create new restaurant
-    /// </summary>
-    /// <param name="restaurantCreateDto"></param>
-    /// <returns></returns>
-    RestaurantFullDto CreateRestaurant(RestaurantCreateDto restaurantCreateDto);
+    Task<RestaurantFullDto> GetRestaurant(Guid restaurantId);
 
     /// <summary>
     /// Update restaurant info
@@ -33,27 +26,7 @@ public interface IRestaurantService {
     /// <param name="restaurantId"></param>
     /// <param name="restaurantEditDto"></param>
     /// <returns></returns>
-    RestaurantFullDto EditRestaurant(Guid restaurantId, RestaurantEditDto restaurantEditDto);
-
-    /// <summary>
-    /// Archive restaurant
-    /// </summary>
-    /// <param name="restaurantId"></param>
-    /// <returns></returns>
-    RestaurantFullDto ArchiveRestaurant(Guid restaurantId);
-
-    /// <summary>
-    /// Unarchive restaurant
-    /// </summary>
-    /// <param name="restaurantId"></param>
-    /// <returns></returns>
-    RestaurantFullDto UnarchiveRestaurant(Guid restaurantId);
-
-    /// <summary>
-    /// Get list of archived restaurants
-    /// </summary>
-    /// <returns></returns>
-    List<RestaurantShortDto> GetArchivedRestaurants();
+    Task EditRestaurant(Guid restaurantId, RestaurantEditDto restaurantEditDto);
 
     /// <summary>
     /// Get restaurant orders
@@ -63,7 +36,21 @@ public interface IRestaurantService {
     /// <param name="status"></param>
     /// <param name="number"></param>
     /// <param name="page"></param>
+    /// <param name="pageSize"></param>
     /// <returns></returns>
-    Pagination<OrderShortDto> GetRestaurantOrders(Guid restaurantId, OrderSort sort,
-        List<OrderStatus>? status, String? number, int page = 1);
+    Task<Pagination<OrderShortDto>> GetRestaurantOrders(Guid restaurantId, OrderSort sort,
+        List<OrderStatus>? status, String? number, int page = 1, int pageSize = 10);
+    
+    /// <summary>
+    /// Get cook restaurant orders
+    /// </summary>
+    /// <param name="restaurantId"></param>
+    /// <param name="sort"></param>
+    /// <param name="status"></param>
+    /// <param name="number"></param>
+    /// <param name="page"></param>
+    /// <param name="pageSize"></param>
+    /// <returns></returns>
+    Task<Pagination<OrderShortDto>> GetCookRestaurantOrders(Guid restaurantId, OrderSort sort,
+        String? number, int page = 1, int pageSize = 10);
 }

@@ -26,12 +26,14 @@ public class RestaurantController : ControllerBase {
     /// <summary>
     /// [Anyone] Get list of available restaurants (non-archived restaurants)
     /// </summary>
-    /// <param name="name" example="Claude Monet">Name of restaurant for search</param>
+    /// <param name="name">Name of restaurant for search</param>
+    /// <param name="sort"></param>
+    /// <param name="pageSize"></param>
     /// <param name="page">Page of list (natural number)</param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<Pagination<RestaurantShortDto>> GetRestaurants([FromQuery] String name, [FromQuery] int page = 1 ) {
-        return Ok(_restaurantService.GetAllUnarchivedRestaurants(name, page));
+    public async Task<ActionResult<Pagination<RestaurantShortDto>>> GetRestaurants([FromQuery] String? name = null, [FromQuery] RestaurantSort sort = RestaurantSort.NameAsc, [FromQuery] int pageSize = 10, [FromQuery] int page = 1 ) {
+        return Ok(await _restaurantService.GetAllUnarchivedRestaurants(page, pageSize, sort, name));
     }
 
     /// <summary>
@@ -42,8 +44,8 @@ public class RestaurantController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{restaurantId}")]
-    public ActionResult<RestaurantFullDto> GetRestaurant([FromRoute] Guid restaurantId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<RestaurantFullDto>> GetRestaurant([FromRoute] Guid restaurantId) {
+        return Ok(await _restaurantService.GetRestaurant(restaurantId));
     }
 
     /// <summary>
@@ -54,43 +56,50 @@ public class RestaurantController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{restaurantId}")]
-    public ActionResult EditRestaurant([FromRoute] Guid restaurantId, RestaurantEditDto restaurantEditDto) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> EditRestaurant([FromRoute] Guid restaurantId, RestaurantEditDto restaurantEditDto) {
+        await _restaurantService.EditRestaurant(restaurantId, restaurantEditDto);
+        // Todo: Check if user is manager
+        return Ok();
     }
-    
+
     /// <summary>
     /// [Manager] Get orders from specific restaurant. 
     /// </summary>
     /// <remarks>
     /// Manager see all the orders in restaurant.<br/>
     /// </remarks>
-    /// <param name="sort">Sort type</param>
+    /// <param name="restaurantId"></param>
     /// <param name="status">Order statuses for filter</param>
     /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
     /// <param name="page">Page of list (natural number)</param>
+    /// <param name="sort">Sort type</param>
     /// <returns></returns>
     [HttpGet]
     [Route("{restaurantId}/orders")]
-    public ActionResult<Pagination<OrderShortDto>> GetRestaurantOrders([FromQuery] [Optional] List<OrderStatus>? status, 
-        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<Pagination<OrderShortDto>>> GetRestaurantOrders([FromRoute] Guid restaurantId, 
+        [FromQuery] [Optional] List<OrderStatus>? status, [FromQuery] [Optional] String? number, 
+        [FromQuery] int page = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        // Todo: Check if user is manager
+        return Ok(await _restaurantService.GetRestaurantOrders(restaurantId, sort, status, number, page));
     }
-    
+
     /// <summary>
     /// [Cook] Get cook orders from specific restaurant. 
     /// </summary>
     /// <remarks>
     /// Cook see orders in his restaurant with statuses: Created
     /// </remarks>
-    /// <param name="sort">Sort type</param>
-    /// <param name="status">Order statuses for filter</param>
+    /// <param name="restaurantId"></param>
     /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
     /// <param name="page">Page of list (natural number)</param>
+    /// <param name="sort">Sort type</param>
     /// <returns></returns>
     [HttpGet]
     [Route("{restaurantId}/orders/cook")]
-    public ActionResult<Pagination<OrderShortDto>> GetCookRestaurantOrders([FromQuery] [Optional] List<OrderStatus>? status, 
-        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public ActionResult<Pagination<OrderShortDto>> GetCookRestaurantOrders([FromRoute] Guid restaurantId, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
+        [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        // Todo: Check if user is cook
+        return Ok(_restaurantService.GetCookRestaurantOrders(restaurantId, sort, number, page));
     }
 }
