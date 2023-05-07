@@ -1,14 +1,12 @@
 ﻿using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using SignalRSwaggerGen.Attributes;
 
 namespace Delivery.Notification.Hubs; 
 
 /// <summary>
 /// Hub for notifications
 /// </summary>
-[SignalRHub("/api/notifications")]
 [Authorize(AuthenticationSchemes = "Bearer")]
 public class NotificationHub : Hub {
     private readonly ILogger<NotificationHub> _logger;
