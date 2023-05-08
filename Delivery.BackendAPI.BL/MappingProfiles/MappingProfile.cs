@@ -18,5 +18,6 @@ public class MappingProfile : Profile {
         CreateMap<Dish, DishFullDto>();
         CreateMap<Menu, MenuShortDto>();
         CreateMap<Menu, MenuFullDto>();
+        CreateMap<DishInCart, CartDishDto>();
     }
 }

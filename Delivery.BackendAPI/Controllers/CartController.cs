@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Delivery.Common.DTO;
+﻿using Delivery.Common.DTO;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -43,8 +42,12 @@ public class CartController : ControllerBase {
     /// <returns></returns>
     [HttpPost]
     [Route("dish/{dishId}")]
-    public ActionResult AddDishToCart([FromRoute] Guid dishId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> AddDishToCart([FromRoute] Guid dishId) {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+        await _cartService.AddDishToCart(userId, dishId);
+        return Ok();
     }
 
     /// <summary>
@@ -56,8 +59,12 @@ public class CartController : ControllerBase {
     /// <returns></returns>
     [HttpDelete]
     [Route("dish/{dishId}")]
-    public ActionResult RemoveDishFromCart([FromRoute] Guid dishId, [FromQuery] Boolean removeAll = false) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> RemoveDishFromCart([FromRoute] Guid dishId, [FromQuery] Boolean removeAll = false) {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+        await _cartService.RemoveDishFromCart(userId, dishId, removeAll);
+        return Ok();
     }
     
     /// <summary>
@@ -65,7 +72,11 @@ public class CartController : ControllerBase {
     /// </summary>
     /// <returns></returns>
     [HttpDelete]
-    public ActionResult ClearCart() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> ClearCart() {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+        await _cartService.ClearCart(userId);
+        return Ok();
     }
 }

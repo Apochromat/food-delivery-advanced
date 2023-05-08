@@ -11,7 +11,7 @@ public class CartDto {
     /// <summary>
     /// Total price of dishes in cart
     /// </summary>
-    public int TotalPrice { get; set; }
+    public decimal TotalPrice { get; set; }
     /// <summary>
     /// Information about restaurant
     /// </summary>

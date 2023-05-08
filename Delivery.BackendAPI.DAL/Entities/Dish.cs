@@ -47,7 +47,7 @@ public class Dish {
     /// <summary>
     /// Menus where dish is available
     /// </summary>
-    public List<Menu?>? Menus { get; set; }
+    public List<Menu> Menus { get; set; } = new List<Menu>();
 
     /// <summary>
     /// Orders where dish is located

@@ -1,5 +1,4 @@
 ﻿using Delivery.Common.DTO;
-using Delivery.Common.Enums;
 
 namespace Delivery.Common.Interfaces; 
 
