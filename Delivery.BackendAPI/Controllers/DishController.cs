@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
+using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -12,6 +13,16 @@ namespace Delivery.BackendAPI.Controllers;
 [ApiController]
 [Route("api/restaurant/{restaurantId}/dish")]
 public class DishController : ControllerBase {
+    private readonly IDishService _dishService;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="dishService"></param>
+    public DishController(IDishService dishService) {
+        _dishService = dishService;
+    }
+
     /// <summary>
     /// [Manager] Creates a new dish in restaurant default menu
     /// </summary>
@@ -19,8 +30,9 @@ public class DishController : ControllerBase {
     /// <param name="dishCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult CreateRestaurantDish([FromRoute] Guid restaurantId, [FromBody] DishCreateDto dishCreateDto) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> CreateRestaurantDish([FromRoute] Guid restaurantId, [FromBody] DishCreateDto dishCreateDto) {
+        await _dishService.CreateDish(restaurantId, dishCreateDto);
+        return Ok();
     }
 
     /// <summary>
@@ -33,16 +45,18 @@ public class DishController : ControllerBase {
     /// <param name="categories">List of categories to search.
     /// If empty, then the search goes through all the dishes categories of the restaurant.
     /// If multiple categories are selected, union of them is used</param>
+    /// <param name="pageSize"></param>
     /// <param name="sort">Sorting type</param>
     /// <param name="name">Dish name for search</param>
     /// <param name="isVegetarian">Should a list of only veggie dishes be returned</param>
     /// <param name="page">Page of list (natural number)</param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<Pagination<DishShortDto>> GetDishes([FromRoute] Guid restaurantId, [FromQuery] [Optional] List<Guid>? menus,
+    public async Task<ActionResult<Pagination<DishShortDto>>> GetDishes([FromRoute] Guid restaurantId, [FromQuery] [Optional] List<Guid>? menus,
         [FromQuery] [Optional] List<DishCategory>? categories, [FromQuery] [Optional] String? name, 
-        [FromQuery] Boolean isVegetarian = false, [FromQuery] int page = 1, [FromQuery] DishSort? sort = DishSort.NameAsc) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+        [FromQuery] Boolean isVegetarian = false, [FromQuery] int page = 1, [FromQuery] int pageSize = 10,
+        [FromQuery] DishSort sort = DishSort.NameAsc) {
+        return Ok(await _dishService.GetAllUnarchivedDishes(restaurantId, menus, categories, page, pageSize, name, isVegetarian, sort));
     }
 
     /// <summary>
@@ -52,8 +66,8 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{dishId}")]
-    public ActionResult<DishFullDto> GetDish([FromRoute] Guid dishId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<DishFullDto>> GetDish([FromRoute] Guid dishId) {
+        return Ok(await _dishService.GetDish(dishId));
     }
 
     /// <summary>
@@ -64,8 +78,9 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{dishId}/edit")]
-    public ActionResult EditDish([FromRoute] Guid dishId, [FromBody] DishEditDto dishEditDto) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> EditDish([FromRoute] Guid dishId, [FromBody] DishEditDto dishEditDto) {
+        await _dishService.EditDish(dishId, dishEditDto);
+        return Ok();
     }
 
     /// <summary>
@@ -78,8 +93,9 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{dishId}/archive")]
-    public ActionResult ArchiveDish([FromRoute] Guid dishId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> ArchiveDish([FromRoute] Guid dishId) {
+        await _dishService.ArchiveDish(dishId);
+        return Ok();
     }
     
     /// <summary>
@@ -89,8 +105,8 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("archived")]
-    public ActionResult ArchivedDishes([FromRoute] Guid restaurantId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<List<DishShortDto>>> ArchivedDishes([FromRoute] Guid restaurantId) {
+        return Ok(await _dishService.GetArchivedDishes(restaurantId));
     }
 
     /// <summary>
@@ -103,8 +119,9 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{dishId}/unarchive")]
-    public ActionResult UnarchiveDish([FromRoute] Guid dishId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> UnarchiveDish([FromRoute] Guid dishId) {
+        await _dishService.UnarchiveDish(dishId);
+        return Ok();
     }
 
     /// <summary>

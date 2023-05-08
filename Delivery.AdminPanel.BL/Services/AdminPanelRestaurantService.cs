@@ -113,22 +113,51 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
         var restaurant = _mapper.Map<Restaurant>(restaurantCreateDto);
         restaurant.CreatedAt = DateTime.UtcNow;
         restaurant.UpdatedAt = DateTime.UtcNow;
+        
+        var menu = new Menu() {
+            Id = new Guid(),
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            RestaurantId = restaurant.Id,
+            Dishes = new List<Dish>(),
+            IsArchived = false,
+            IsDefault = true,
+            Name = "Default"
+        };
+        restaurant.Menus.Add(menu);
+        _backendDbContext.Menus.Add(menu);
         _backendDbContext.Restaurants.Add(restaurant);
         await _backendDbContext.SaveChangesAsync();
     }
 
     public async Task UpdateRestaurant(Guid restaurantId, RestaurantEditDto restaurantEditDto) {
-        var restaurant = _backendDbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
+        var restaurant = _backendDbContext.Restaurants.Include(r=> r.Menus).FirstOrDefault(x => x.Id == restaurantId);
         if (restaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
-
+        
+        if (restaurant.Menus.Count(m => m.IsDefault) == 0) {
+            var menu = new Menu() {
+                Id = new Guid(),
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                RestaurantId = restaurant.Id,
+                Dishes = new List<Dish>(),
+                IsArchived = false,
+                IsDefault = true,
+                Name = "Default"
+            };
+            restaurant.Menus.Add(menu);
+            _backendDbContext.Menus.Add(menu);
+        }
+        
         restaurant.Name = restaurantEditDto.Name;
         restaurant.Description = restaurantEditDto.Description;
         restaurant.Address = restaurantEditDto.Address;
         restaurant.BigImage = restaurantEditDto.BigImage;
         restaurant.SmallImage = restaurantEditDto.SmallImage;
         restaurant.UpdatedAt = DateTime.UtcNow;
+        
 
         await _backendDbContext.SaveChangesAsync();
     }

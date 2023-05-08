@@ -9,6 +9,10 @@ public class Menu {
     /// </summary>
     public Guid Id { get; set; }
     /// <summary>
+    /// Restaurant identifier
+    /// </summary>
+    public Guid RestaurantId { get; set; }
+    /// <summary>
     /// Name of the menu
     /// </summary>
     public string? Name { get; set; }

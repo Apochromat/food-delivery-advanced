@@ -17,6 +17,7 @@ public static class ServiceDependencyExtension {
         services.AddDbContext<BackendDbContext>();
         services.AddScoped<IRestaurantService, RestaurantService>();
         services.AddScoped<ICartService, CartService>();
+        services.AddScoped<IDishService, DishService>();
         services.AddScoped<INotificationQueueService, NotificationQueueService>();
         services.AddAutoMapper(typeof(MappingProfiles.MappingProfile));
         return services;
