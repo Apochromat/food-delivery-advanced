@@ -64,6 +64,7 @@ public class DishService : IDishService {
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             Menus = new List<Menu?>() { menu },
+            ImageUrl = dishCreateDto.ImageUrl,
             Name = dishCreateDto.Name,
             Description = dishCreateDto.Description,
             Price = dishCreateDto.Price,

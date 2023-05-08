@@ -50,7 +50,7 @@ public class CartService : ICartService {
         var cart = new CartDto() { 
             Dishes = _mapper.Map<List<CartDishDto>>(dishes),
             Restaurant = _mapper.Map<RestaurantShortDto>(restaurant),
-            TotalPrice = dishes.Sum(x=>x.Dish.Price)
+            TotalPrice = dishes.Sum(x=>x.Dish.Price*x.Amount)
         };
         return cart;
     }
