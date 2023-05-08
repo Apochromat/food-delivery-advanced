@@ -1,5 +1,6 @@
-﻿using System.Net;
+﻿using System.Runtime.InteropServices;
 using Delivery.Common.DTO;
+using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -10,6 +11,16 @@ namespace Delivery.BackendAPI.Controllers;
 [ApiController]
 [Route("api/restaurant/{restaurantId}/menu")]
 public class MenuController : ControllerBase {
+    private readonly IMenuService _menuService;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="menuService"></param>
+    public MenuController(IMenuService menuService) {
+        _menuService = menuService;
+    }
+
     /// <summary>
     /// [Manager] Creates a new menu. You shouldn`t create menu for new Restaurant, It always has Default one. 
     /// </summary>
@@ -17,19 +28,20 @@ public class MenuController : ControllerBase {
     /// <param name="menuCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult CreateRestaurantMenu([FromRoute] Guid restaurantId, [FromBody] MenuCreateDto menuCreateDto) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> CreateRestaurantMenu([FromRoute] Guid restaurantId, [FromBody] MenuCreateDto menuCreateDto) {
+        await _menuService.CreateRestaurantMenu(restaurantId, menuCreateDto);
+        return Ok();
     }
     
     /// <summary>
     /// [Anyone] Get list of unarchived menus in restaurant. Restaurant always has Default menu.
     /// </summary>
-    /// <param name="name" example="Claude Monet">Name of menu for filter</param>
+    /// <param name="name" >Name of menu for filter</param>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<List<MenuShortDto>> GetRestaurantMenus([FromQuery] String name, [FromRoute] Guid restaurantId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<List<MenuShortDto>>> GetRestaurantMenus([FromRoute] Guid restaurantId, [FromQuery][Optional] String? name) {
+        return Ok(await _menuService.GetRestaurantMenus(name, restaurantId));
     }
 
     /// <summary>
@@ -39,8 +51,8 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{menuId}")]
-    public ActionResult<MenuFullDto> GetMenu([FromRoute] Guid menuId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<MenuFullDto>> GetMenu([FromRoute] Guid menuId) {
+        return Ok(await _menuService.GetMenu(menuId));
     }
 
     /// <summary>
@@ -54,8 +66,9 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{menuId}")]
-    public ActionResult Update([FromRoute] Guid menuId, [FromBody] MenuEditDto menuEditDto) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> Edit([FromRoute] Guid menuId, [FromBody] MenuEditDto menuEditDto) {
+        await _menuService.EditMenu(menuId, menuEditDto);
+        return Ok();
     }
     
     /// <summary>
@@ -68,8 +81,9 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{menuId}/archive")]
-    public ActionResult ArchiveMenu([FromRoute] Guid menuId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> ArchiveMenu([FromRoute] Guid menuId) {
+        await _menuService.ArchiveMenu(menuId);
+        return Ok();
     }
     
     /// <summary>
@@ -78,8 +92,8 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("archived")]
-    public ActionResult<List<MenuShortDto>> ArchivedMenus() {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<List<MenuShortDto>>> ArchivedMenus([FromRoute] Guid restaurantId) {
+        return Ok(await _menuService.ArchivedRestaurantMenus(restaurantId));
     }
     
     /// <summary>
@@ -92,8 +106,9 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{menuId}/unarchive")]
-    public ActionResult UnarchiveMenu([FromRoute] Guid menuId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult> UnarchiveMenu([FromRoute] Guid menuId) {
+        await _menuService.UnarchiveMenu(menuId);
+        return Ok();
     }
     
     /// <summary>
@@ -103,9 +118,10 @@ public class MenuController : ControllerBase {
     /// <param name="dishId"></param>
     /// <returns></returns>
     [HttpPost]
-    [Route("{menuId}/add-dish/{dishId}")]
-    public ActionResult AddDishToMenu([FromRoute] Guid menuId, [FromRoute] Guid dishId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    [Route("{menuId}/dish/{dishId}")]
+    public async Task<ActionResult> AddDishToMenu([FromRoute] Guid menuId, [FromRoute] Guid dishId) {
+        await _menuService.AddDishToMenu(menuId, dishId);
+        return Ok();
     }
     
     /// <summary>
@@ -115,8 +131,9 @@ public class MenuController : ControllerBase {
     /// <param name="dishId"></param>
     /// <returns></returns>
     [HttpDelete]
-    [Route("{menuId}/delete-dish/{dishId}")]
-    public ActionResult RemoveDishFromMenu([FromRoute] Guid menuId, [FromRoute] Guid dishId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    [Route("{menuId}/dish/{dishId}")]
+    public async Task<ActionResult> RemoveDishFromMenu([FromRoute] Guid menuId, [FromRoute] Guid dishId) {
+        await _menuService.RemoveDishFromMenu(menuId, dishId);
+        return Ok();
     }
 }

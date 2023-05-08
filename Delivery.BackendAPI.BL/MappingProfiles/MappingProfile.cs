@@ -16,5 +16,7 @@ public class MappingProfile : Profile {
         CreateMap<Restaurant, RestaurantFullDto>();
         CreateMap<Dish, DishShortDto>();
         CreateMap<Dish, DishFullDto>();
+        CreateMap<Menu, MenuShortDto>();
+        CreateMap<Menu, MenuFullDto>();
     }
 }

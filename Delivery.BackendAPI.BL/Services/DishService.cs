@@ -92,7 +92,7 @@ public class DishService : IDishService {
     /// <exception cref="NotFoundException"></exception>
     public Task<Pagination<DishShortDto>> GetAllUnarchivedDishes(Guid restaurantId, List<Guid>? menus,
         List<DishCategory>? categories, int page, int pageSize = 10, string? name = null,
-        bool isVegetarian = false, DishSort sort = DishSort.NameAsc) {
+        bool? isVegetarian = null, DishSort sort = DishSort.NameAsc) {
         if (page < 1) {
             throw new BadRequestException("Page number must be greater than 0");
         }

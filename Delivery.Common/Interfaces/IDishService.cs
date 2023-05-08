@@ -29,7 +29,7 @@ public interface IDishService {
     /// <returns></returns>
     Task<Pagination<DishShortDto>> GetAllUnarchivedDishes(Guid restaurantId, List<Guid>? menus,
         List<DishCategory>? categories, int page, int pageSize = 10, string? name = null,
-        bool isVegetarian = false, DishSort sort = DishSort.NameAsc);
+        bool? isVegetarian = null, DishSort sort = DishSort.NameAsc);
 
     /// <summary>
     /// Get full dish info

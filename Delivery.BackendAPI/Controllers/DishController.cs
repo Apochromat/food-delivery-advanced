@@ -54,7 +54,7 @@ public class DishController : ControllerBase {
     [HttpGet]
     public async Task<ActionResult<Pagination<DishShortDto>>> GetDishes([FromRoute] Guid restaurantId, [FromQuery] [Optional] List<Guid>? menus,
         [FromQuery] [Optional] List<DishCategory>? categories, [FromQuery] [Optional] String? name, 
-        [FromQuery] Boolean isVegetarian = false, [FromQuery] int page = 1, [FromQuery] int pageSize = 10,
+        [FromQuery] Boolean? isVegetarian = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10,
         [FromQuery] DishSort sort = DishSort.NameAsc) {
         return Ok(await _dishService.GetAllUnarchivedDishes(restaurantId, menus, categories, page, pageSize, name, isVegetarian, sort));
     }

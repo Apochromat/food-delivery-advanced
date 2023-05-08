@@ -18,6 +18,7 @@ public static class ServiceDependencyExtension {
         services.AddScoped<IRestaurantService, RestaurantService>();
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IDishService, DishService>();
+        services.AddScoped<IMenuService, MenuService>();
         services.AddScoped<INotificationQueueService, NotificationQueueService>();
         services.AddAutoMapper(typeof(MappingProfiles.MappingProfile));
         return services;

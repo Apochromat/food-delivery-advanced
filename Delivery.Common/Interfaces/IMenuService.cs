@@ -10,22 +10,22 @@ public interface IMenuService {
     /// Create new menu
     /// </summary>
     /// <param name="restaurantId"></param>
-    /// <param name="restaurantCreateDto"></param>
+    /// <param name="menuCreateDto"></param>
     /// <returns></returns>
-    RestaurantFullDto CreateRestaurantMenu(Guid restaurantId, RestaurantCreateDto restaurantCreateDto);
+    Task CreateRestaurantMenu(Guid restaurantId, MenuCreateDto menuCreateDto);
     /// <summary>
     /// Get all unarchived menus
     /// </summary>
     /// <param name="name"></param>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
-    List<MenuShortDto> GetRestaurantMenus(String name, Guid restaurantId);
+    Task<List<MenuShortDto>> GetRestaurantMenus(String? name, Guid restaurantId);
     /// <summary>
     /// Get full menu info
     /// </summary>
     /// <param name="menuId"></param>
     /// <returns></returns>
-    MenuFullDto GetMenu(Guid menuId);
+    Task<MenuFullDto> GetMenu(Guid menuId);
     /// <summary>
     /// Archive menu
     /// </summary>
@@ -43,7 +43,7 @@ public interface IMenuService {
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
-    List<MenuShortDto> ArchivedRestaurantMenus(Guid restaurantId);
+    Task<List<MenuShortDto>> ArchivedRestaurantMenus(Guid restaurantId);
     /// <summary>
     /// Add dish to menu. Unable for Default menu
     /// </summary>
