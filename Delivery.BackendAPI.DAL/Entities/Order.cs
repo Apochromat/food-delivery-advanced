@@ -13,7 +13,7 @@ public class Order {
     /// <summary>
     /// Number of the order in "ORD-88005553535-0001" format
     /// </summary>
-    public String? Number { get; set; }
+    public required String Number { get; set; }
     /// <summary>
     /// Order status
     /// </summary>
@@ -46,22 +46,22 @@ public class Order {
     /// <summary>
     /// Order dishes
     /// </summary>
-    public List<OrderDish>? Dishes { get; set; }
+    public List<OrderDish> Dishes { get; set; } = new List<OrderDish>();
 
     /// <summary>
     /// Restaurant of the order
     /// </summary>
-    public Restaurant? Restaurant { get; set; }
+    public required Restaurant Restaurant { get; set; }
     /// <summary>
     /// Id of the assigned cook
     /// </summary>
-    public Guid CookId { get; set; }
+    public Guid? CookId { get; set; }
     /// <summary>
     /// Id of the customer
     /// </summary>
-    public Guid CustomerId { get; set; }
+    public required Guid CustomerId { get; set; }
     /// <summary>
     /// Id of the assigned courier
     /// </summary>
-    public Guid CourierId { get; set; }
+    public Guid? CourierId { get; set; }
 }

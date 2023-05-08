@@ -11,7 +11,7 @@ public class DishInCart {
     /// <summary>
     /// Dish in cart
     /// </summary>
-    public Dish? Dish { get; set; }
+    public required Dish Dish { get; set; }
     /// <summary>
     /// Amount of dishes in cart
     /// </summary>
@@ -19,5 +19,5 @@ public class DishInCart {
     /// <summary>
     /// Identifier of customer
     /// </summary>
-    public Guid? CustomerId { get; set; }
+    public required Guid CustomerId { get; set; }
 }

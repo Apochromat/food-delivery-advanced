@@ -15,7 +15,7 @@ public class Menu {
     /// <summary>
     /// Name of the menu
     /// </summary>
-    public string? Name { get; set; }
+    public required string Name { get; set; }
     /// <summary>
     /// Indicates if menu is default (only one default menu can exist
     /// </summary>
@@ -27,7 +27,7 @@ public class Menu {
     /// <summary>
     /// List of dishes in menu
     /// </summary>
-    public List<Dish>? Dishes { get; set; }
+    public List<Dish> Dishes { get; set; } = new List<Dish>();
     /// <summary>
     /// Creation date
     /// </summary>

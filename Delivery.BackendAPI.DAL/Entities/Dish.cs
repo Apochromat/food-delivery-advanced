@@ -35,10 +35,11 @@ public class Dish {
     /// Calculated rating
     /// </summary>
     public decimal CalculatedRating { get; set; }
+
     /// <summary>
     /// Categories of the dish
     /// </summary>
-    public List<DishCategory>? DishCategories { get; set; }
+    public List<DishCategory> DishCategories { get; set; } = new List<DishCategory>();
     /// <summary>
     /// Is dish vegetarian
     /// </summary>
@@ -47,10 +48,11 @@ public class Dish {
     /// Menus where dish is available
     /// </summary>
     public List<Menu?>? Menus { get; set; }
+
     /// <summary>
     /// Orders where dish is located
     /// </summary>
-    public List<OrderDish>? Orders { get; set; }
+    public List<OrderDish> Orders { get; set; } = new List<OrderDish>();
     /// <summary>
     /// Creation date
     /// </summary>

@@ -179,8 +179,6 @@ public class MenuService : IMenuService {
             throw new NotFoundException("Dish not found");
         }
         
-        // ToDo: разобраться с лишними null
-        menu.Dishes??= new List<Dish>();
         menu.Dishes.Add(dish);
         await _backendDbContext.SaveChangesAsync();
     }
@@ -208,8 +206,6 @@ public class MenuService : IMenuService {
             throw new NotFoundException("Dish not found");
         }
         
-        // Todo: разобраться с лишними null
-        menu.Dishes??= new List<Dish>();
         menu.Dishes.Remove(dish);
         await _backendDbContext.SaveChangesAsync();
     }

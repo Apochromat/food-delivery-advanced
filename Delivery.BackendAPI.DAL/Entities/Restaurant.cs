@@ -35,7 +35,7 @@ public class Restaurant {
     /// <summary>
     /// List of menus in restaurant
     /// </summary>
-    public List<Menu> Menus { get; set; } = new ();
+    public required List<Menu> Menus { get; set; } = new ();
     /// <summary>
     /// Creation date
     /// </summary>
