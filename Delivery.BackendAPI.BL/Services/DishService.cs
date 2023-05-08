@@ -5,6 +5,7 @@ using Delivery.BackendAPI.DAL.Extensions;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
+using Delivery.Common.Extensions;
 using Delivery.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,12 @@ public class DishService : IDishService {
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Create dish
+    /// </summary>
+    /// <param name="restaurantId"></param>
+    /// <param name="dishCreateDto"></param>
+    /// <exception cref="NotFoundException"></exception>
     public async Task CreateDish(Guid restaurantId, DishCreateDto dishCreateDto) {
         var restaurant = await _backendDbContext.Restaurants
             .FirstOrDefaultAsync(x => x.Id == restaurantId);
@@ -73,6 +80,7 @@ public class DishService : IDishService {
     /// Get list of all unarchived dishes
     /// </summary>
     /// <param name="restaurantId"></param>
+    /// <param name="menus"></param>
     /// <param name="categories"></param>
     /// <param name="page"></param>
     /// <param name="pageSize"></param>
@@ -94,11 +102,8 @@ public class DishService : IDishService {
         }
 
         var allCount = _backendDbContext.Dishes
-            .Count(x => x.Menus.FirstOrDefault().RestaurantId == restaurantId
-                        && x.Menus.Any(y => menus == null|| menus.Count == 0 || menus.Contains(y.Id))
-                        && !x.IsArchived
-                        && (categories == null || categories.Count == 0 || categories.All(y => x.DishCategories.Contains(y)))
-                        && (name == null || x.Name.Contains(name)));
+            .FilterDishes(restaurantId, menus, categories, name, false, isVegetarian)
+            .Count();
         if (allCount == 0) {
             throw new NotFoundException("Dishes not found");
         }
@@ -111,20 +116,21 @@ public class DishService : IDishService {
 
         // Get dishes
         var raw = _backendDbContext.Dishes
-            .Where(x => x.Menus.FirstOrDefault().RestaurantId == restaurantId
-                        && x.Menus.Any(y => menus == null|| menus.Count == 0 || menus.Contains(y.Id))
-                        && !x.IsArchived
-                        && (categories == null || categories.Count == 0 || categories.All(y => x.DishCategories.Contains(y)))
-                        && (name == null || x.Name.Contains(name)))
+            .FilterDishes(restaurantId, menus, categories, name, false, isVegetarian)
             .OrderByDishSort(sort)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .TakePage(page, pageSize)
             .ToList();
 
         var mapped = _mapper.Map<List<DishShortDto>>(raw);
         return Task.FromResult(new Pagination<DishShortDto>(mapped, page, pageSize, pages));
     }
 
+    /// <summary>
+    /// Get dish by id
+    /// </summary>
+    /// <param name="dishId"></param>
+    /// <returns></returns>
+    /// <exception cref="NotFoundException"></exception>
     public async Task<DishFullDto> GetDish(Guid dishId) {
         var dish = await _backendDbContext.Dishes
             .FirstOrDefaultAsync(x => x.Id == dishId);
@@ -158,6 +164,11 @@ public class DishService : IDishService {
         await _backendDbContext.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// Archive dish
+    /// </summary>
+    /// <param name="dishId"></param>
+    /// <exception cref="NotFoundException"></exception>
     public async Task ArchiveDish(Guid dishId) {
         var dish = await _backendDbContext.Dishes
             .FirstOrDefaultAsync(x => x.Id == dishId);
@@ -210,11 +221,25 @@ public class DishService : IDishService {
         return mapped;
     }
 
-    public async Task<bool> IsAbleToSetRating(Guid dishId, Guid customerId) {
+    /// <summary>
+    /// Check if customer is able to set rating
+    /// </summary>
+    /// <param name="dishId"></param>
+    /// <param name="customerId"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public Task<bool> IsAbleToSetRating(Guid dishId, Guid customerId) {
         throw new NotImplementedException();
     }
 
-    public async Task SetRating(Guid dishId, Guid customerId, RatingSetDto ratingSetDto) {
+    /// <summary>
+    /// Set rating
+    /// </summary>
+    /// <param name="dishId"></param>
+    /// <param name="customerId"></param>
+    /// <param name="ratingSetDto"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public Task SetRating(Guid dishId, Guid customerId, RatingSetDto ratingSetDto) {
         throw new NotImplementedException();
     }
 }

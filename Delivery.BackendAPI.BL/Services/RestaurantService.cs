@@ -4,6 +4,7 @@ using Delivery.BackendAPI.DAL.Extensions;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
+using Delivery.Common.Extensions;
 using Delivery.Common.Interfaces;
 
 namespace Delivery.BackendAPI.BL.Services; 
@@ -145,8 +146,7 @@ public class RestaurantService : IRestaurantService {
                         && (status == null || status.Contains(x.Status)) 
                         && (number == null || x.Number.Contains(number)))
             .OrderByOrderSort(sort)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .TakePage(page, pageSize)
             .ToList();
         
         var mapped = _mapper.Map<List<OrderShortDto>>(raw);
@@ -195,8 +195,7 @@ public class RestaurantService : IRestaurantService {
                         && (number == null || x.Number.Contains(number))
                         && x.Status == OrderStatus.Created)
             .OrderByOrderSort(sort)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .TakePage(page, pageSize)
             .ToList();
         
         var mapped = _mapper.Map<List<OrderShortDto>>(raw);

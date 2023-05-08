@@ -4,9 +4,9 @@ using Delivery.Common.Enums;
 namespace Delivery.BackendAPI.DAL.Extensions; 
 
 /// <summary>
-/// Enumerable extensions for LINQ
+/// Queryable extensions for LINQ
 /// </summary>
-public static class EnumerableExtensions {
+public static class QueryableExtensions {
     
     /// <summary>
     /// Order smth by OrderSort enum
@@ -46,4 +46,19 @@ public static class EnumerableExtensions {
             _ => source
         };
     }
+    
+    /// <summary>
+    /// Filter dishes
+    /// </summary>
+    public static IQueryable<Dish> FilterDishes(this IQueryable<Dish> source, Guid restaurantId, List<Guid>? menus, List<DishCategory>? categories, string? name, bool isArchived = false, bool isVegetarian = false) {
+        return source.Where(x => 
+            x.Menus.FirstOrDefault().RestaurantId == restaurantId
+            && x.Menus.Any(y => menus == null|| menus.Count == 0 || menus.Contains(y.Id))
+            && x.IsArchived == isArchived
+            && x.IsVegetarian == isVegetarian
+            && (categories == null || categories.Count == 0 || categories.All(y => x.DishCategories.Contains(y)))
+            && (name == null || x.Name.Contains(name)));
+    }
+    
+    
 }
