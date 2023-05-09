@@ -20,6 +20,8 @@ public class CartService : ICartService {
     /// Constructor
     /// </summary>
     /// <param name="notificationQueueService"></param>
+    /// <param name="backendDbContext"></param>
+    /// <param name="mapper"></param>
     public CartService(INotificationQueueService notificationQueueService, BackendDbContext backendDbContext, IMapper mapper) {
         _notificationQueueService = notificationQueueService;
         _backendDbContext = backendDbContext;
@@ -60,8 +62,9 @@ public class CartService : ICartService {
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="dishId"></param>
+    /// <param name="amount"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task AddDishToCart(Guid userId, Guid dishId) {
+    public async Task AddDishToCart(Guid userId, Guid dishId, int amount = 1) {
         var dish = await _backendDbContext.Dishes
             .Include(x=>x.Menus)
             .FirstOrDefaultAsync(x => x.Id == dishId);
@@ -72,12 +75,14 @@ public class CartService : ICartService {
         var dishRestaurant = await _backendDbContext.Restaurants
             .FirstOrDefaultAsync(x => x.Id == dish.Menus.First().RestaurantId);
         
+        if (dishRestaurant == null) {
+            throw new NotFoundException("Restaurant not found");
+        }
+        
         var cartRestaurant = await _backendDbContext.DishesInCart
-            .Include(x=>x.Dish)
-            .ThenInclude(x=>x.Menus)
             .FirstOrDefaultAsync(x => x.CustomerId == userId);
         
-        if (cartRestaurant != null && cartRestaurant.Dish.Menus.First().RestaurantId != dishRestaurant.Id) {
+        if (cartRestaurant != null && cartRestaurant.Restaurant.Id != dishRestaurant.Id) {
             throw new BadRequestException("You can`t add dishes from different restaurants to cart");
         }
         
@@ -85,7 +90,7 @@ public class CartService : ICartService {
             .FirstOrDefaultAsync(x => x.CustomerId == userId && x.Dish.Id == dishId);
         
         if (dishInCart != null) {
-            dishInCart.Amount++;
+            dishInCart.Amount += amount;
             _backendDbContext.DishesInCart.Update(dishInCart);
             await _backendDbContext.SaveChangesAsync();
             return;
@@ -95,7 +100,8 @@ public class CartService : ICartService {
             Id = new Guid(),
             CustomerId = userId,
             Dish = dish,
-            Amount = 1
+            Amount = amount,
+            Restaurant = dishRestaurant
         };
         
         await _backendDbContext.DishesInCart.AddAsync(dishInCart);

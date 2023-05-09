@@ -54,6 +54,18 @@ public class ExceptionHandlerMiddleware {
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(errorDetails.ToString());
         }
+        
+        catch (ForbiddenException ex) {
+            var errorDetails = new ErrorDetails {
+                StatusCode = (int)HttpStatusCode.Forbidden,
+                Message = ex.Message,
+                TraceId = Activity.Current?.Id ?? context.TraceIdentifier
+            };
+            _logger.LogError(ex, errorDetails.ToString());
+            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(errorDetails.ToString());
+        }
 
         catch (BadRequestException ex) {
             var errorDetails = new ErrorDetails {

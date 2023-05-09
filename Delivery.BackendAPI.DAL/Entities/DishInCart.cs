@@ -20,4 +20,8 @@ public class DishInCart {
     /// Identifier of customer
     /// </summary>
     public required Guid CustomerId { get; set; }
+    /// <summary>
+    /// Restaurant of the dish
+    /// </summary>
+    public required Restaurant Restaurant { get; set; }
 }

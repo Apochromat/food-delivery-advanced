@@ -12,7 +12,7 @@ public class OrderDish {
     /// <summary>
     /// Dish in order identifier
     /// </summary>
-    public Dish? Dish { get; set; }
+    public required Dish Dish { get; set; }
     /// <summary>
     /// Order of the dish
     /// </summary>

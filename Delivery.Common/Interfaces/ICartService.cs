@@ -12,13 +12,15 @@ public interface ICartService {
     /// <param name="userId"></param>
     /// <returns></returns>
     Task<CartDto> GetCart(Guid userId);
+
     /// <summary>
     /// Add dish to cart
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="dishId"></param>
+    /// <param name="amount"></param>
     /// <returns></returns>
-    Task AddDishToCart(Guid userId, Guid dishId);
+    Task AddDishToCart(Guid userId, Guid dishId, int amount = 1);
     /// <summary>
     /// Remove dish from cart
     /// </summary>

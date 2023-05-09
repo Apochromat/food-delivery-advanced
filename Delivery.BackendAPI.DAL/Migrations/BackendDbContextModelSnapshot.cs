@@ -80,9 +80,14 @@ namespace Delivery.BackendAPI.DAL.Migrations
                     b.Property<Guid>("DishId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("RestaurantId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DishId");
+
+                    b.HasIndex("RestaurantId");
 
                     b.ToTable("DishesInCart");
                 });
@@ -184,7 +189,7 @@ namespace Delivery.BackendAPI.DAL.Migrations
                     b.Property<decimal>("ArchivedDishPrice")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid?>("DishId")
+                    b.Property<Guid>("DishId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("OrderId")
@@ -291,7 +296,15 @@ namespace Delivery.BackendAPI.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Delivery.BackendAPI.DAL.Entities.Restaurant", "Restaurant")
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Dish");
+
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("Delivery.BackendAPI.DAL.Entities.Menu", b =>
@@ -318,7 +331,9 @@ namespace Delivery.BackendAPI.DAL.Migrations
                 {
                     b.HasOne("Delivery.BackendAPI.DAL.Entities.Dish", "Dish")
                         .WithMany("Orders")
-                        .HasForeignKey("DishId");
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Delivery.BackendAPI.DAL.Entities.Order", "Order")
                         .WithMany("Dishes")

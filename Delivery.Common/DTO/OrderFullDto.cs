@@ -45,5 +45,5 @@ public class OrderFullDto {
     /// <summary>
     /// Order dishes
     /// </summary>
-    public List<DishShortDto>? Dishes { get; set; }
+    public List<DishShortDto> Dishes { get; set; } = new();
 }
