@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Delivery.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -30,6 +31,7 @@ public class DishController : ControllerBase {
     /// <param name="dishCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> CreateRestaurantDish([FromRoute] Guid restaurantId, [FromBody] DishCreateDto dishCreateDto) {
         await _dishService.CreateDish(restaurantId, dishCreateDto);
         return Ok();
@@ -78,6 +80,7 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{dishId}/edit")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> EditDish([FromRoute] Guid dishId, [FromBody] DishEditDto dishEditDto) {
         await _dishService.EditDish(dishId, dishEditDto);
         return Ok();
@@ -93,6 +96,7 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{dishId}/archive")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> ArchiveDish([FromRoute] Guid dishId) {
         await _dishService.ArchiveDish(dishId);
         return Ok();
@@ -105,6 +109,7 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("archived")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult<List<DishShortDto>>> ArchivedDishes([FromRoute] Guid restaurantId) {
         return Ok(await _dishService.GetArchivedDishes(restaurantId));
     }
@@ -119,6 +124,7 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{dishId}/unarchive")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> UnarchiveDish([FromRoute] Guid dishId) {
         await _dishService.UnarchiveDish(dishId);
         return Ok();
@@ -131,6 +137,7 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("{dishId}/rating/check")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
     public ActionResult<RatingCheckDto> RatingCheck([FromRoute] Guid dishId) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }
@@ -143,6 +150,7 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPost]
     [Route("{dishId}/rating")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public ActionResult Rating([FromRoute] Guid dishId, [FromBody] RatingSetDto ratingSetDto) {
         return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
     }

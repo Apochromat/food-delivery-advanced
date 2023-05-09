@@ -46,7 +46,6 @@ public interface IRestaurantService {
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <param name="sort"></param>
-    /// <param name="status"></param>
     /// <param name="number"></param>
     /// <param name="page"></param>
     /// <param name="pageSize"></param>

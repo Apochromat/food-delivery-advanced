@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Delivery.Common.DTO;
 using Delivery.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -28,6 +29,7 @@ public class MenuController : ControllerBase {
     /// <param name="menuCreateDto"></param>
     /// <returns></returns>
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> CreateRestaurantMenu([FromRoute] Guid restaurantId, [FromBody] MenuCreateDto menuCreateDto) {
         await _menuService.CreateRestaurantMenu(restaurantId, menuCreateDto);
         return Ok();
@@ -66,6 +68,7 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{menuId}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> Edit([FromRoute] Guid menuId, [FromBody] MenuEditDto menuEditDto) {
         await _menuService.EditMenu(menuId, menuEditDto);
         return Ok();
@@ -81,6 +84,7 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{menuId}/archive")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> ArchiveMenu([FromRoute] Guid menuId) {
         await _menuService.ArchiveMenu(menuId);
         return Ok();
@@ -92,6 +96,7 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpGet]
     [Route("archived")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult<List<MenuShortDto>>> ArchivedMenus([FromRoute] Guid restaurantId) {
         return Ok(await _menuService.ArchivedRestaurantMenus(restaurantId));
     }
@@ -106,6 +111,7 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{menuId}/unarchive")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> UnarchiveMenu([FromRoute] Guid menuId) {
         await _menuService.UnarchiveMenu(menuId);
         return Ok();

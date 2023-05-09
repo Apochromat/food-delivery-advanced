@@ -21,5 +21,6 @@ public class MappingProfile : Profile {
         CreateMap<DishInCart, CartDishDto>();
         CreateMap<Order, OrderShortDto>();
         CreateMap<Order, OrderFullDto>();
+        CreateMap<OrderDish, DishOrderDto>();
     }
 }

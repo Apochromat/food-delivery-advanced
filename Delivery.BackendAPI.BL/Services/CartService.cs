@@ -28,15 +28,40 @@ public class CartService : ICartService {
         _mapper = mapper;
     }
 
+    /// <inheritdoc/>
+    public async Task ClearCartFromArchivedDishes(Guid userId) {
+        var dishes = await _backendDbContext.DishesInCart
+            .Include(x=>x.Dish)
+            .Include(x=>x.Restaurant)
+            .Where(x => x.CustomerId == userId)
+            .ToListAsync();
+        if (dishes.Count == 0) {
+            return;
+        }
+        
+        var restaurant = await _backendDbContext.Restaurants
+            .FirstOrDefaultAsync(x => x.Id == dishes.First().Restaurant.Id);
+        if (restaurant == null || restaurant.IsArchived) {
+            await ClearCart(userId);
+        }
+
+        foreach (var dish in dishes) {
+            if (dish.Dish.IsArchived) {
+                await RemoveDishFromCart(userId, dish.Dish.Id, true);
+            }
+        }
+    }
+
     /// <summary>
     /// Get user`s cart
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
     public async Task<CartDto> GetCart(Guid userId) {
+        await ClearCartFromArchivedDishes(userId);
         var dishes = await _backendDbContext.DishesInCart
             .Include(x=>x.Dish)
-            .ThenInclude(x=>x.Menus)
+            .Include(x=>x.Restaurant)
             .Where(x => x.CustomerId == userId)
             .ToListAsync();
         if (dishes.Count == 0) {
@@ -44,7 +69,7 @@ public class CartService : ICartService {
         }
         
         var restaurant = await _backendDbContext.Restaurants
-            .FirstOrDefaultAsync(x => x.Id == dishes.First().Dish.Menus.First().RestaurantId);
+            .FirstOrDefaultAsync(x => x.Id == dishes.First().Restaurant.Id);
         if (restaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
@@ -80,6 +105,7 @@ public class CartService : ICartService {
         }
         
         var cartRestaurant = await _backendDbContext.DishesInCart
+            .Include(x=>x.Restaurant)
             .FirstOrDefaultAsync(x => x.CustomerId == userId);
         
         if (cartRestaurant != null && cartRestaurant.Restaurant.Id != dishRestaurant.Id) {
@@ -114,8 +140,9 @@ public class CartService : ICartService {
     /// <param name="userId"></param>
     /// <param name="dishId"></param>
     /// <param name="removeAll"></param>
+    /// <param name="amount"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task RemoveDishFromCart(Guid userId, Guid dishId, bool removeAll = false) {
+    public async Task RemoveDishFromCart(Guid userId, Guid dishId, bool removeAll = false, int amount = 1) {
         var dishInCart = await _backendDbContext.DishesInCart
             .FirstOrDefaultAsync(x => x.CustomerId == userId && x.Dish.Id == dishId);
         if (dishInCart == null) {
@@ -128,7 +155,10 @@ public class CartService : ICartService {
             return;
         }
         
-        dishInCart.Amount--;
+        if (dishInCart.Amount < amount) {
+            throw new BadRequestException("You can`t remove more dishes than you have");
+        }
+        dishInCart.Amount -= amount;
         if (dishInCart.Amount == 0) {
             _backendDbContext.DishesInCart.Remove(dishInCart);
         }
@@ -142,13 +172,17 @@ public class CartService : ICartService {
     /// Clear cart
     /// </summary>
     /// <param name="userId"></param>
+    /// <param name="force"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task ClearCart(Guid userId) {
+    public async Task ClearCart(Guid userId, bool force = true) {
         var dishesInCart = await _backendDbContext.DishesInCart
             .Where(x => x.CustomerId == userId)
             .ToListAsync();
-        if (dishesInCart.Count == 0) {
+        if (dishesInCart.Count == 0 && force) {
             throw new NotFoundException("Cart is empty");
+        }
+        if (!force) {
+            return;
         }
         
         _backendDbContext.DishesInCart.RemoveRange(dishesInCart);

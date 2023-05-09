@@ -24,7 +24,6 @@ public class Dish {
     public decimal Price { get; set; }
     /// <summary>
     /// Image url
-    /// TODO: add image upload
     /// </summary>
     public string? ImageUrl { get; set; }
     /// <summary>

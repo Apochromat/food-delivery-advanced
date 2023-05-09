@@ -13,6 +13,7 @@ public class OrderDish {
     /// Dish in order identifier
     /// </summary>
     public required Dish Dish { get; set; }
+    
     /// <summary>
     /// Order of the dish
     /// </summary>
@@ -27,8 +28,19 @@ public class OrderDish {
     /// Archived dish price
     /// </summary>
     public decimal ArchivedDishPrice { get; set; }
+    
     /// <summary>
     /// Archived dish name
     /// </summary>
     public String? ArchivedDishName { get; set; }
+    
+    /// <summary>
+    /// Archived dish image url
+    /// </summary>
+    public String? ArchivedDishImageUrl { get; set; }
+    
+    /// <summary>
+    /// Archived dish description
+    /// </summary>
+    public String? ArchivedDishDescription { get; set; }
 }

@@ -2,7 +2,9 @@ using System.Net;
 using System.Runtime.InteropServices;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
+using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.BackendAPI.Controllers;
@@ -14,13 +16,16 @@ namespace Delivery.BackendAPI.Controllers;
 [Route("api/restaurant")]
 public class RestaurantController : ControllerBase {
     private readonly IRestaurantService _restaurantService;
-    
+    private readonly IPermissionCheckerService _permissionCheckerService;
+
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="restaurantService"></param>
-    public RestaurantController(IRestaurantService restaurantService) {
+    /// <param name="permissionCheckerService"></param>
+    public RestaurantController(IRestaurantService restaurantService, IPermissionCheckerService permissionCheckerService) {
         _restaurantService = restaurantService;
+        _permissionCheckerService = permissionCheckerService;
     }
 
     /// <summary>
@@ -56,9 +61,14 @@ public class RestaurantController : ControllerBase {
     /// <returns></returns>
     [HttpPut]
     [Route("{restaurantId}")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult> EditRestaurant([FromRoute] Guid restaurantId, RestaurantEditDto restaurantEditDto) {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+
+        await _permissionCheckerService.IsUserManagerOfRestaurant(userId, restaurantId);
         await _restaurantService.EditRestaurant(restaurantId, restaurantEditDto);
-        // Todo: Check if user is manager
         return Ok();
     }
 
@@ -72,15 +82,21 @@ public class RestaurantController : ControllerBase {
     /// <param name="status">Order statuses for filter</param>
     /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
     /// <param name="page">Page of list (natural number)</param>
+    /// <param name="pageSize"></param>
     /// <param name="sort">Sort type</param>
     /// <returns></returns>
     [HttpGet]
     [Route("{restaurantId}/orders")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult<Pagination<OrderShortDto>>> GetRestaurantOrders([FromRoute] Guid restaurantId, 
         [FromQuery] [Optional] List<OrderStatus>? status, [FromQuery] [Optional] String? number, 
-        [FromQuery] int page = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
-        // Todo: Check if user is manager
-        return Ok(await _restaurantService.GetRestaurantOrders(restaurantId, sort, status, number, page));
+        [FromQuery] int page = 1, [FromQuery] int pageSize = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+
+        await _permissionCheckerService.IsUserManagerOfRestaurant(userId, restaurantId);
+        return Ok(await _restaurantService.GetRestaurantOrders(restaurantId, sort, status, number, page, pageSize));
     }
 
     /// <summary>
@@ -90,16 +106,22 @@ public class RestaurantController : ControllerBase {
     /// Cook see orders in his restaurant with statuses: Created
     /// </remarks>
     /// <param name="restaurantId"></param>
-    /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="number">Order number for search</param>
     /// <param name="page">Page of list (natural number)</param>
+    /// <param name="pageSize"></param>
     /// <param name="sort">Sort type</param>
     /// <returns></returns>
     [HttpGet]
     [Route("{restaurantId}/orders/cook")]
-    public ActionResult<Pagination<OrderShortDto>> GetCookRestaurantOrders([FromRoute] Guid restaurantId, 
-        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, 
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Cook")]
+    public async Task<ActionResult<Pagination<OrderShortDto>>> GetCookRestaurantOrders([FromRoute] Guid restaurantId, 
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, [FromQuery] int pageSize = 1, 
         [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
-        // Todo: Check if user is cook
-        return Ok(_restaurantService.GetCookRestaurantOrders(restaurantId, sort, number, page));
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+
+        await _permissionCheckerService.IsUserCookOfRestaurant(userId, restaurantId);
+        return Ok(await _restaurantService.GetCookRestaurantOrders(restaurantId, sort, number, page, pageSize));
     }
 }

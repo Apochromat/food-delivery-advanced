@@ -6,6 +6,7 @@ using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Extensions;
 using Delivery.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Delivery.BackendAPI.BL.Services; 
 
@@ -117,7 +118,7 @@ public class RestaurantService : IRestaurantService {
     /// <param name="pageSize"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public Task<Pagination<OrderShortDto>> GetRestaurantOrders(Guid restaurantId, OrderSort sort, 
+    public async Task<Pagination<OrderShortDto>> GetRestaurantOrders(Guid restaurantId, OrderSort sort, 
         List<OrderStatus>? status, string? number, int page = 1, int pageSize = 10) {
         if (page < 1) {
             throw new BadRequestException("Page number must be greater than 0");
@@ -126,9 +127,9 @@ public class RestaurantService : IRestaurantService {
             throw new BadRequestException("Page size must be greater than 0");
         }
         
-        var allCount = _backendDbContext.Orders
-            .Count(x => x.Restaurant.Id == restaurantId 
-                        && (status == null || status.Contains(x.Status)) 
+        var allCount = await _backendDbContext.Orders
+            .CountAsync(x => x.Restaurant.Id == restaurantId 
+                        && (status == null || status.Count == 0 || status.Contains(x.Status)) 
                         && (number == null || x.Number.Contains(number)));
         if (allCount == 0) {
             throw new NotFoundException("Orders not found");
@@ -141,16 +142,16 @@ public class RestaurantService : IRestaurantService {
         }
         
         // Get orders
-        var raw = _backendDbContext.Orders
+        var raw = await _backendDbContext.Orders
             .Where(x => x.Restaurant.Id == restaurantId 
-                        && (status == null || status.Contains(x.Status)) 
+                        && (status == null || status.Count == 0 || status.Contains(x.Status)) 
                         && (number == null || x.Number.Contains(number)))
             .OrderByOrderSort(sort)
             .TakePage(page, pageSize)
-            .ToList();
+            .ToListAsync();
         
         var mapped = _mapper.Map<List<OrderShortDto>>(raw);
-        return Task.FromResult(new Pagination<OrderShortDto>(mapped, page, pageSize, pages));
+        return new Pagination<OrderShortDto>(mapped, page, pageSize, pages);
     }
 
     /// <summary>
@@ -167,7 +168,7 @@ public class RestaurantService : IRestaurantService {
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
     /// <exception cref="BadRequestException"></exception>
-    public Task<Pagination<OrderShortDto>> GetCookRestaurantOrders(Guid restaurantId, OrderSort sort, string? number, 
+    public async Task<Pagination<OrderShortDto>> GetCookRestaurantOrders(Guid restaurantId, OrderSort sort, string? number, 
         int page = 1, int pageSize = 10) {
         if (page < 1) {
             throw new BadRequestException("Page number must be greater than 0");
@@ -176,8 +177,8 @@ public class RestaurantService : IRestaurantService {
             throw new BadRequestException("Page size must be greater than 0");
         }
         
-        var allCount = _backendDbContext.Orders
-            .Count(x => x.Restaurant.Id == restaurantId 
+        var allCount = await _backendDbContext.Orders
+            .CountAsync(x => x.Restaurant.Id == restaurantId 
                         && (number == null || x.Number.Contains(number)));
         if (allCount == 0) {
             throw new NotFoundException("Orders not found");
@@ -190,15 +191,15 @@ public class RestaurantService : IRestaurantService {
         }
         
         // Get orders
-        var raw = _backendDbContext.Orders
+        var raw = await _backendDbContext.Orders
             .Where(x => x.Restaurant.Id == restaurantId
                         && (number == null || x.Number.Contains(number))
                         && x.Status == OrderStatus.Created)
             .OrderByOrderSort(sort)
             .TakePage(page, pageSize)
-            .ToList();
+            .ToListAsync();
         
         var mapped = _mapper.Map<List<OrderShortDto>>(raw);
-        return Task.FromResult(new Pagination<OrderShortDto>(mapped, page, pageSize, pages));
+        return new Pagination<OrderShortDto>(mapped, page, pageSize, pages);
     }
 }

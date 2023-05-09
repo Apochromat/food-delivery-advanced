@@ -27,7 +27,8 @@ public class CartController : ControllerBase {
     /// [Customer] Get user`s cart
     /// </summary>
     /// <returns></returns>
-    [HttpGet] 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
     public async Task<ActionResult<CartDto>> GetCart() {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");
@@ -39,14 +40,16 @@ public class CartController : ControllerBase {
     /// [Customer] Add dish to user`s cart. If cart includes dish from another restaurant, adding is blocked
     /// </summary>
     /// <param name="dishId"></param>
+    /// <param name="amount"></param>
     /// <returns></returns>
     [HttpPost]
     [Route("dish/{dishId}")]
-    public async Task<ActionResult> AddDishToCart([FromRoute] Guid dishId) {
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
+    public async Task<ActionResult> AddDishToCart([FromRoute] Guid dishId, [FromQuery] int amount = 1) {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");
         }
-        await _cartService.AddDishToCart(userId, dishId);
+        await _cartService.AddDishToCart(userId, dishId, amount);
         return Ok();
     }
 
@@ -55,11 +58,14 @@ public class CartController : ControllerBase {
     /// </summary>
     /// <param name="dishId"></param>
     /// <param name="removeAll">If True, then removes all instances of the dish from the basket,
-    /// else removes only one of them</param>
+    ///     else removes only one (or amount) of them</param>
+    /// <param name="amount"></param>
     /// <returns></returns>
     [HttpDelete]
     [Route("dish/{dishId}")]
-    public async Task<ActionResult> RemoveDishFromCart([FromRoute] Guid dishId, [FromQuery] Boolean removeAll = false) {
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
+    public async Task<ActionResult> RemoveDishFromCart([FromRoute] Guid dishId, [FromQuery] Boolean removeAll = false,
+        [FromQuery] int amount = 1) {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");
         }
@@ -72,6 +78,7 @@ public class CartController : ControllerBase {
     /// </summary>
     /// <returns></returns>
     [HttpDelete]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
     public async Task<ActionResult> ClearCart() {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");

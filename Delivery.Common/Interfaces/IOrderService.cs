@@ -18,7 +18,7 @@ public interface IOrderService {
     /// <returns></returns>
     Task<Pagination<OrderShortDto>> GetAllOrders(List<OrderStatus>? status = null, String? number = null, int page = 1, 
         int pageSize = 10, OrderSort sort = OrderSort.CreationDesc);
-
+    
     /// <summary>
     /// Get Customer`s orders from all restaurants.
     /// </summary>
@@ -72,31 +72,16 @@ public interface IOrderService {
     /// <param name="orderCreateDto"></param>
     /// <returns></returns>
     Task CreateOrder(Guid customerId, OrderCreateDto orderCreateDto);
-    
+
     /// <summary>
     /// Set order status.
     /// </summary>
     /// <param name="orderId"></param>
     /// <param name="status"></param>
+    /// <param name="userId"></param>
     /// <returns></returns>
-    Task SetOrderStatus(Guid orderId, OrderStatus status);
+    Task SetOrderStatus(Guid orderId, OrderStatus status, Guid? userId = null);
     
-    /// <summary>
-    /// Set order courier.
-    /// </summary>
-    /// <param name="orderId"></param>
-    /// <param name="courierId"></param>
-    /// <returns></returns>
-    Task SetOrderCourier(Guid orderId, Guid courierId);
-    
-    /// <summary>
-    /// Set order cook.
-    /// </summary>
-    /// <param name="orderId"></param>
-    /// <param name="cookId"></param>
-    /// <returns></returns>
-    Task SerOrderCook(Guid orderId, Guid cookId);
-
     /// <summary>
     /// Repeats order.
     /// </summary>
