@@ -42,8 +42,7 @@ public class RestaurantController : ControllerBase {
     }
 
     /// <summary>
-    /// [Anyone] Get information about restaurant, list of menus.
-    /// If menu is archived, it is available only for Manager and Administrator.
+    /// [Anyone] Get information about restaurant.
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
@@ -80,7 +79,7 @@ public class RestaurantController : ControllerBase {
     /// </remarks>
     /// <param name="restaurantId"></param>
     /// <param name="status">Order statuses for filter</param>
-    /// <param name="number" example="ORD-8800553535-0001">Order number for search</param>
+    /// <param name="number">Order number for search</param>
     /// <param name="page">Page of list (natural number)</param>
     /// <param name="pageSize"></param>
     /// <param name="sort">Sort type</param>

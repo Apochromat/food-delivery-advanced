@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
+using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,16 @@ namespace Delivery.BackendAPI.Controllers;
 [Route("api/restaurant/{restaurantId}/dish")]
 public class DishController : ControllerBase {
     private readonly IDishService _dishService;
+    private readonly IRatingService _ratingService;
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="dishService"></param>
-    public DishController(IDishService dishService) {
+    /// <param name="ratingService"></param>
+    public DishController(IDishService dishService, IRatingService ratingService) {
         _dishService = dishService;
+        _ratingService = ratingService;
     }
 
     /// <summary>
@@ -32,7 +36,8 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPost]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
-    public async Task<ActionResult> CreateRestaurantDish([FromRoute] Guid restaurantId, [FromBody] DishCreateDto dishCreateDto) {
+    public async Task<ActionResult> CreateRestaurantDish([FromRoute] Guid restaurantId,
+        [FromBody] DishCreateDto dishCreateDto) {
         await _dishService.CreateDish(restaurantId, dishCreateDto);
         return Ok();
     }
@@ -54,11 +59,13 @@ public class DishController : ControllerBase {
     /// <param name="page">Page of list (natural number)</param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<Pagination<DishShortDto>>> GetDishes([FromRoute] Guid restaurantId, [FromQuery] [Optional] List<Guid>? menus,
-        [FromQuery] [Optional] List<DishCategory>? categories, [FromQuery] [Optional] String? name, 
+    public async Task<ActionResult<Pagination<DishShortDto>>> GetDishes([FromRoute] Guid restaurantId,
+        [FromQuery] [Optional] List<Guid>? menus,
+        [FromQuery] [Optional] List<DishCategory>? categories, [FromQuery] [Optional] String? name,
         [FromQuery] Boolean? isVegetarian = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10,
         [FromQuery] DishSort sort = DishSort.NameAsc) {
-        return Ok(await _dishService.GetAllUnarchivedDishes(restaurantId, menus, categories, page, pageSize, name, isVegetarian, sort));
+        return Ok(await _dishService.GetAllUnarchivedDishes(restaurantId, menus, categories, page, pageSize, name,
+            isVegetarian, sort));
     }
 
     /// <summary>
@@ -101,7 +108,7 @@ public class DishController : ControllerBase {
         await _dishService.ArchiveDish(dishId);
         return Ok();
     }
-    
+
     /// <summary>
     /// [Manager] Get list of archived dishes
     /// </summary>
@@ -138,8 +145,12 @@ public class DishController : ControllerBase {
     [HttpGet]
     [Route("{dishId}/rating/check")]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
-    public ActionResult<RatingCheckDto> RatingCheck([FromRoute] Guid dishId) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    public async Task<ActionResult<RatingCheckDto>> RatingCheck([FromRoute] Guid dishId) {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+
+        return Ok(await _ratingService.IsUserCanRate(userId, dishId));
     }
 
     /// <summary>
@@ -150,8 +161,13 @@ public class DishController : ControllerBase {
     /// <returns></returns>
     [HttpPost]
     [Route("{dishId}/rating")]
-    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
-    public ActionResult Rating([FromRoute] Guid dishId, [FromBody] RatingSetDto ratingSetDto) {
-        return Problem("Not Implemented", "Not Implemented", (int)HttpStatusCode.NotImplemented);
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
+    public async Task<ActionResult> Rating([FromRoute] Guid dishId, [FromBody] RatingSetDto ratingSetDto) {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+
+        await _ratingService.RateDish(userId, dishId, ratingSetDto);
+        return Ok();
     }
 }

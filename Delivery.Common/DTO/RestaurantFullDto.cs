@@ -32,8 +32,4 @@ public class RestaurantFullDto {
     /// Restaurant address
     /// </summary>
     public String Address { get; set; } = "";
-    /// <summary>
-    /// List of menus in restaurant
-    /// </summary>
-    public List<MenuShortDto>? Menus { get; set; }
 }

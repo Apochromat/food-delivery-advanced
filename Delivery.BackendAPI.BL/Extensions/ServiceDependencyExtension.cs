@@ -20,6 +20,7 @@ public static class ServiceDependencyExtension {
         services.AddScoped<IDishService, DishService>();
         services.AddScoped<IMenuService, MenuService>();
         services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<ITransactionValidationService, TransactionValidationService>();
         services.AddScoped<IPermissionCheckerService, PermissionCheckerService>();
         services.AddScoped<INotificationQueueService, NotificationQueueService>();
