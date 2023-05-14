@@ -13,6 +13,7 @@ public class HomeController : Controller {
     }
 
     public IActionResult Index() {
+        _logger.LogInformation("Home page is opened");
         return View();
     }
 

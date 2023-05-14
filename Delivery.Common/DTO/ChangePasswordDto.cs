@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Data transfer object for changing password
@@ -12,11 +12,12 @@ public class ChangePasswordDto {
     /// </summary>
     [Required]
     [DisplayName("old_password")]
-    public String OldPassword { get; set; } = "";
+    public required string OldPassword { get; set; }
+
     /// <summary>
     /// New password
     /// </summary>
     [Required]
     [DisplayName("new_password")]
-    public String NewPassword { get; set; } = "";
+    public required string NewPassword { get; set; }
 }

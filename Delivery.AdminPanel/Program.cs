@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-builder.Services.AddAdminPanelBlServiceDependencies();
+builder.Services.AddAdminPanelBlServiceDependencies(builder.Configuration);
 builder.Services.AddAdminPanelBlServiceIdentityDependencies();
 
 // Add cookie authentication

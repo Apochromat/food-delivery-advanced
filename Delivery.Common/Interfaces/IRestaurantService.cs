@@ -11,7 +11,8 @@ public interface IRestaurantService {
     /// Get all restaurants
     /// </summary>
     /// <returns></returns>
-    Task<Pagination<RestaurantShortDto>>GetAllUnarchivedRestaurants(int page, int pageSize = 10, RestaurantSort sort = RestaurantSort.NameAsc, String? name = null);
+    Task<Pagination<RestaurantShortDto>> GetAllUnarchivedRestaurants(int page, int pageSize = 10,
+        RestaurantSort sort = RestaurantSort.NameAsc, String? name = null);
 
     /// <summary>
     /// Get Full restaurant info
@@ -40,7 +41,7 @@ public interface IRestaurantService {
     /// <returns></returns>
     Task<Pagination<OrderShortDto>> GetRestaurantOrders(Guid restaurantId, OrderSort sort,
         List<OrderStatus>? status, String? number, int page = 1, int pageSize = 10);
-    
+
     /// <summary>
     /// Get cook restaurant orders
     /// </summary>

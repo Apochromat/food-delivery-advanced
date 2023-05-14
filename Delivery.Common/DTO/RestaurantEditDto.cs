@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// DTO for updating restaurant
@@ -10,24 +10,28 @@ public class RestaurantEditDto {
     /// Name of the restaurant
     /// </summary>
     [Required]
-    public string Name { get; set; } = "";
+    public string Name { get; set; } = null!; // Late initialization
+
     /// <summary>
     /// Image of restaurant (URL)
     /// </summary>
     [Required]
-    public String SmallImage { get; set; } = "";
+    public string SmallImage { get; set; } = null!; // Late initialization
+
     /// <summary>
     /// Image of restaurant (URL)
     /// </summary>
     [Required]
-    public String BigImage { get; set; } = "";
+    public string BigImage { get; set; } = null!; // Late initialization
+
     /// <summary>
     /// Short description of restaurant
     /// </summary>
-    public String? Description { get; set; }
+    public string? Description { get; set; }
+
     /// <summary>
     /// Restaurant address
     /// </summary>
     [Required]
-    public String Address { get; set; } = "";
+    public string Address { get; set; } = null!; // Late initialization
 }

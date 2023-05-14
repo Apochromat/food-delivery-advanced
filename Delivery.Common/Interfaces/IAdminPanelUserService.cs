@@ -1,7 +1,6 @@
 ﻿using Delivery.Common.DTO;
-using Delivery.Common.Enums;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Admin panel user service
@@ -20,7 +19,7 @@ public interface IAdminPanelUserService {
     /// <param name="model"></param>
     /// <returns></returns>
     Task EditUser(Guid userId, AdminPanelAccountProfileEditDto model);
-    
+
     /// <summary>
     /// Is user banned
     /// </summary>
@@ -34,7 +33,7 @@ public interface IAdminPanelUserService {
     /// <param name="userId"></param>
     /// <returns></returns>
     Task BanUser(Guid userId);
-    
+
     /// <summary>
     /// Unban user
     /// </summary>

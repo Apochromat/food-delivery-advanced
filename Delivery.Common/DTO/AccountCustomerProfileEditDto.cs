@@ -10,5 +10,5 @@ public class AccountCustomerProfileEditDto {
     /// User`s address
     /// </summary>
     [Required]
-    public String Address { get; set; } = "";
+    public required string Address { get; set; }
 }

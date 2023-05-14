@@ -33,6 +33,7 @@ public class CartController : ControllerBase {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");
         }
+
         return Ok(await _cartService.GetCart(userId));
     }
 
@@ -49,6 +50,7 @@ public class CartController : ControllerBase {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");
         }
+
         await _cartService.AddDishToCart(userId, dishId, amount);
         return Ok();
     }
@@ -69,10 +71,11 @@ public class CartController : ControllerBase {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");
         }
-        await _cartService.RemoveDishFromCart(userId, dishId, removeAll);
+
+        await _cartService.RemoveDishFromCart(userId, dishId, removeAll, amount);
         return Ok();
     }
-    
+
     /// <summary>
     /// [Customer] Clear user`s cart
     /// </summary>
@@ -83,6 +86,7 @@ public class CartController : ControllerBase {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");
         }
+
         await _cartService.ClearCart(userId);
         return Ok();
     }

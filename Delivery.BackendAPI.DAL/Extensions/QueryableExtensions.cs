@@ -52,7 +52,7 @@ public static class QueryableExtensions {
     /// </summary>
     public static IQueryable<Dish> FilterDishes(this IQueryable<Dish> source, Guid restaurantId, List<Guid>? menus, List<DishCategory>? categories, string? name, bool? isArchived, bool? isVegetarian) {
         return source.Where(x => 
-            x.Menus.FirstOrDefault().RestaurantId == restaurantId
+            x.Menus.FirstOrDefault()!.RestaurantId == restaurantId
             && x.Menus.Any(y => menus == null|| menus.Count == 0 || menus.Contains(y.Id))
             && x.IsArchived == isArchived
             && (isVegetarian == null || x.IsVegetarian == isVegetarian)

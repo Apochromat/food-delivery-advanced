@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.Interfaces; 
+﻿namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Interface for connection manager service
@@ -11,12 +11,14 @@ public interface IConnectionManagerService {
     /// <param name="connectionId"></param>
     /// <returns></returns>
     Task AddConnectionAsync(Guid userId, string connectionId);
+
     /// <summary>
     /// Ends connection tracking
     /// </summary>
     /// <param name="connectionId"></param>
     /// <returns></returns>
     Task RemoveConnectionAsync(string connectionId);
+
     /// <summary>
     /// Checks if user is connected
     /// </summary>

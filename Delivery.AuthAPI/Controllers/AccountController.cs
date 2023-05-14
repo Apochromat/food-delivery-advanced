@@ -1,5 +1,4 @@
 ﻿using Delivery.Common.DTO;
-using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -37,7 +36,7 @@ public class AccountController : ControllerBase {
 
         return Ok(await _accountService.GetProfileAsync(User.Identity.Name));
     }
-    
+
     /// <summary>
     /// Get information about Customer of current authenticated user
     /// </summary>
@@ -65,10 +64,12 @@ public class AccountController : ControllerBase {
             throw new UnauthorizedException("Invalid authorisation");
         }
 
+        // TODO: add User.Identity.Name validation
+        
         await _accountService.EditProfileAsync(User.Identity.Name, accountProfileEditDto);
         return Ok();
     }
-    
+
     /// <summary>   
     /// Edit current authenticated user`s customer profile
     /// </summary>
@@ -76,7 +77,8 @@ public class AccountController : ControllerBase {
     [HttpPut]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
     [Route("account/customer")]
-    public async Task<ActionResult> UpdateCustomerProfile([FromBody] AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
+    public async Task<ActionResult> UpdateCustomerProfile(
+        [FromBody] AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
         if (User.Identity == null || User.Identity.Name == null) {
             throw new UnauthorizedException("Invalid authorisation");
         }

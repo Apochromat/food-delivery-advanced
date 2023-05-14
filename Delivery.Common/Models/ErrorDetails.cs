@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Delivery.Common.Models; 
+namespace Delivery.Common.Models;
 
 /// <summary>
 /// Error details model
@@ -10,21 +10,22 @@ public class ErrorDetails {
     /// Http status code
     /// </summary>
     public int StatusCode { get; set; }
+
     /// <summary>
     /// Message to user
     /// </summary>
     public string? Message { get; set; }
+
     /// <summary>
     /// Trace id
     /// </summary>
     public string? TraceId { get; set; }
-    
+
     /// <summary>
     /// Convert to string
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
-    {
+    public override string ToString() {
         return JsonSerializer.Serialize(this);
     }
 }

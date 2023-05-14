@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// DTO for creating new menu
@@ -10,5 +10,5 @@ public class MenuCreateDto {
     /// Menu name
     /// </summary>
     [Required]
-    public String Name { get; set; } = "";
+    public required string Name { get; set; }
 }

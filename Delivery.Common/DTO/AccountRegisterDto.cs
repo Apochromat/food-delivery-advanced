@@ -14,7 +14,7 @@ public class AccountRegisterDto {
     [Required]
     [EmailAddress]
     [DisplayName("email")]
-    public string Email { get; set; } = "";
+    public required string Email { get; set; }
 
     /// <summary>
     /// User`s password
@@ -23,36 +23,36 @@ public class AccountRegisterDto {
     [DefaultValue("P@ssw0rd")]
     [DisplayName("password")]
     [MinLength(8)]
-    public string Password { get; set; } = "";
+    public required string Password { get; set; }
 
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
     [Required]
-    public string FullName { get; set; } = "";
-    
+    public required string FullName { get; set; }
+
     /// <summary>
     /// User`s phone number
     /// </summary>
     [Required]
     [Phone]
-    public string? PhoneNumber { get; set; }
+    public required string PhoneNumber { get; set; }
 
     /// <summary>
     /// User`s birth date
     /// </summary>
     [Required]
     [Range(typeof(DateTime), "01/01/1900", "01/01/2023")]
-    public DateTime BirthDate { get; set; }
+    public required DateTime BirthDate { get; set; }
 
     /// <summary>
     /// User`s gender
     /// </summary>
     [Required]
-    public Gender Gender { get; set; }
-    
+    public required Gender Gender { get; set; }
+
     /// <summary>
     /// User`s address
     /// </summary>
-    public String? Address { get; set; }
+    public string? Address { get; set; }
 }

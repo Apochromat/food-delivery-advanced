@@ -1,4 +1,4 @@
-﻿namespace Delivery.BackendAPI.DAL.Entities; 
+﻿namespace Delivery.BackendAPI.DAL.Entities;
 
 /// <summary>
 /// Menu entity
@@ -8,30 +8,37 @@ public class Menu {
     /// Menu Identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Restaurant identifier
     /// </summary>
     public Guid RestaurantId { get; set; }
+
     /// <summary>
     /// Name of the menu
     /// </summary>
     public required string Name { get; set; }
+
     /// <summary>
     /// Indicates if menu is default (only one default menu can exist
     /// </summary>
     public Boolean IsDefault { get; set; }
+
     /// <summary>
     /// Is menu archived
     /// </summary>
     public Boolean IsArchived { get; set; }
+
     /// <summary>
     /// List of dishes in menu
     /// </summary>
     public List<Dish> Dishes { get; set; } = new List<Dish>();
+
     /// <summary>
     /// Creation date
     /// </summary>
     public DateTime CreatedAt { get; set; }
+
     /// <summary>
     /// Update date
     /// </summary>

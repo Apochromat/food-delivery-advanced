@@ -15,7 +15,7 @@ builder.Services.AddControllers().AddJsonOptions(opts => {
     opts.JsonSerializerOptions.Converters.Add(enumConverter);
 });
 
-builder.Services.AddAuthBlServiceDependencies();
+builder.Services.AddAuthBlServiceDependencies(builder.Configuration);
 builder.Services.AddAuthBlServiceIdentityDependencies();
 
 // Swagger

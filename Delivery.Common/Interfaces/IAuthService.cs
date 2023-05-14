@@ -1,7 +1,7 @@
 ﻿using Delivery.Common.DTO;
 using Microsoft.AspNetCore.Http;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Service for authentication and authorization
@@ -38,7 +38,7 @@ public interface IAuthService {
     /// <param name="httpContext"></param>
     /// <returns></returns>
     Task<TokenResponseDto> RefreshTokenAsync(TokenRequestDto tokenRequestDto, HttpContext httpContext);
-    
+
     /// <summary>
     /// Get user devices
     /// </summary>
@@ -54,7 +54,7 @@ public interface IAuthService {
     /// <param name="deviceRenameDto"></param>
     /// <returns></returns>
     Task RenameDeviceAsync(string userId, Guid deviceId, DeviceRenameDto deviceRenameDto);
-    
+
     /// <summary>
     /// Delete device from user devices
     /// </summary>

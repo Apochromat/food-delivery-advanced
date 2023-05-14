@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.Enums; 
+﻿namespace Delivery.Common.Enums;
 
 /// <summary>
 /// Sorting types for orders
@@ -7,15 +7,18 @@ public enum OrderSort {
     /// <summary>
     /// By Creation Date Ascending
     /// </summary>
-    CreationAsc, 
+    CreationAsc,
+
     /// <summary>
     /// By Creation Date Descending
     /// </summary>
-    CreationDesc, 
+    CreationDesc,
+
     /// <summary>
     /// By Delivery Date Ascending
     /// </summary>
-    DeliveryAsc, 
+    DeliveryAsc,
+
     /// <summary>
     /// By Delivery Date Descending
     /// </summary>

@@ -27,14 +27,14 @@ public class RestaurantController : Controller {
         var restaurants = _restaurantService.GetAllRestaurants(
             searchModel?.Name, page, 10, searchModel?.IsArchived, searchModel?.Sort);
         var model = new RestaurantListViewModel() {
-            Restaurants = restaurants.Content,
-            RestaurantCreateModel = new RestaurantCreateModel() {
+            Restaurants = restaurants.Items,
+            RestaurantCreateModel = new RestaurantCreateModel {
                 RestaurantCreateDto = new RestaurantCreateDto()
             },
             RestaurantSearchModel = searchModel ?? new RestaurantSearchModel(),
-            Page = restaurants.Current,
-            Pages = restaurants.Pages,
-            PageSize = restaurants.Items
+            Page = restaurants.CurrentPage,
+            Pages = restaurants.PagesAmount,
+            PageSize = restaurants.PageSize
         };
         return View(model);
     }

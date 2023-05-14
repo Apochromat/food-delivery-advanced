@@ -1,4 +1,4 @@
-﻿namespace Delivery.BackendAPI.DAL.Entities; 
+﻿namespace Delivery.BackendAPI.DAL.Entities;
 
 /// <summary>
 /// Restaurant entity
@@ -8,38 +8,47 @@ public class Restaurant {
     /// Restaurant Identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Name of the restaurant
     /// </summary>
-    public string Name { get; set; } = "";
+    public required string Name { get; set; }
+
     /// <summary>
     /// Is restaurant archived
     /// </summary>
     public Boolean IsArchived { get; set; }
+
     /// <summary>
     /// Small image of restaurant (URL)
     /// </summary>
-    public String SmallImage { get; set; } = "";
+    public required string SmallImage { get; set; }
+
     /// <summary>
     /// Big image of restaurant (URL)
     /// </summary>
-    public String BigImage { get; set; } = "";
+    public required string BigImage { get; set; }
+
     /// <summary>
     /// Short description of restaurant
     /// </summary>
-    public String? Description { get; set; }
+    public string? Description { get; set; }
+
     /// <summary>
     /// Restaurant address
     /// </summary>
-    public String Address { get; set; } = "";
+    public required string Address { get; set; }
+
     /// <summary>
     /// List of menus in restaurant
     /// </summary>
-    public required List<Menu> Menus { get; set; } = new ();
+    public required List<Menu> Menus { get; set; } = new();
+
     /// <summary>
     /// Creation date
     /// </summary>
     public DateTime CreatedAt { get; set; }
+
     /// <summary>
     /// Update date
     /// </summary>
@@ -48,10 +57,10 @@ public class Restaurant {
     /// <summary>
     /// List of cooks in restaurant
     /// </summary>
-    public List<Guid> Cooks { get; set; } = new ();
+    public List<Guid> Cooks { get; set; } = new();
 
     /// <summary>
     /// List of managers in restaurant
     /// </summary>
-    public List<Guid> Managers { get; set; } = new ();
+    public List<Guid> Managers { get; set; } = new();
 }

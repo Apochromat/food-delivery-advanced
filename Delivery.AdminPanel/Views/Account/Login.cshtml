@@ -24,7 +24,7 @@
             @if (ViewData.ModelState["Errors"] != null) {
                 <div class="col-12 mt-2">
                     <span class="text-danger">
-                        @ViewData.ModelState["Errors"].Errors[0].ErrorMessage;
+                        @ViewData.ModelState["Errors"]?.Errors[0].ErrorMessage;
                     </span>
                 </div>
             }

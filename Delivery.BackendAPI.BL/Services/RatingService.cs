@@ -62,7 +62,7 @@ public class RatingService : IRatingService {
         }
 
         var userRating = await _backendDbContext.Ratings
-            .FirstOrDefaultAsync(x => x.CustomerId == userId && x.Dish.Id == dishId);;
+            .FirstOrDefaultAsync(x => x.CustomerId == userId && x.Dish.Id == dishId);
 
         if (userRating == null) {
             userRating = new Rating {

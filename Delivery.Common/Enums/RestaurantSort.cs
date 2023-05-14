@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.Enums; 
+﻿namespace Delivery.Common.Enums;
 
 /// <summary>
 /// Sorting types for restaurants
@@ -7,7 +7,8 @@ public enum RestaurantSort {
     /// <summary>
     /// By Name Ascending
     /// </summary>
-    NameAsc, 
+    NameAsc,
+
     /// <summary>
     /// By Name Descending
     /// </summary>

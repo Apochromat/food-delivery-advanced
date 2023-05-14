@@ -1,6 +1,6 @@
 ﻿using Delivery.Common.Enums;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Dish DTO info about dish
@@ -10,34 +10,42 @@ public class DishFullDto {
     /// Dish Identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Name of the dish
     /// </summary>
-    public string? Name { get; set; }
+    public required string Name { get; set; }
+
     /// <summary>
     /// Description of the dish
     /// </summary>
     public string? Description { get; set; }
+
     /// <summary>
     /// Dish price
     /// </summary>
     public decimal Price { get; set; }
+
     /// <summary>
     /// Image url
     /// </summary>
-    public string? ImageUrl { get; set; }
+    public required string ImageUrl { get; set; }
+
     /// <summary>
     /// Is dish archived
     /// </summary>
     public Boolean IsArchived { get; set; }
+
     /// <summary>
     /// Calculated rating
     /// </summary>
     public decimal CalculatedRating { get; set; }
+
     /// <summary>
     /// Categories of the dish
     /// </summary>
-    public List<DishCategory>? DishCategories { get; set; }
+    public required List<DishCategory> DishCategories { get; set; }
+
     /// <summary>
     /// Is dish vegetarian
     /// </summary>

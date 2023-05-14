@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Delivery.AuthAPI.DAL.Entities; 
+﻿namespace Delivery.AuthAPI.DAL.Entities;
 
 /// <summary>
 /// Entity for user devices, refresh tokens, etc.
@@ -9,32 +7,38 @@ public class Device {
     /// <summary>
     /// Device identifier
     /// </summary>
-    [Key]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
+
     /// <summary>
     /// User identifier
     /// </summary>
-    public User? User { get; set; }
+    public required User User { get; set; }
+
     /// <summary>
     /// User agent
     /// </summary>
-    public String? UserAgent { get; set; }
+    public string? UserAgent { get; set; }
+
     /// <summary>
     /// Device name
     /// </summary>
-    public String? DeviceName { get; set; }
+    public string? DeviceName { get; set; }
+
     /// <summary>
     /// Refresh token
     /// </summary>
-    public String? RefreshToken { get; set; }
+    public required string RefreshToken { get; set; }
+
     /// <summary>
     /// Last activity
     /// </summary>
     public DateTime? LastActivity { get; set; }
+
     /// <summary>
     /// Date of creation
     /// </summary>
     public DateTime? CreatedAt { get; set; } = DateTime.UtcNow.ToUniversalTime();
+
     /// <summary>
     /// Expiration date
     /// </summary>

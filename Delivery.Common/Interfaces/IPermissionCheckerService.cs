@@ -1,7 +1,6 @@
-﻿using Delivery.Common.DTO;
-using Delivery.Common.Enums;
+﻿using Delivery.Common.Enums;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Permission Checker service interface
@@ -14,7 +13,7 @@ public interface IPermissionCheckerService {
     /// <param name="restaurantId"></param>
     /// <returns></returns>
     Task<bool> IsUserManagerOfRestaurant(Guid userId, Guid restaurantId);
-    
+
     /// <summary>
     /// Check if user is cook of restaurant.
     /// </summary>
@@ -34,7 +33,7 @@ public interface IPermissionCheckerService {
     /// <param name="orderId"></param>
     /// <returns></returns>
     Task<bool> IsCookHasAccessToOrder(Guid userId, Guid orderId);
-    
+
     /// <summary>
     /// Check if courier has access to order.
     /// </summary>
@@ -46,7 +45,7 @@ public interface IPermissionCheckerService {
     /// <param name="orderId"></param>
     /// <returns></returns>
     Task<bool> IsCourierHasAccessToOrder(Guid userId, Guid orderId);
-    
+
     /// <summary>
     /// Check if manager has access to order.
     /// </summary>
@@ -57,7 +56,7 @@ public interface IPermissionCheckerService {
     /// <param name="orderId"></param>
     /// <returns></returns>
     Task<bool> IsManagerHasAccessToOrder(Guid userId, Guid orderId);
-    
+
     /// <summary>
     /// Check if customer has access to order.
     /// </summary>
@@ -68,7 +67,7 @@ public interface IPermissionCheckerService {
     /// <param name="orderId"></param>
     /// <returns></returns>
     Task<bool> IsCustomerHasAccessToOrder(Guid userId, Guid orderId);
-    
+
     /// <summary>
     /// Check if order has status from list.
     /// </summary>

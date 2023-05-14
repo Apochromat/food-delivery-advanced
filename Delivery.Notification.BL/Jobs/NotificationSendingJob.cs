@@ -4,7 +4,7 @@ using Delivery.Notification.DAL;
 using Microsoft.Extensions.Logging;
 using Quartz;
 
-namespace Delivery.Notification.BL.Jobs; 
+namespace Delivery.Notification.BL.Jobs;
 
 /// <summary>
 /// Job for sending notifications
@@ -20,7 +20,8 @@ public class NotificationSendingJob : IJob {
     /// <param name="logger"></param>
     /// <param name="dbContext"></param>
     /// <param name="notificationService"></param>
-    public NotificationSendingJob(ILogger<NotificationSendingJob> logger, NotificationDbContext dbContext, INotificationService notificationService) {
+    public NotificationSendingJob(ILogger<NotificationSendingJob> logger, NotificationDbContext dbContext,
+        INotificationService notificationService) {
         _dbContext = dbContext;
         _notificationService = notificationService;
         _logger = logger;
@@ -40,11 +41,12 @@ public class NotificationSendingJob : IJob {
                 Title = notification.Title,
                 CreatedAt = notification.CreatedAt
             });
-            
+
             if (sent) {
                 notification.DeliveredAt = DateTime.UtcNow;
             }
         }
+
         _dbContext.SaveChanges();
     }
 }

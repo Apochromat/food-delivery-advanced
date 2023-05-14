@@ -1,7 +1,7 @@
 ﻿using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Admin panel restaurant service
@@ -11,21 +11,23 @@ public interface IAdminPanelRestaurantService {
     /// Get all restaurants
     /// </summary>
     /// <returns></returns>
-    Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null, RestaurantSort? sort = null);
+    Pagination<RestaurantShortDto> GetAllRestaurants(String? name, int page, int pageSize = 10, bool? isArchived = null,
+        RestaurantSort? sort = null);
+
     /// <summary>
     /// Get Full restaurant info
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
     RestaurantFullDto GetRestaurant(Guid restaurantId);
-    
+
     /// <summary>
     /// Get restaurant manager list
     /// </summary>
     /// <param name="restaurantId"></param>
     /// <returns></returns>
     List<AccountProfileFullDto> GetRestaurantManagers(Guid restaurantId);
-    
+
     /// <summary>
     /// Get restaurant cook list
     /// </summary>
@@ -69,7 +71,7 @@ public interface IAdminPanelRestaurantService {
     /// <param name="email"></param>
     /// <returns></returns>
     Task AddManagerToRestaurant(Guid restaurantId, String email);
-    
+
     /// <summary>
     /// Remove manager from restaurant
     /// </summary>
@@ -77,7 +79,7 @@ public interface IAdminPanelRestaurantService {
     /// <param name="email"></param>
     /// <returns></returns>
     Task RemoveManagerFromRestaurant(Guid restaurantId, String email);
-    
+
     /// <summary>
     /// Add cook to restaurant
     /// </summary>

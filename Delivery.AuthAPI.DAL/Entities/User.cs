@@ -10,11 +10,13 @@ public class User : IdentityUser<Guid> {
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
-    public string FullName { get; set; } = "";
+    public required string FullName { get; set; }
+
     /// <summary>
     /// User`s birth date
     /// </summary>
     public DateTime BirthDate { get; set; }
+
     /// <summary>
     /// User`s gender
     /// </summary>
@@ -29,19 +31,22 @@ public class User : IdentityUser<Guid> {
     /// User`s devices
     /// </summary>
     public List<Device> Devices { get; set; } = new List<Device>();
-    
+
     /// <summary>
     /// Link to customer
     /// </summary>
     public Customer? Customer { get; set; }
+
     /// <summary>
     /// Link to courier
     /// </summary>
     public Courier? Courier { get; set; }
+
     /// <summary>
     /// Link to manager
     /// </summary>
     public Manager? Manager { get; set; }
+
     /// <summary>
     /// Link to cook
     /// </summary>

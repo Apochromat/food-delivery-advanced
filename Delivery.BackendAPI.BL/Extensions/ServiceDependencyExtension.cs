@@ -1,6 +1,8 @@
 ﻿using Delivery.BackendAPI.BL.Services;
 using Delivery.BackendAPI.DAL;
 using Delivery.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Delivery.BackendAPI.BL.Extensions;
@@ -12,9 +14,11 @@ public static class ServiceDependencyExtension {
     /// Add BackendAPI BL service dependencies
     /// </summary>
     /// <param name="services"></param>
+    /// <param name="configuration"></param>
     /// <returns></returns>
-    public static IServiceCollection AddBackendBlServiceDependencies(this IServiceCollection services) {
-        services.AddDbContext<BackendDbContext>();
+    public static IServiceCollection AddBackendBlServiceDependencies(this IServiceCollection services, IConfiguration configuration) {
+        services.AddDbContext<BackendDbContext>(options => 
+            options.UseNpgsql(configuration.GetConnectionString("BackendDatabasePostgres")));
         services.AddScoped<IRestaurantService, RestaurantService>();
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IDishService, DishService>();

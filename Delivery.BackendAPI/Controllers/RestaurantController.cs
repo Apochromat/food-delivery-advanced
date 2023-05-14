@@ -1,4 +1,3 @@
-using System.Net;
 using System.Runtime.InteropServices;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
@@ -23,7 +22,8 @@ public class RestaurantController : ControllerBase {
     /// </summary>
     /// <param name="restaurantService"></param>
     /// <param name="permissionCheckerService"></param>
-    public RestaurantController(IRestaurantService restaurantService, IPermissionCheckerService permissionCheckerService) {
+    public RestaurantController(IRestaurantService restaurantService,
+        IPermissionCheckerService permissionCheckerService) {
         _restaurantService = restaurantService;
         _permissionCheckerService = permissionCheckerService;
     }
@@ -37,7 +37,9 @@ public class RestaurantController : ControllerBase {
     /// <param name="page">Page of list (natural number)</param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<Pagination<RestaurantShortDto>>> GetRestaurants([FromQuery] String? name = null, [FromQuery] RestaurantSort sort = RestaurantSort.NameAsc, [FromQuery] int pageSize = 10, [FromQuery] int page = 1 ) {
+    public async Task<ActionResult<Pagination<RestaurantShortDto>>> GetRestaurants([FromQuery] String? name = null,
+        [FromQuery] RestaurantSort sort = RestaurantSort.NameAsc, [FromQuery] int pageSize = 10,
+        [FromQuery] int page = 1) {
         return Ok(await _restaurantService.GetAllUnarchivedRestaurants(page, pageSize, sort, name));
     }
 
@@ -87,8 +89,8 @@ public class RestaurantController : ControllerBase {
     [HttpGet]
     [Route("{restaurantId}/orders")]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
-    public async Task<ActionResult<Pagination<OrderShortDto>>> GetRestaurantOrders([FromRoute] Guid restaurantId, 
-        [FromQuery] [Optional] List<OrderStatus>? status, [FromQuery] [Optional] String? number, 
+    public async Task<ActionResult<Pagination<OrderShortDto>>> GetRestaurantOrders([FromRoute] Guid restaurantId,
+        [FromQuery] [Optional] List<OrderStatus>? status, [FromQuery] [Optional] String? number,
         [FromQuery] int page = 1, [FromQuery] int pageSize = 1, [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");
@@ -113,8 +115,8 @@ public class RestaurantController : ControllerBase {
     [HttpGet]
     [Route("{restaurantId}/orders/cook")]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Cook")]
-    public async Task<ActionResult<Pagination<OrderShortDto>>> GetCookRestaurantOrders([FromRoute] Guid restaurantId, 
-        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, [FromQuery] int pageSize = 1, 
+    public async Task<ActionResult<Pagination<OrderShortDto>>> GetCookRestaurantOrders([FromRoute] Guid restaurantId,
+        [FromQuery] [Optional] String? number, [FromQuery] int page = 1, [FromQuery] int pageSize = 1,
         [FromQuery] OrderSort sort = OrderSort.CreationDesc) {
         if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
             throw new UnauthorizedException("User is not authorized");

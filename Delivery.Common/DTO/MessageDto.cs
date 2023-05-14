@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Message DTO
@@ -11,21 +11,25 @@ public class MessageDto {
     /// </summary>
     [DisplayName("receiverId")]
     public Guid ReceiverId { get; set; }
+
     /// <summary>
     /// Message title
     /// </summary>
     [DisplayName("title")]
     public required string Title { get; set; }
+
     /// <summary>
     /// Message text
     /// </summary>
     [DisplayName("text")]
-    public string Text { get; set; } = string.Empty;
+    public required string Text { get; set; }
+
     /// <summary>
     /// Message creation date
     /// </summary>
     [DisplayName("createdAt")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     /// <summary>
     /// Message delivery date
     /// </summary>

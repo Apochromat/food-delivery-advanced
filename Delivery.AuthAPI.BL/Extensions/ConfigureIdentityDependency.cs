@@ -3,7 +3,7 @@ using Delivery.AuthAPI.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Delivery.AuthAPI.BL.Extensions; 
+namespace Delivery.AuthAPI.BL.Extensions;
 
 /// <summary>
 /// Extension methods for AuthAPI BL service Identity dependencies

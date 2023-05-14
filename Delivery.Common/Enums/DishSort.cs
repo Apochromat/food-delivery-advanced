@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.Enums; 
+﻿namespace Delivery.Common.Enums;
 
 /// <summary>
 /// Sorting types for dishes
@@ -7,23 +7,28 @@ public enum DishSort {
     /// <summary>
     /// By Name Ascending
     /// </summary>
-    NameAsc, 
+    NameAsc,
+
     /// <summary>
     /// By Name Descending
     /// </summary>
-    NameDesc, 
+    NameDesc,
+
     /// <summary>
     /// By Price Ascending
     /// </summary>
-    PriceAsc, 
+    PriceAsc,
+
     /// <summary>
     /// By Price Descending
     /// </summary>
-    PriceDesc, 
+    PriceDesc,
+
     /// <summary>
     /// By Rating Ascending
     /// </summary>
-    RatingAsc, 
+    RatingAsc,
+
     /// <summary>
     /// By Rating Descending
     /// </summary>

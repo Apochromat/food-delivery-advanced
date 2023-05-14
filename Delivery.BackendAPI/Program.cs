@@ -15,7 +15,7 @@ builder.Services.AddControllers().AddJsonOptions(opts => {
     opts.JsonSerializerOptions.Converters.Add(enumConverter);
 });
 
-builder.Services.AddBackendBlServiceDependencies();
+builder.Services.AddBackendBlServiceDependencies(builder.Configuration);
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

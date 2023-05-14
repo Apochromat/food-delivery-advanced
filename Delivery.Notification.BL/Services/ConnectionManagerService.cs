@@ -3,7 +3,7 @@ using Delivery.Notification.DAL;
 using Delivery.Notification.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Delivery.Notification.BL.Services; 
+namespace Delivery.Notification.BL.Services;
 
 /// <summary>
 /// Connection manager service
@@ -44,6 +44,7 @@ public class ConnectionManagerService : IConnectionManagerService {
         if (connection == null) {
             return;
         }
+
         _dbContext.Connections.Remove(connection);
         await _dbContext.SaveChangesAsync();
     }
@@ -59,6 +60,7 @@ public class ConnectionManagerService : IConnectionManagerService {
         if (connections > 0) {
             return true;
         }
+
         return false;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Delivery.Common.DTO;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Interface for notification service

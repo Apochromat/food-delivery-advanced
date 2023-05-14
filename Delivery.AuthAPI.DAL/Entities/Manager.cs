@@ -1,4 +1,4 @@
-﻿namespace Delivery.AuthAPI.DAL.Entities; 
+﻿namespace Delivery.AuthAPI.DAL.Entities;
 
 /// <summary>
 /// Manager entity
@@ -8,22 +8,9 @@ public class Manager {
     /// Manager`s id
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Link to user
     /// </summary>
-    public User? User { get; set; }
-    
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="user"></param>
-    public Manager(User user) {
-        User = user;
-    }
-    
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public Manager() {
-    }
+    public required User User { get; set; }
 }

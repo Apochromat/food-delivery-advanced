@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Restaurant DTO to short info about restaurant
@@ -8,12 +8,14 @@ public class RestaurantShortDto {
     /// Restaurant id
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Restaurant name
     /// </summary>
-    public String Name { get; set; } = "";
+    public required string Name { get; set; }
+
     /// <summary>
     /// Image of restaurant (URL)
     /// </summary>
-    public String SmallImage { get; set; } = "";
+    public required string SmallImage { get; set; }
 }

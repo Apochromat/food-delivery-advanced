@@ -12,18 +12,15 @@ namespace Delivery.BackendAPI.BL.Services;
 /// Cart service
 /// </summary>
 public class CartService : ICartService {
-    private readonly INotificationQueueService _notificationQueueService;
     private readonly BackendDbContext _backendDbContext;
     private readonly IMapper _mapper;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="notificationQueueService"></param>
     /// <param name="backendDbContext"></param>
     /// <param name="mapper"></param>
-    public CartService(INotificationQueueService notificationQueueService, BackendDbContext backendDbContext, IMapper mapper) {
-        _notificationQueueService = notificationQueueService;
+    public CartService(BackendDbContext backendDbContext, IMapper mapper) {
         _backendDbContext = backendDbContext;
         _mapper = mapper;
     }

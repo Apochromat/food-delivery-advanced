@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.Enums; 
+﻿namespace Delivery.Common.Enums;
 
 /// <summary>
 /// Dish categories
@@ -8,18 +8,22 @@ public enum DishCategory {
     /// Wok
     /// </summary>
     Wok,
+
     /// <summary>
     /// Pizza
     /// </summary>
     Pizza,
+
     /// <summary>
     /// Soup
     /// </summary>
     Soup,
+
     /// <summary>
     /// Dessert
     /// </summary>
     Dessert,
+
     /// <summary>
     /// Drink
     /// </summary>

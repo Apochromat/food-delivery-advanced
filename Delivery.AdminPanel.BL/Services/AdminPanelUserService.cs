@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Delivery.AuthAPI.DAL;
 using Delivery.AuthAPI.DAL.Entities;
-using Delivery.BackendAPI.DAL;
 using Delivery.Common.DTO;
 using Delivery.Common.Exceptions;
+using Delivery.Common.Extensions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -22,7 +22,7 @@ public class AdminPanelUserService : IAdminPanelUserService {
 
     public async Task<Pagination<AccountProfileFullDto>> GetAllUsers(string? name, int page, int pageSize = 10) {
         var allCount = _authDbContext.Users
-            .Count(x => name == null ? true : x.FullName.Contains(name));
+            .Count(x => name == null || x.FullName.Contains(name));
         if (allCount == 0) {
             return new Pagination<AccountProfileFullDto>(new List<AccountProfileFullDto>(), page, pageSize, 0);
         }
@@ -34,11 +34,10 @@ public class AdminPanelUserService : IAdminPanelUserService {
         }
 
         // Get users
-        var raw = _authDbContext.Users?
-            .Where(x => name == null ? true : x.FullName.Contains(name))
+        var raw = _authDbContext.Users
+            .Where(x => name == null || x.FullName.Contains(name))
             .OrderBy(x => x.FullName)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .TakePage(page, pageSize)
             .ToList();
         var mapped = _mapper.Map<List<AccountProfileFullDto>>(raw);
         foreach (var user in mapped) {

@@ -1,6 +1,6 @@
 ﻿using Delivery.Common.DTO;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Cart service interface
@@ -12,7 +12,7 @@ public interface ICartService {
     /// <param name="userId"></param>
     /// <returns></returns>
     Task ClearCartFromArchivedDishes(Guid userId);
-    
+
     /// <summary>
     /// Get user cart
     /// </summary>

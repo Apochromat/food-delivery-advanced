@@ -1,6 +1,6 @@
 ﻿using Delivery.Common.Enums;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Account profile DTO
@@ -10,10 +10,12 @@ public class AccountCourierProfileDto {
     /// Profile Identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// User`s full name (surname, name, patronymic)
     /// </summary>
-    public string? FullName { get; set; }
+    public required string FullName { get; set; }
+
     /// <summary>
     /// User`s gender
     /// </summary>

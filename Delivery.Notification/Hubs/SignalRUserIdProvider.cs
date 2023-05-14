@@ -12,6 +12,6 @@ public class SignalRUserIdProvider : IUserIdProvider {
     /// <param name="connection"></param>
     /// <returns></returns>
     public string GetUserId(HubConnectionContext connection) {
-        return connection.User.Identity.Name;
+        return connection.User.Identity!.Name!;
     }
 }

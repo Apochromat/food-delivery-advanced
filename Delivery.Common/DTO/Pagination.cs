@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Pagination DTO component
@@ -9,44 +9,38 @@ public class Pagination<T> {
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="content"></param>
-    /// <param name="current"></param>
     /// <param name="items"></param>
-    /// <param name="pages"></param>
-    public Pagination(List<T> content, int current, int items, int pages) {
-        Content = content;
-        Current = current;
+    /// <param name="currentPage"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="pagesAmount"></param>
+    public Pagination(List<T> items, int currentPage, int pageSize, int pagesAmount) {
         Items = items;
-        Pages = pages;
-    }
-    
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public Pagination() {
+        CurrentPage = currentPage;
+        PageSize = pageSize;
+        PagesAmount = pagesAmount;
     }
 
     /// <summary>
     /// List of items
     /// </summary>
-    [DisplayName("content")]
-    public List<T> Content { get; set; } = new List<T>();
+    [DisplayName("items")]
+    public List<T> Items { get; set; }
 
     /// <summary>
     /// Page of list (natural number)
     /// </summary>
-    [DisplayName("current")]
-    public int Current { get; set; }
-    
+    [DisplayName("current_page")]
+    public int CurrentPage { get; set; }
+
     /// <summary>
     /// Count of items on page (natural number)
     /// </summary>
-    [DisplayName("items")]
-    public int Items { get; set; }
-    
+    [DisplayName("page_size")]
+    public int PageSize { get; set; }
+
     /// <summary>
     /// Amount of pages
     /// </summary>
-    [DisplayName("pages")]
-    public int Pages { get; set; }
+    [DisplayName("pages_amount")]
+    public int PagesAmount { get; set; }
 }

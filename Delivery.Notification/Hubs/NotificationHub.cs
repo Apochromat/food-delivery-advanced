@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Delivery.Notification.Hubs; 
+namespace Delivery.Notification.Hubs;
 
 /// <summary>
 /// Hub for notifications
@@ -21,7 +21,7 @@ public class NotificationHub : Hub {
         _logger = logger;
         _connectionManager = connectionManager;
     }
-    
+
     /// <summary>
     /// User connection event
     /// </summary>
@@ -30,6 +30,7 @@ public class NotificationHub : Hub {
             _logger.LogError("User identifier is null");
             return;
         }
+
         await _connectionManager.AddConnectionAsync(new Guid(Context.UserIdentifier), Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, Context.UserIdentifier);
         await base.OnConnectedAsync();
@@ -44,6 +45,7 @@ public class NotificationHub : Hub {
             _logger.LogError("User identifier is null");
             return;
         }
+
         await _connectionManager.RemoveConnectionAsync(Context.ConnectionId);
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, Context.UserIdentifier);
         await base.OnDisconnectedAsync(exception);

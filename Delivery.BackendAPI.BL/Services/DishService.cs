@@ -63,7 +63,7 @@ public class DishService : IDishService {
             Id = new Guid(),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            Menus = new List<Menu?>() { menu },
+            Menus = new List<Menu> { menu },
             ImageUrl = dishCreateDto.ImageUrl,
             Name = dishCreateDto.Name,
             Description = dishCreateDto.Description,
@@ -72,7 +72,7 @@ public class DishService : IDishService {
             IsArchived = false,
             DishCategories = dishCreateDto.DishCategories
         };
-        menu.Dishes?.Add(dish);
+        menu.Dishes.Add(dish);
         _backendDbContext.Dishes.Add(dish);
         await _backendDbContext.SaveChangesAsync();
     }
@@ -160,7 +160,7 @@ public class DishService : IDishService {
         dish.Description = dishUpdateDto.Description;
         dish.Price = dishUpdateDto.Price;
         dish.IsVegetarian = dishUpdateDto.IsVegetarian;
-        dish.DishCategories = dishUpdateDto.DishCategories;
+        dish.DishCategories = dishUpdateDto.DishCategories ?? new List<DishCategory>();
         dish.UpdatedAt = DateTime.UtcNow;
         await _backendDbContext.SaveChangesAsync();
     }
@@ -214,7 +214,7 @@ public class DishService : IDishService {
         }
         
         var dishes = await _backendDbContext.Dishes
-            .Where(x => x.Menus.FirstOrDefault().RestaurantId == restaurantId
+            .Where(x => x.Menus.FirstOrDefault()!.RestaurantId == restaurantId
                         && x.IsArchived)
             .ToListAsync();
         

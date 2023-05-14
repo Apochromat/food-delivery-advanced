@@ -22,13 +22,13 @@ public class UserController : Controller {
 
     [HttpGet]
     public async Task<IActionResult> Index(int page = 1) {
-        var users = await _adminPanelUserService.GetAllUsers(null, page, 10);
+        var users = await _adminPanelUserService.GetAllUsers(null, page);
         
         var model = new UserListViewModel() {
-            Users = users.Content,
-            Page = users.Current,
-            Pages = users.Pages,
-            PageSize = users.Items
+            Users = users.Items,
+            Page = users.CurrentPage,
+            Pages = users.PagesAmount,
+            PageSize = users.PageSize
         };
         return View(model);
     }

@@ -30,11 +30,12 @@ public class MenuController : ControllerBase {
     /// <returns></returns>
     [HttpPost]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
-    public async Task<ActionResult> CreateRestaurantMenu([FromRoute] Guid restaurantId, [FromBody] MenuCreateDto menuCreateDto) {
+    public async Task<ActionResult> CreateRestaurantMenu([FromRoute] Guid restaurantId,
+        [FromBody] MenuCreateDto menuCreateDto) {
         await _menuService.CreateRestaurantMenu(restaurantId, menuCreateDto);
         return Ok();
     }
-    
+
     /// <summary>
     /// [Anyone] Get list of unarchived menus in restaurant. Restaurant always has Default menu.
     /// </summary>
@@ -42,7 +43,8 @@ public class MenuController : ControllerBase {
     /// <param name="restaurantId"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<List<MenuShortDto>>> GetRestaurantMenus([FromRoute] Guid restaurantId, [FromQuery][Optional] String? name) {
+    public async Task<ActionResult<List<MenuShortDto>>> GetRestaurantMenus([FromRoute] Guid restaurantId,
+        [FromQuery] [Optional] String? name) {
         return Ok(await _menuService.GetRestaurantMenus(name, restaurantId));
     }
 
@@ -73,7 +75,7 @@ public class MenuController : ControllerBase {
         await _menuService.EditMenu(menuId, menuEditDto);
         return Ok();
     }
-    
+
     /// <summary>
     /// [Manager] Archive menu. Unable for Default menu.
     /// </summary>
@@ -89,7 +91,7 @@ public class MenuController : ControllerBase {
         await _menuService.ArchiveMenu(menuId);
         return Ok();
     }
-    
+
     /// <summary>
     /// [Manager] Get list of archived menus.
     /// </summary>
@@ -100,7 +102,7 @@ public class MenuController : ControllerBase {
     public async Task<ActionResult<List<MenuShortDto>>> ArchivedMenus([FromRoute] Guid restaurantId) {
         return Ok(await _menuService.ArchivedRestaurantMenus(restaurantId));
     }
-    
+
     /// <summary>
     /// [Manager] Unarchive menu. Only for archived menus.
     /// </summary>
@@ -116,7 +118,7 @@ public class MenuController : ControllerBase {
         await _menuService.UnarchiveMenu(menuId);
         return Ok();
     }
-    
+
     /// <summary>
     /// [Manager] Add dish to menu. Unable for Default menu.
     /// </summary>
@@ -129,7 +131,7 @@ public class MenuController : ControllerBase {
         await _menuService.AddDishToMenu(menuId, dishId);
         return Ok();
     }
-    
+
     /// <summary>
     /// [Manager] Remove dish from menu. Unable for Default menu.
     /// </summary>

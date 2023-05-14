@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Delivery.Common.Enums;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Token request DTO
@@ -13,11 +12,12 @@ public class TokenRequestDto {
     /// </summary>
     [Required]
     [DisplayName("access_token")]
-    public String AccessToken { get; set; } = "";
+    public required string AccessToken { get; set; }
+
     /// <summary>
     /// Refresh token
     /// </summary>
     [Required]
     [DisplayName("refresh_token")]
-    public String RefreshToken { get; set; } = "";
+    public required string RefreshToken { get; set; } 
 }

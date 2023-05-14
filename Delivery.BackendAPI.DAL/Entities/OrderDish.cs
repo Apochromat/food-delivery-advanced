@@ -1,4 +1,4 @@
-﻿namespace Delivery.BackendAPI.DAL.Entities; 
+﻿namespace Delivery.BackendAPI.DAL.Entities;
 
 /// <summary>
 /// Entity for dishes in order
@@ -8,17 +8,17 @@ public class OrderDish {
     /// OrderDish identifier
     /// </summary>
     public Guid Id { get; set; }
-    
+
     /// <summary>
     /// Dish in order identifier
     /// </summary>
     public required Dish Dish { get; set; }
-    
+
     /// <summary>
     /// Order of the dish
     /// </summary>
-    public Order? Order { get; set; }
-    
+    public Order Order { get; set; } = null!;   // Late init
+
     /// <summary>
     /// Amount of dishes in order
     /// </summary>
@@ -28,19 +28,19 @@ public class OrderDish {
     /// Archived dish price
     /// </summary>
     public decimal ArchivedDishPrice { get; set; }
-    
+
     /// <summary>
     /// Archived dish name
     /// </summary>
-    public String? ArchivedDishName { get; set; }
-    
+    public string? ArchivedDishName { get; set; }
+
     /// <summary>
     /// Archived dish image url
     /// </summary>
-    public String? ArchivedDishImageUrl { get; set; }
-    
+    public string? ArchivedDishImageUrl { get; set; }
+
     /// <summary>
     /// Archived dish description
     /// </summary>
-    public String? ArchivedDishDescription { get; set; }
+    public string? ArchivedDishDescription { get; set; }
 }

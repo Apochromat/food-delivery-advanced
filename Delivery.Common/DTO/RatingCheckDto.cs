@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Rating check DTO

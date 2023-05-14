@@ -1,6 +1,6 @@
 ﻿using Delivery.Common.Enums;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Interface for the transaction validation service.

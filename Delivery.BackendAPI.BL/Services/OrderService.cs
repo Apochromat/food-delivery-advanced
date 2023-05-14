@@ -276,11 +276,11 @@ public class OrderService : IOrderService {
         try {
             cart = await _cartService.GetCart(order.CustomerId);
         }
-        catch (Exception e) {
+        catch (Exception) {
             // ignored
         }
         
-        if (cart != null && (cart?.Dishes.Count != 0 && force == false)) {
+        if (cart != null && (cart.Dishes.Count != 0 && force == false)) {
             throw new BadRequestException("Cart is not empty. Send force=true to override");
         }
 

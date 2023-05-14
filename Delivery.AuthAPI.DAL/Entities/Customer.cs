@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Delivery.AuthAPI.DAL.Entities; 
+﻿namespace Delivery.AuthAPI.DAL.Entities;
 
 /// <summary>
 /// Customer entity
@@ -10,26 +8,14 @@ public class Customer {
     /// Customer`s id
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Link to user
     /// </summary>
-    public User? User { get; set; }
+    public required User User { get; set; }
+
     /// <summary>
     /// Customer`s address 
     /// </summary>
     public string? Address { get; set; }
-    
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="user"></param>
-    public Customer(User user) {
-        User = user;
-    }
-    
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public Customer() {
-    }
 }

@@ -7,7 +7,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Delivery.Notification.BL.Extensions; 
 
+/// <summary>
+/// Extension for notification service dependencies.
+/// </summary>
 public static class ServiceDependencyExtension {
+    /// <summary>
+    /// Add notification service dependencies.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
     public static IServiceCollection AddNotificationServiceDependencies(this IServiceCollection services, IConfiguration configuration) {
         services.AddDbContext<NotificationDbContext>(options => 
             options.UseNpgsql(configuration.GetConnectionString("NotificationDatabasePostgres")));

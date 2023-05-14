@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Data transfer object for cart
@@ -7,13 +7,15 @@ public class CartDto {
     /// <summary>
     /// List of dishes in cart
     /// </summary>
-    public List<CartDishDto> Dishes { get; set; } = new List<CartDishDto>();
+    public required List<CartDishDto> Dishes { get; set; } = new List<CartDishDto>();
+
     /// <summary>
     /// Total price of dishes in cart
     /// </summary>
-    public decimal TotalPrice { get; set; }
+    public required decimal TotalPrice { get; set; }
+
     /// <summary>
     /// Information about restaurant
     /// </summary>
-    public RestaurantShortDto? Restaurant { get; set; }
+    public required RestaurantShortDto Restaurant { get; set; }
 }

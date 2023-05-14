@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Delivery.AuthAPI.DAL;
 using Delivery.AuthAPI.DAL.Entities;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
@@ -7,7 +6,6 @@ using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Delivery.AuthAPI.BL.Services;
 
@@ -15,27 +13,17 @@ namespace Delivery.AuthAPI.BL.Services;
 /// Service for account info management
 /// </summary>
 public class AccountService : IAccountService {
-    private readonly ILogger<AccountService> _logger;
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
-    private readonly AuthDbContext _authDbContext;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="logger"></param>
     /// <param name="mapper"></param>
     /// <param name="userManager"></param>
-    /// <param name="signInManager"></param>
-    /// <param name="authDbContext"></param>
-    public AccountService(ILogger<AccountService> logger, IMapper mapper, UserManager<User> userManager,
-        SignInManager<User> signInManager, AuthDbContext authDbContext) {
-        _logger = logger;
+    public AccountService(IMapper mapper, UserManager<User> userManager) {
         _mapper = mapper;
         _userManager = userManager;
-        _signInManager = signInManager;
-        _authDbContext = authDbContext;
     }
 
     /// <summary>
@@ -63,18 +51,17 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="NotFoundException"></exception>
     public async Task<AccountCustomerProfileFullDto> GetCustomerFullProfileAsync(string userId) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
         }
 
-        var user = await _userManager.Users.Include(u => u.Customer).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        var user = await _userManager.Users.Include(u => u.Customer)
+            .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-        
+
         var profile = _mapper.Map<AccountCustomerProfileFullDto>(user.Customer);
         return profile;
     }
@@ -110,21 +97,22 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="accountCustomerProfileEditDto"></param>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="NotFoundException"></exception>
-    public async Task EditCustomerProfileAsync(string userId, AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
+    public async Task EditCustomerProfileAsync(string userId,
+        AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
         if (userId == null) {
             throw new ArgumentException("User id is empty");
         }
 
-        var user = await _userManager.Users.Include(u => u.Customer).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        var user = await _userManager.Users.Include(u => u.Customer)
+            .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-        
+
         if (user.Customer == null) {
             throw new NotFoundException("Customer not found");
         }
+
         user.Customer.Address = accountCustomerProfileEditDto.Address;
         await _userManager.UpdateAsync(user);
     }
@@ -147,7 +135,7 @@ public class AccountService : IAccountService {
         if (!await _userManager.IsInRoleAsync(user, RoleType.Courier.ToString())) {
             throw new NotFoundException("Courier not found");
         }
-        
+
         var profile = _mapper.Map<AccountCourierProfileDto>(user);
         return profile;
     }
@@ -170,7 +158,7 @@ public class AccountService : IAccountService {
         if (!await _userManager.IsInRoleAsync(user, RoleType.Cook.ToString())) {
             throw new NotFoundException("Cook not found");
         }
-        
+
         var profile = _mapper.Map<AccountCookProfileDto>(user);
         return profile;
     }
@@ -185,7 +173,8 @@ public class AccountService : IAccountService {
             throw new ArgumentException("User id is empty");
         }
 
-        var user = await _userManager.Users.Include(u => u.Customer).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        var user = await _userManager.Users.Include(u => u.Customer)
+            .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -193,7 +182,7 @@ public class AccountService : IAccountService {
         if (!await _userManager.IsInRoleAsync(user, RoleType.Customer.ToString())) {
             throw new NotFoundException("Customer not found");
         }
-        
+
         var profile = _mapper.Map<AccountCustomerProfileDto>(user);
         return profile;
     }

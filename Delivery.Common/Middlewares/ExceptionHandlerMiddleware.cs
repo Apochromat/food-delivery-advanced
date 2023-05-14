@@ -54,7 +54,7 @@ public class ExceptionHandlerMiddleware {
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(errorDetails.ToString());
         }
-        
+
         catch (ForbiddenException ex) {
             var errorDetails = new ErrorDetails {
                 StatusCode = (int)HttpStatusCode.Forbidden,
@@ -78,7 +78,7 @@ public class ExceptionHandlerMiddleware {
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(errorDetails.ToString());
         }
-        
+
         catch (MethodNotAllowedException ex) {
             var errorDetails = new ErrorDetails {
                 StatusCode = (int)HttpStatusCode.MethodNotAllowed,
@@ -90,7 +90,7 @@ public class ExceptionHandlerMiddleware {
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(errorDetails.ToString());
         }
-        
+
         catch (UnauthorizedException ex) {
             var errorDetails = new ErrorDetails {
                 StatusCode = (int)HttpStatusCode.Unauthorized,
@@ -102,7 +102,7 @@ public class ExceptionHandlerMiddleware {
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(errorDetails.ToString());
         }
-        
+
         catch (Exception ex) {
             var errorDetails = new ErrorDetails {
                 StatusCode = (int)HttpStatusCode.InternalServerError,

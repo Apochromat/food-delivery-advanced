@@ -3,7 +3,6 @@ using System.Text.Json;
 using Delivery.Common.DTO;
 using Delivery.Notification.DAL;
 using Delivery.Notification.DAL.Entities;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -55,9 +54,9 @@ public class RabbitMqService : BackgroundService {
         stoppingToken.ThrowIfCancellationRequested();
 
         var consumer = new EventingBasicConsumer(_channel);
-        consumer.Received += async (model, ea) => {
+        consumer.Received += async (_, eventArgs) => {
             try {
-                var rawMessage = Encoding.UTF8.GetString(ea.Body.ToArray());
+                var rawMessage = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
                 var message = JsonSerializer.Deserialize<MessageDto>(rawMessage);
                 if (message == null) throw new InvalidOperationException();
 
@@ -69,7 +68,7 @@ public class RabbitMqService : BackgroundService {
                         Text = message.Text,
                         Title = message.Title,
                         CreatedAt = DateTime.UtcNow
-                    });
+                    }, stoppingToken);
                 
                     await dbContext.SaveChangesAsync(stoppingToken);
                 }

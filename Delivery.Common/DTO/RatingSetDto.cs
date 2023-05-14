@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// DTO for rating set
@@ -11,5 +11,5 @@ public class RatingSetDto {
     /// </summary>
     [Required]
     [Range(1, 5)]
-    public int Rating { get; set; }
+    public required int Rating { get; set; }
 }

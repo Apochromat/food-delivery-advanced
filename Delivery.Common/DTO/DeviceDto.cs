@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// DTO for device
@@ -8,14 +8,17 @@ public class DeviceDto {
     /// Device identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// User agent
     /// </summary>
-    public String? UserAgent { get; set; }
+    public string? UserAgent { get; set; }
+
     /// <summary>
     /// Device name
     /// </summary>
-    public String? DeviceName { get; set; }
+    public string? DeviceName { get; set; }
+
     /// <summary>
     /// Last activity
     /// </summary>

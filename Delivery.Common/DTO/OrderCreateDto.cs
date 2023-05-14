@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// DTO for creating order
@@ -10,13 +10,15 @@ public class OrderCreateDto {
     /// Address of the order
     /// </summary>
     [Required]
-    public String Address { get; set; } = "";
+    public required string Address { get; set; }
+
     /// <summary>
     /// Time when order should be delivered
     /// </summary>
     public DateTime DeliveryTime { get; set; }
+
     /// <summary>
     /// Customer comment to order
     /// </summary>
-    public String? Comment { get; set; }
+    public string? Comment { get; set; }
 }

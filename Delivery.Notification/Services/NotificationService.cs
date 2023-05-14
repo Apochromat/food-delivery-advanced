@@ -4,7 +4,7 @@ using Delivery.Common.Interfaces;
 using Delivery.Notification.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Delivery.Notification.Services; 
+namespace Delivery.Notification.Services;
 
 /// <summary>
 /// Service for sending notifications
@@ -35,6 +35,7 @@ public class NotificationService : INotificationService {
                 .SendAsync("ReceiveMessage", JsonSerializer.Serialize(messageDto));
             return true;
         }
+
         return false;
     }
 }

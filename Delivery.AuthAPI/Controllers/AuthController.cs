@@ -68,6 +68,9 @@ public class AuthController : ControllerBase {
         if (User.Identity == null || User.Identity.Name == null) {
             throw new UnauthorizedException("Invalid authorisation");
         }
+        
+        // Todo: Add User.Identity.Name validation
+        
         await _authService.LogoutAsync(User.Identity.Name, HttpContext);
         return Ok();
     }

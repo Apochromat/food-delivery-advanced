@@ -11,7 +11,7 @@ public class DishCreateDto {
     /// Name of the dish
     /// </summary>
     [Required]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Description of the dish
@@ -28,12 +28,12 @@ public class DishCreateDto {
     /// Image url
     /// </summary>
     [Required]
-    public string? ImageUrl { get; set; }
+    public required string ImageUrl { get; set; }
 
     /// <summary>
     /// Categories of the dish
     /// </summary>
-    public List<DishCategory>? DishCategories { get; set; }
+    public List<DishCategory> DishCategories { get; set; } = new List<DishCategory>();
 
     /// <summary>
     /// Is dish vegetarian

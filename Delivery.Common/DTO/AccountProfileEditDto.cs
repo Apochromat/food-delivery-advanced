@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Delivery.Common.Enums;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Account profile DTO
@@ -11,16 +11,18 @@ public class AccountProfileEditDto {
     /// User`s full name (surname, name, patronymic)
     /// </summary>
     [Required]
-    public string FullName { get; set; } = "";
+    public required string FullName { get; set; }
+
     /// <summary>
     /// User`s birth date
     /// </summary>
     [Required]
     [Range(typeof(DateTime), "01/01/1900", "01/01/2023")]
-    public DateTime BirthDate { get; set; }
+    public required DateTime BirthDate { get; set; }
+
     /// <summary>
     /// User`s gender
     /// </summary>
     [Required]
-    public Gender Gender { get; set; }
+    public required Gender Gender { get; set; }
 }

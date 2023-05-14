@@ -30,7 +30,7 @@ public class NotificationQueueService : INotificationQueueService {
                     body: body);
             }
         }
-        catch (Exception e) {
+        catch (Exception) {
             // ignored
         }
         return Task.CompletedTask;

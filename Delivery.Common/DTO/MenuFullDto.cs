@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Menu DTO with full information
@@ -8,20 +8,24 @@ public class MenuFullDto {
     /// Menu Identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Name of the menu
     /// </summary>
-    public string? Name { get; set; }
+    public required string Name { get; set; }
+
     /// <summary>
     /// Indicates if menu is default (only one default menu can exist
     /// </summary>
     public Boolean IsDefault { get; set; }
+
     /// <summary>
     /// Is menu archived
     /// </summary>
     public Boolean IsArchived { get; set; }
+
     /// <summary>
     /// List of dishes in menu
     /// </summary>
-    public List<DishShortDto>? Dishes { get; set; }
+    public List<DishShortDto> Dishes { get; set; } = new();
 }

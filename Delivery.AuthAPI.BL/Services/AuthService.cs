@@ -63,15 +63,22 @@ public class AuthService : IAuthService {
         }
 
         var user = _mapper.Map<User>(accountRegisterDto);
-        user.Customer = new Customer(user) {
+        user.Customer = new Customer() {
+            User = user,
             Address = accountRegisterDto.Address
         };
-        user.Manager = new Manager(user);
-        user.Cook = new Cook(user);
-        user.Customer = new Customer(user);
+        user.Manager = new Manager() {
+            User = user
+        };
+        user.Cook = new Cook() {
+            User = user
+        };
+        user.Customer = new Customer() {
+            User = user
+        };
 
         var result = await _userManager.CreateAsync(user, accountRegisterDto.Password);
-        
+
         if (result.Succeeded) {
             _logger.LogInformation("Successful register");
             await _userManager.AddToRoleAsync(user, ApplicationRoleNames.Customer);
@@ -157,7 +164,7 @@ public class AuthService : IAuthService {
         if (device == null) {
             throw new MethodNotAllowedException("You can`t logout from this device");
         }
-        
+
         _authDbContext.Devices.Remove(device);
         await _authDbContext.SaveChangesAsync();
     }
@@ -184,7 +191,7 @@ public class AuthService : IAuthService {
         if (await _userManager.IsLockedOutAsync(user)) {
             throw new UnauthorizedException("User is banned");
         }
-        
+
         var device =
             user.Devices.FirstOrDefault(x => x.UserAgent == httpContext.Request.Headers["User-Agent"]);
 
@@ -195,7 +202,7 @@ public class AuthService : IAuthService {
         if (device.RefreshToken != tokenRequestDto.RefreshToken) {
             throw new BadRequestException("Refresh token is invalid");
         }
-        
+
         if (device.ExpirationDate < DateTime.UtcNow) {
             throw new UnauthorizedException("Refresh token is expired. Re-login needed");
         }
@@ -285,7 +292,7 @@ public class AuthService : IAuthService {
         _authDbContext.Devices.Remove(device);
         await _authDbContext.SaveChangesAsync();
     }
-    
+
     /// <summary>
     /// Change password
     /// </summary>

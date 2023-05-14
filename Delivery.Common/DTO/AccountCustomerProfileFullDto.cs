@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Account customer profile DTO
@@ -8,8 +8,9 @@ public class AccountCustomerProfileFullDto {
     /// Profile Identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// User`s address
     /// </summary>
-    public String? Address { get; set; }
+    public required string Address { get; set; }
 }

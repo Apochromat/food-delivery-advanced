@@ -1,6 +1,6 @@
 ﻿using Delivery.Common.Enums;
 
-namespace Delivery.Common.DTO; 
+namespace Delivery.Common.DTO;
 
 /// <summary>
 /// DTO of order with short information
@@ -10,14 +10,17 @@ public class OrderShortDto {
     /// Order Identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
-    /// Number of the order in "ORD-88005553535-0001" format
+    /// Number of the order
     /// </summary>
-    public String? Number { get; set; }
+    public required string Number { get; set; }
+
     /// <summary>
     /// Order status
     /// </summary>
     public OrderStatus Status { get; set; }
+
     /// <summary>
     /// Total price of the order
     /// </summary>

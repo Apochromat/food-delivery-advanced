@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// LoginView DTO for LoginViewModel in AdminPanel
@@ -8,6 +8,7 @@ public class LoginViewDto {
     /// User email
     /// </summary>
     public string Email { get; set; } = "";
+
     /// <summary>
     /// User password
     /// </summary>

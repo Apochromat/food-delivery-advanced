@@ -18,11 +18,11 @@ if (Console.ReadKey().Key == ConsoleKey.Y) {
 Console.WriteLine();
 
 var connection = new HubConnectionBuilder()
-    .WithUrl("http://localhost:5144/api/notifications", options => { options.AccessTokenProvider = () => Login(); })
+    .WithUrl("http://localhost:5144/api/notifications", options => { options.AccessTokenProvider = Login; })
     .WithAutomaticReconnect()
     .Build();
 
-Action<string> Print = (string message) => {
+void Print(string message) {
     var obj = JsonSerializer.Deserialize<MessageDto>(message);
     if (obj == null) {
         Console.WriteLine("Error deserializing message");
@@ -30,9 +30,9 @@ Action<string> Print = (string message) => {
     }
 
     Console.WriteLine($"Title: {obj.Title}  Text: {obj.Text}  CreatedAt: {obj.CreatedAt}");
-};
+}
 
-connection.On<string>("ReceiveMessage", Print);
+connection.On("ReceiveMessage", (Action<string>)Print);
 
 async Task<string?> Login() {
     HttpClient client = new HttpClient();
@@ -48,5 +48,5 @@ async Task<string?> Login() {
 
 await connection.StartAsync();
 while (true) {
-    var message = Console.ReadLine();
+    var _ = Console.ReadLine();
 }

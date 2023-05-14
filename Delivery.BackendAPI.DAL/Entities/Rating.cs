@@ -1,4 +1,4 @@
-﻿namespace Delivery.BackendAPI.DAL.Entities; 
+﻿namespace Delivery.BackendAPI.DAL.Entities;
 
 /// <summary>
 /// Rating entity
@@ -8,14 +8,17 @@ public class Rating {
     /// Rating identifier
     /// </summary>
     public required Guid Id { get; set; }
+
     /// <summary>
     /// Identifier of customer
     /// </summary>
     public required Guid CustomerId { get; set; }
+
     /// <summary>
     /// Dish of the rating
     /// </summary>
     public required Dish Dish { get; set; }
+
     /// <summary>
     /// Rating value
     /// </summary>

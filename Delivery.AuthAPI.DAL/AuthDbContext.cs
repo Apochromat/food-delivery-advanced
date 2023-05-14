@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Delivery.AuthAPI.DAL;
 
@@ -11,45 +10,36 @@ namespace Delivery.AuthAPI.DAL;
 /// </summary>
 public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>,
     IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>> {
-    private readonly IConfiguration? _configuration;
-
-    private readonly String? _connection =
-        "Host=localhost;Database=delivery-auth-db;Username=postgres;Password=postgres";
-
+    
     /// <summary>
     /// Users table
     /// </summary>
-    public DbSet<User> Users { get; set; }
+    public new DbSet<User> Users { get; set; } = null!; // Late initialization
 
     /// <summary>
     /// Customers table
     /// </summary>
-    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Customer> Customers { get; set; } = null!; // Late initialization
 
     /// <summary>
     /// Couriers table
     /// </summary>
-    public DbSet<Courier> Couriers { get; set; }
+    public DbSet<Courier> Couriers { get; set; } = null!; // Late initialization
 
     /// <summary>
     /// Managers table
     /// </summary>
-    public DbSet<Manager> Managers { get; set; }
+    public DbSet<Manager> Managers { get; set; } = null!; // Late initialization
 
     /// <summary>
     /// Cooks table
     /// </summary>
-    public DbSet<Cook> Cooks { get; set; }
+    public DbSet<Cook> Cooks { get; set; } = null!; // Late initialization
 
     /// <summary>
     /// Devices table
     /// </summary>
-    public DbSet<Device> Devices { get; set; }
-
-    /// <inheritdoc />
-    public AuthDbContext(DbContextOptions<AuthDbContext> options, IConfiguration configuration) : base(options) {
-        _configuration = configuration;
-    }
+    public DbSet<Device> Devices { get; set; } = null!; // Late initialization
 
     /// <inheritdoc />
     public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options) {
@@ -62,17 +52,5 @@ public class AuthDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, I
         builder.Entity<User>().HasOne(u => u.Courier).WithOne(c => c.User).HasForeignKey<Courier>();
         builder.Entity<User>().HasOne(u => u.Manager).WithOne(c => c.User).HasForeignKey<Manager>();
         builder.Entity<User>().HasOne(u => u.Cook).WithOne(c => c.User).HasForeignKey<Cook>();
-    }
-
-    /// <inheritdoc />
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        if (_configuration == null) {
-            optionsBuilder.UseNpgsql(_connection,
-                b => b.MigrationsAssembly("Delivery.AuthAPI.DAL"));
-        }
-        else {
-            optionsBuilder.UseNpgsql(_configuration?.GetConnectionString("AuthDatabasePostgres"),
-                b => b.MigrationsAssembly("Delivery.AuthAPI.DAL"));
-        }
     }
 }

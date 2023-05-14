@@ -4,10 +4,17 @@ using Quartz;
 
 namespace Delivery.Notification.BL.Extensions;
 
+/// <summary>
+/// Extension for Quartz configuration.
+/// </summary>
 public static class QuartzConfigureExtension {
+    /// <summary>
+    /// Quartz configuration.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
     public static IServiceCollection ConfigureQuartz(this IServiceCollection services) {
         services.AddQuartz(q => {
-            q.UseMicrosoftDependencyInjectionScopedJobFactory();
             // Just use the name of your job that you created in the Jobs folder.
             var jobKey = new JobKey("NotificationSendingJob");
             q.AddJob<NotificationSendingJob>(opts => opts.WithIdentity(jobKey));

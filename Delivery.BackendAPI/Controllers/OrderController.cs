@@ -80,11 +80,12 @@ public class OrderController : ControllerBase {
         if (status != null && !status.All(x => allowedStatuses.Contains(x))) {
             throw new BadRequestException("Statuses must be: AssignedForCourier, Delivery");
         }
+
         if (status == null || status.Count == 0) {
             status = allowedStatuses;
         }
-        return Ok(await _orderService.GetMyCourierOrders(userId, status, number, page, pageSize,
-            sort));
+
+        return Ok(await _orderService.GetMyCourierOrders(userId, status, number, page, pageSize, sort));
     }
 
     /// <summary>
@@ -114,11 +115,12 @@ public class OrderController : ControllerBase {
         if (status != null && !status.All(x => allowedStatuses.Contains(x))) {
             throw new BadRequestException("Statuses must be: Delivered, Canceled");
         }
+
         if (status == null || status.Count == 0) {
             status = allowedStatuses;
         }
-        return Ok(await _orderService.GetMyCourierOrders(userId, status, number, page, pageSize,
-            sort));
+
+        return Ok(await _orderService.GetMyCourierOrders(userId, status, number, page, pageSize, sort));
     }
 
     /// <summary>
@@ -170,7 +172,7 @@ public class OrderController : ControllerBase {
         await _orderService.SetOrderStatus(orderId, status.Status, userId);
         return Ok();
     }
-    
+
     /// <summary>
     /// [Cook] Get cooks`s orders for work with them.
     /// </summary>
@@ -198,9 +200,11 @@ public class OrderController : ControllerBase {
         if (status != null && !status.All(x => allowedStatuses.Contains(x))) {
             throw new BadRequestException("Statuses must be: Kitchen, Packaged");
         }
+
         if (status == null || status.Count == 0) {
             status = allowedStatuses;
         }
+
         return Ok(await _orderService.GetMyCookOrders(userId, status, number, page, pageSize, sort));
     }
 
@@ -232,9 +236,11 @@ public class OrderController : ControllerBase {
         if (status != null && !status.All(x => allowedStatuses.Contains(x))) {
             throw new BadRequestException("Statuses must be: AssignedForCourier, Delivery, Delivered, Canceled");
         }
+
         if (status == null || status.Count == 0) {
             status = allowedStatuses;
         }
+
         return Ok(await _orderService.GetMyCookOrders(userId, status, number, page, pageSize, sort));
     }
 
@@ -319,11 +325,12 @@ public class OrderController : ControllerBase {
             throw new BadRequestException(
                 "Statuses must be: Created, Kitchen, Packaged, AssignedForCourier, Delivery");
         }
+
         if (status == null || status.Count == 0) {
             status = allowedStatuses;
         }
-        return Ok(await _orderService.GetMyCustomerOrders(userId, status, number, page, pageSize,
-            sort));
+
+        return Ok(await _orderService.GetMyCustomerOrders(userId, status, number, page, pageSize, sort));
     }
 
     /// <summary>
@@ -353,11 +360,12 @@ public class OrderController : ControllerBase {
         if (status != null && !status.All(x => allowedStatuses.Contains(x))) {
             throw new BadRequestException("Statuses must be: Delivered, Canceled");
         }
+
         if (status == null || status.Count == 0) {
             status = allowedStatuses;
         }
-        return Ok(await _orderService.GetMyCourierOrders(userId, status, number, page, pageSize,
-            sort));
+
+        return Ok(await _orderService.GetMyCourierOrders(userId, status, number, page, pageSize, sort));
     }
 
     /// <summary>
@@ -478,7 +486,7 @@ public class OrderController : ControllerBase {
     [HttpPost]
     [Route("order/{orderId}/repeat")]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
-    public async Task<ActionResult> RepeatOrder([FromRoute] Guid orderId, Boolean? replaceCart = false) {
+    public async Task<ActionResult> RepeatOrder([FromRoute] Guid orderId, [FromQuery] Boolean? replaceCart = false) {
         await _orderService.RepeatOrder(orderId, replaceCart ?? false);
         return Ok();
     }

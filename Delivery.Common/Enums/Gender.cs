@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.Enums; 
+﻿namespace Delivery.Common.Enums;
 
 /// <summary>
 /// Available genders
@@ -8,6 +8,7 @@ public enum Gender {
     /// Male gender
     /// </summary>
     Male,
+
     /// <summary>
     /// Female gender
     /// </summary>

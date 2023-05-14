@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// Data transfer object for dish in cart
@@ -7,7 +7,8 @@ public class CartDishDto {
     /// <summary>
     /// Dish
     /// </summary>
-    public DishShortDto? Dish { get; set; }
+    public required DishShortDto Dish { get; set; }
+
     /// <summary>
     /// Dish amount
     /// </summary>

@@ -54,9 +54,9 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
 
         // Get restaurants
         if (sort == RestaurantSort.NameAsc) {
-            var raw = _backendDbContext.Restaurants?
-                .Where(x => (isArchived == null || x.IsArchived == isArchived))
-                .Where(x => name == null ? true : x.Name.Contains(name))
+            var raw = _backendDbContext.Restaurants
+                .Where(x => isArchived == null || x.IsArchived == isArchived)
+                .Where(x => name == null || x.Name.Contains(name))
                 .OrderBy(x => x.Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -65,9 +65,9 @@ public class AdminPanelRestaurantService : IAdminPanelRestaurantService {
             return new Pagination<RestaurantShortDto>(mapped, page, pageSize, pages);
         }
         else {
-            var raw = _backendDbContext.Restaurants?
+            var raw = _backendDbContext.Restaurants
                 .Where(x => (isArchived == null || x.IsArchived == isArchived))
-                .Where(x => name == null ? true : x.Name.Contains(name))
+                .Where(x => name == null || x.Name.Contains(name))
                 .OrderByDescending(x => x.Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)

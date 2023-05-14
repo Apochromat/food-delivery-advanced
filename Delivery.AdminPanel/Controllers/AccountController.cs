@@ -9,11 +9,9 @@ namespace Delivery.AdminPanel.Controllers;
 [Controller]
 public class AccountController : Controller {
     private readonly IAdminPanelAccountService _accountService;
-    private readonly ILogger<AccountController> _logger;
 
-    public AccountController(IAdminPanelAccountService accountService, ILogger<AccountController> logger) {
+    public AccountController(IAdminPanelAccountService accountService) {
         _accountService = accountService;
-        _logger = logger;
     }
 
     [HttpGet]

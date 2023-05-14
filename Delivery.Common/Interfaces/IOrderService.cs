@@ -1,7 +1,7 @@
 ﻿using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Order service interface
@@ -16,9 +16,9 @@ public interface IOrderService {
     /// <param name="pageSize"></param>
     /// <param name="sort"></param>
     /// <returns></returns>
-    Task<Pagination<OrderShortDto>> GetAllOrders(List<OrderStatus>? status = null, String? number = null, int page = 1, 
+    Task<Pagination<OrderShortDto>> GetAllOrders(List<OrderStatus>? status = null, String? number = null, int page = 1,
         int pageSize = 10, OrderSort sort = OrderSort.CreationDesc);
-    
+
     /// <summary>
     /// Get Customer`s orders from all restaurants.
     /// </summary>
@@ -29,7 +29,7 @@ public interface IOrderService {
     /// <param name="pageSize"></param>
     /// <param name="sort"></param>
     /// <returns></returns>
-    Task<Pagination<OrderShortDto>> GetMyCustomerOrders(Guid customerId, List<OrderStatus>? status = null, 
+    Task<Pagination<OrderShortDto>> GetMyCustomerOrders(Guid customerId, List<OrderStatus>? status = null,
         String? number = null, int page = 1, int pageSize = 10, OrderSort sort = OrderSort.CreationDesc);
 
     /// <summary>
@@ -57,7 +57,7 @@ public interface IOrderService {
     /// <returns></returns>
     Task<Pagination<OrderShortDto>> GetMyCourierOrders(Guid courierId, List<OrderStatus>? status, String? number,
         int page = 1, int pageSize = 10, OrderSort sort = OrderSort.CreationDesc);
-    
+
     /// <summary>
     /// Get information about specific order.
     /// </summary>
@@ -81,7 +81,7 @@ public interface IOrderService {
     /// <param name="userId"></param>
     /// <returns></returns>
     Task SetOrderStatus(Guid orderId, OrderStatus status, Guid? userId = null);
-    
+
     /// <summary>
     /// Repeats order.
     /// </summary>

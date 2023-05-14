@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Delivery.Common.Configurations; 
+namespace Delivery.Common.Configurations;
 
 /// <summary>
 /// Jwt configuration
@@ -11,14 +11,17 @@ public static class JwtConfiguration {
     /// JWT lifetime in minutes
     /// </summary>
     public static int Lifetime = 5;
+
     /// <summary>
     /// JWT issuer
     /// </summary>
     public static string Issuer = "DefaultIssuer";
+
     /// <summary>
     /// JWT audience
     /// </summary>
     public static string Audience = "DefaultAudience";
+
     /// <summary>
     /// JWT key
     /// </summary>

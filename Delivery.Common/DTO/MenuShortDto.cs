@@ -1,4 +1,4 @@
-﻿namespace Delivery.Common.DTO; 
+﻿namespace Delivery.Common.DTO;
 
 /// <summary>
 /// DTO for short info about menu
@@ -8,8 +8,9 @@ public class MenuShortDto {
     /// Menu id
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Menu name
     /// </summary>
-    public String? Name { get; set; }
+    public required string Name { get; set; }
 }

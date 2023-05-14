@@ -1,6 +1,6 @@
 ﻿using Delivery.Common.DTO;
 
-namespace Delivery.Common.Interfaces; 
+namespace Delivery.Common.Interfaces;
 
 /// <summary>
 /// Rating service interface
@@ -13,7 +13,7 @@ public interface IRatingService {
     /// <param name="dishId"></param>
     /// <returns></returns>
     Task<RatingCheckDto> IsUserCanRate(Guid userId, Guid dishId);
-    
+
     /// <summary>
     /// Rate dish
     /// </summary>

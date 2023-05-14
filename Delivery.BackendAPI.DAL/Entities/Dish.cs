@@ -1,6 +1,6 @@
 ﻿using Delivery.Common.Enums;
 
-namespace Delivery.BackendAPI.DAL.Entities; 
+namespace Delivery.BackendAPI.DAL.Entities;
 
 /// <summary>
 /// Dish entity
@@ -10,26 +10,32 @@ public class Dish {
     /// Dish Identifier
     /// </summary>
     public Guid Id { get; set; }
+
     /// <summary>
     /// Name of the dish
     /// </summary>
-    public string? Name { get; set; }
+    public required string Name { get; set; }
+
     /// <summary>
     /// Description of the dish
     /// </summary>
     public string? Description { get; set; }
+
     /// <summary>
     /// Dish price
     /// </summary>
     public decimal Price { get; set; }
+
     /// <summary>
     /// Image url
     /// </summary>
-    public string? ImageUrl { get; set; }
+    public required string ImageUrl { get; set; }
+
     /// <summary>
     /// Is dish archived
     /// </summary>
     public Boolean IsArchived { get; set; }
+
     /// <summary>
     /// Calculated rating
     /// </summary>
@@ -39,10 +45,12 @@ public class Dish {
     /// Categories of the dish
     /// </summary>
     public List<DishCategory> DishCategories { get; set; } = new List<DishCategory>();
+
     /// <summary>
     /// Is dish vegetarian
     /// </summary>
     public Boolean IsVegetarian { get; set; }
+
     /// <summary>
     /// Menus where dish is available
     /// </summary>
@@ -52,10 +60,12 @@ public class Dish {
     /// Orders where dish is located
     /// </summary>
     public List<OrderDish> Orders { get; set; } = new List<OrderDish>();
+
     /// <summary>
     /// Creation date
     /// </summary>
     public DateTime CreatedAt { get; set; }
+
     /// <summary>
     /// Update date
     /// </summary>
