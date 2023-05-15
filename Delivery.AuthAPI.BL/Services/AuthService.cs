@@ -1,9 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using AutoMapper;
 using Delivery.AuthAPI.DAL;
 using Delivery.AuthAPI.DAL.Entities;
-using Delivery.Common.Configurations;
 using Delivery.Common.DTO;
 using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
@@ -11,6 +11,7 @@ using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
@@ -25,6 +26,7 @@ public class AuthService : IAuthService {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly AuthDbContext _authDbContext;
+    private readonly IConfiguration _configuration;
 
     /// <summary>
     /// Constructor
@@ -34,13 +36,15 @@ public class AuthService : IAuthService {
     /// <param name="signInManager"></param>
     /// <param name="authDbContext"></param>
     /// <param name="mapper"></param>
+    /// <param name="configuration"></param>
     public AuthService(ILogger<AuthService> logger, UserManager<User> userManager, SignInManager<User> signInManager,
-        AuthDbContext authDbContext, IMapper mapper) {
+        AuthDbContext authDbContext, IMapper mapper, IConfiguration configuration) {
         _logger = logger;
         _userManager = userManager;
         _signInManager = signInManager;
         _authDbContext = authDbContext;
         _mapper = mapper;
+        _configuration = configuration;
     }
 
     /// <summary>
@@ -118,7 +122,8 @@ public class AuthService : IAuthService {
                 UserAgent = httpContext.Request.Headers["User-Agent"],
                 CreatedAt = DateTime.UtcNow,
                 LastActivity = DateTime.UtcNow,
-                ExpirationDate = DateTime.UtcNow.AddMonths(6)
+                ExpirationDate = DateTime.UtcNow.AddDays(_configuration.GetSection("Jwt")
+                    .GetValue<int>("RefreshTokenLifetimeInMonths"))
             };
             await _authDbContext.Devices.AddAsync(device);
             await _authDbContext.SaveChangesAsync();
@@ -129,12 +134,15 @@ public class AuthService : IAuthService {
         await _authDbContext.SaveChangesAsync();
 
         var jwt = new JwtSecurityToken(
-            issuer: JwtConfiguration.Issuer,
-            audience: JwtConfiguration.Audience,
+            issuer: _configuration.GetSection("Jwt")["Issuer"],
+            audience: _configuration.GetSection("Jwt")["Audience"],
             notBefore: DateTime.UtcNow,
             claims: identity.Claims,
-            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(JwtConfiguration.Lifetime)),
-            signingCredentials: new SigningCredentials(JwtConfiguration.GetSymmetricSecurityKey(),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(_configuration.GetSection("Jwt")
+                .GetValue<int>("AccessTokenLifetimeInMinutes"))),
+            signingCredentials: new SigningCredentials(
+                new SymmetricSecurityKey(
+                    Encoding.ASCII.GetBytes(_configuration.GetSection("Jwt")["Secret"] ?? string.Empty)),
                 SecurityAlgorithms.HmacSha256));
 
         _logger.LogInformation("Successful login");
@@ -153,13 +161,14 @@ public class AuthService : IAuthService {
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
     public async Task LogoutAsync(string userId, HttpContext httpContext) {
-        var user = _userManager.Users.Include(x => x.Devices).FirstOrDefault(x => x.Id.ToString() == userId);
+        var user = _userManager.Users
+            .Include(x => x.Devices)
+            .FirstOrDefault(x => x.Id.ToString() == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
 
-        var device =
-            user.Devices.FirstOrDefault(x => x.UserAgent == httpContext.Request.Headers["User-Agent"]);
+        var device = user.Devices.FirstOrDefault(x => x.UserAgent == httpContext.Request.Headers["User-Agent"]);
 
         if (device == null) {
             throw new MethodNotAllowedException("You can`t logout from this device");
@@ -208,12 +217,14 @@ public class AuthService : IAuthService {
         }
 
         var jwt = new JwtSecurityToken(
-            issuer: JwtConfiguration.Issuer,
+            issuer: _configuration.GetSection("Jwt")["Issuer"],
             audience: null,
             notBefore: DateTime.UtcNow,
             claims: principal.Claims,
-            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(JwtConfiguration.Lifetime)),
-            signingCredentials: new SigningCredentials(JwtConfiguration.GetSymmetricSecurityKey(),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(_configuration.GetSection("Jwt")
+                .GetValue<int>("AccessTokenLifetimeInMinutes"))),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(
+                    Encoding.ASCII.GetBytes(_configuration.GetSection("Jwt")["Secret"] ?? string.Empty)),
                 SecurityAlgorithms.HmacSha256));
 
         device.LastActivity = DateTime.UtcNow;
@@ -316,15 +327,16 @@ public class AuthService : IAuthService {
     }
 
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string jwtToken) {
-        var key = JwtConfiguration.GetSymmetricSecurityKey();
+        var key = new SymmetricSecurityKey(
+            Encoding.ASCII.GetBytes(_configuration.GetSection("Jwt")["Secret"] ?? string.Empty));
 
         var validationParameters = new TokenValidationParameters {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = key,
             ValidateIssuer = true,
-            ValidIssuer = JwtConfiguration.Issuer,
+            ValidIssuer = _configuration.GetSection("Jwt")["Issuer"],
             ValidateAudience = true,
-            ValidAudience = JwtConfiguration.Audience,
+            ValidAudience = _configuration.GetSection("Jwt")["Audience"],
             ValidateLifetime = false
         };
 

@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen(option => {
 });
 
 builder.Services.AddAuthorization();
-builder.Services.AddJwtAuthorisation();
+builder.Services.AddJwtAuthorisation(builder.Configuration);
 
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
