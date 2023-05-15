@@ -40,7 +40,11 @@
         <ul class="pagination justify-content-center">
             @for (int i = 1; i <= Model.Pages; i++) {
                 <li class="@(i == Model.Page ? "page-item active" : "page-item")">
-                    <a class="page-link" href="@Url.Action("Index", new { page = i, searchModel = Model.RestaurantSearchModel })">@i</a>
+                    <a class="page-link" href="@Url.Action("Index", new { page = i, 
+                                                   sort = Model.RestaurantSearchModel.Sort, 
+                                                   name = Model.RestaurantSearchModel.Name,
+                                                   isArchived = Model.RestaurantSearchModel.IsArchived
+                                               })">@i</a>
                 </li>
             }
         </ul>

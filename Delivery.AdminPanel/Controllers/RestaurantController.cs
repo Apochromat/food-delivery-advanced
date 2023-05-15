@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Delivery.AdminPanel.Models;
 using Delivery.Common.DTO;
+using Delivery.Common.Enums;
 using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +26,7 @@ public class RestaurantController : Controller {
     [HttpGet]
     public IActionResult Index(int page = 1, RestaurantSearchModel? searchModel = null) {
         var restaurants = _restaurantService.GetAllRestaurants(
-            searchModel?.Name, page, 10, searchModel?.IsArchived, searchModel?.Sort);
+            searchModel?.Name, page, 1, searchModel?.IsArchived, searchModel?.Sort);
         var model = new RestaurantListViewModel() {
             Restaurants = restaurants.Items,
             RestaurantCreateModel = new RestaurantCreateModel {
@@ -39,6 +40,27 @@ public class RestaurantController : Controller {
         return View(model);
     }
 
+    [HttpGet]
+    public IActionResult Index(int page = 1, string? name = null, RestaurantSort sort = RestaurantSort.NameAsc, bool? isArchived = null) {
+        var restaurants = _restaurantService.GetAllRestaurants(
+            name, page, 1, isArchived, sort);
+        var model = new RestaurantListViewModel() {
+            Restaurants = restaurants.Items,
+            RestaurantCreateModel = new RestaurantCreateModel {
+                RestaurantCreateDto = new RestaurantCreateDto()
+            },
+            RestaurantSearchModel = new RestaurantSearchModel {
+                IsArchived = isArchived,
+                Name = name,
+                Sort = sort
+            },
+            Page = restaurants.CurrentPage,
+            Pages = restaurants.PagesAmount,
+            PageSize = restaurants.PageSize
+        };
+        return View(model);
+    }
+    
     [HttpGet]
     public IActionResult ConcreteRestaurant(Guid restaurantId, AddManagerModel? manager = null,
         AddCookModel? cook = null) {
