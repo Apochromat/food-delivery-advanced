@@ -30,11 +30,11 @@ public class AccountController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("account")]
     public async Task<ActionResult<AccountProfileFullDto>> GetCurrentProfile() {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
 
-        return Ok(await _accountService.GetProfileAsync(User.Identity.Name));
+        return Ok(await _accountService.GetProfileAsync(userId));
     }
 
     /// <summary>
@@ -45,11 +45,11 @@ public class AccountController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Customer")]
     [Route("account/customer")]
     public async Task<ActionResult<AccountCustomerProfileFullDto>> GetCurrentCustomerProfile() {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
 
-        return Ok(await _accountService.GetCustomerFullProfileAsync(User.Identity.Name));
+        return Ok(await _accountService.GetCustomerFullProfileAsync(userId));
     }
 
     /// <summary>   
@@ -60,13 +60,11 @@ public class AccountController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("account")]
     public async Task<ActionResult> UpdateProfile([FromBody] AccountProfileEditDto accountProfileEditDto) {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
-
-        // TODO: add User.Identity.Name validation
         
-        await _accountService.EditProfileAsync(User.Identity.Name, accountProfileEditDto);
+        await _accountService.EditProfileAsync(userId, accountProfileEditDto);
         return Ok();
     }
 
@@ -79,11 +77,11 @@ public class AccountController : ControllerBase {
     [Route("account/customer")]
     public async Task<ActionResult> UpdateCustomerProfile(
         [FromBody] AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
 
-        await _accountService.EditCustomerProfileAsync(User.Identity.Name, accountCustomerProfileEditDto);
+        await _accountService.EditCustomerProfileAsync(userId, accountCustomerProfileEditDto);
         return Ok();
     }
 
@@ -96,7 +94,7 @@ public class AccountController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("courier-profile/{courierId}")]
     public async Task<ActionResult<AccountCourierProfileDto>> GetCourierProfile([FromRoute] Guid courierId) {
-        return Ok(await _accountService.GetCourierProfileAsync(courierId.ToString()));
+        return Ok(await _accountService.GetCourierProfileAsync(courierId));
     }
 
     /// <summary>
@@ -108,7 +106,7 @@ public class AccountController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("customer-profile/{customerId}")]
     public async Task<ActionResult<AccountCustomerProfileDto>> GetCustomerProfile([FromRoute] Guid customerId) {
-        return Ok(await _accountService.GetCustomerProfileAsync(customerId.ToString()));
+        return Ok(await _accountService.GetCustomerProfileAsync(customerId));
     }
 
     /// <summary>
@@ -120,6 +118,6 @@ public class AccountController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("cook-profile/{cookId}")]
     public async Task<ActionResult<AccountCustomerProfileDto>> GetCookProfile([FromRoute] Guid cookId) {
-        return Ok(await _accountService.GetCookProfileAsync(cookId.ToString()));
+        return Ok(await _accountService.GetCookProfileAsync(cookId));
     }
 }

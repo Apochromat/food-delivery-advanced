@@ -42,9 +42,8 @@ public class AdminPanelUserService : IAdminPanelUserService {
         var mapped = _mapper.Map<List<AccountProfileFullDto>>(raw);
         foreach (var user in mapped) {
             var dbUser = await _userManager.FindByIdAsync(user.Id.ToString());
-            if (dbUser == null) throw new ArgumentNullException(nameof(dbUser));
-            var roles = await _userManager.GetRolesAsync(dbUser);
-            user.Roles = roles.ToList();
+            if (dbUser == null) throw new ArgumentException(nameof(dbUser));
+            user.Roles = (await _userManager.GetRolesAsync(dbUser)).ToList();
             user.IsBanned = await IsUserBanned(user.Id);
         }
         return new Pagination<AccountProfileFullDto>(mapped, page, pageSize, pages);

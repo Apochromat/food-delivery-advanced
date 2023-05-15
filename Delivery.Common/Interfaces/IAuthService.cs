@@ -29,7 +29,7 @@ public interface IAuthService {
     /// <param name="userId"></param>
     /// <param name="httpContext"></param>
     /// <returns></returns>
-    Task LogoutAsync(string userId, HttpContext httpContext);
+    Task LogoutAsync(Guid userId, HttpContext httpContext);
 
     /// <summary>
     /// Refresh token
@@ -44,7 +44,7 @@ public interface IAuthService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    Task<List<DeviceDto>> GetDevicesAsync(string userId);
+    Task<List<DeviceDto>> GetDevicesAsync(Guid userId);
 
     /// <summary>
     /// Rename device
@@ -53,7 +53,7 @@ public interface IAuthService {
     /// <param name="deviceId"></param>
     /// <param name="deviceRenameDto"></param>
     /// <returns></returns>
-    Task RenameDeviceAsync(string userId, Guid deviceId, DeviceRenameDto deviceRenameDto);
+    Task RenameDeviceAsync(Guid userId, Guid deviceId, DeviceRenameDto deviceRenameDto);
 
     /// <summary>
     /// Delete device from user devices
@@ -61,7 +61,7 @@ public interface IAuthService {
     /// <param name="userId"></param>
     /// <param name="deviceId"></param>
     /// <returns></returns>
-    Task DeleteDeviceAsync(string userId, Guid deviceId);
+    Task DeleteDeviceAsync(Guid userId, Guid deviceId);
 
     /// <summary>
     /// Change password
@@ -69,5 +69,5 @@ public interface IAuthService {
     /// <param name="userId"></param>
     /// <param name="changePasswordDto"></param>
     /// <returns></returns>
-    Task ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto);
+    Task ChangePasswordAsync(Guid userId, ChangePasswordDto changePasswordDto);
 }

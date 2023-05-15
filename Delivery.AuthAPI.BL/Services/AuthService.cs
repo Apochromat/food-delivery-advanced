@@ -55,11 +55,11 @@ public class AuthService : IAuthService {
     /// <returns></returns>
     public async Task<TokenResponseDto> RegisterAsync(AccountRegisterDto accountRegisterDto, HttpContext httpContext) {
         if (accountRegisterDto.Email == null) {
-            throw new ArgumentNullException(nameof(accountRegisterDto.Email));
+            throw new ArgumentNullException(nameof(accountRegisterDto), "Email is empty");
         }
 
         if (accountRegisterDto.Password == null) {
-            throw new ArgumentNullException(nameof(accountRegisterDto.Password));
+            throw new ArgumentNullException(nameof(accountRegisterDto), "Password is empty");
         }
 
         if (await _userManager.FindByEmailAsync(accountRegisterDto.Email) != null) {
@@ -160,10 +160,10 @@ public class AuthService : IAuthService {
     /// <param name="httpContext"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task LogoutAsync(string userId, HttpContext httpContext) {
+    public async Task LogoutAsync(Guid userId, HttpContext httpContext) {
         var user = _userManager.Users
             .Include(x => x.Devices)
-            .FirstOrDefault(x => x.Id.ToString() == userId);
+            .FirstOrDefault(x => x.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -241,12 +241,8 @@ public class AuthService : IAuthService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public Task<List<DeviceDto>> GetDevicesAsync(string userId) {
-        if (userId == null) {
-            throw new ArgumentNullException(nameof(userId));
-        }
-
-        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Id.ToString() == userId);
+    public Task<List<DeviceDto>> GetDevicesAsync(Guid userId) {
+        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -261,12 +257,8 @@ public class AuthService : IAuthService {
     /// <param name="deviceId"></param>
     /// <param name="deviceRenameDto"></param>
     /// <returns></returns>
-    public async Task RenameDeviceAsync(string userId, Guid deviceId, DeviceRenameDto deviceRenameDto) {
-        if (userId == null) {
-            throw new ArgumentNullException(nameof(userId));
-        }
-
-        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Id.ToString() == userId);
+    public async Task RenameDeviceAsync(Guid userId, Guid deviceId, DeviceRenameDto deviceRenameDto) {
+        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -285,12 +277,8 @@ public class AuthService : IAuthService {
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="deviceId"></param>
-    public async Task DeleteDeviceAsync(string userId, Guid deviceId) {
-        if (userId == null) {
-            throw new ArgumentNullException(nameof(userId));
-        }
-
-        var user = _userManager.Users.First(u => u.Id.ToString() == userId);
+    public async Task DeleteDeviceAsync(Guid userId, Guid deviceId) {
+        var user = _userManager.Users.First(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -309,12 +297,8 @@ public class AuthService : IAuthService {
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="changePasswordDto"></param>
-    public async Task ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto) {
-        if (userId == null) {
-            throw new ArgumentNullException(nameof(userId));
-        }
-
-        var user = _userManager.Users.First(u => u.Id.ToString() == userId);
+    public async Task ChangePasswordAsync(Guid userId, ChangePasswordDto changePasswordDto) {
+        var user = _userManager.Users.First(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }

@@ -65,13 +65,11 @@ public class AuthController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("logout")]
     public async Task<ActionResult> Logout() {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
         
-        // Todo: Add User.Identity.Name validation
-        
-        await _authService.LogoutAsync(User.Identity.Name, HttpContext);
+        await _authService.LogoutAsync(userId, HttpContext);
         return Ok();
     }
 
@@ -83,11 +81,11 @@ public class AuthController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("change-password")]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto) {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
 
-        await _authService.ChangePasswordAsync(User.Identity.Name, changePasswordDto);
+        await _authService.ChangePasswordAsync(userId, changePasswordDto);
         return Ok();
     }
 
@@ -99,11 +97,11 @@ public class AuthController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices")]
     public async Task<ActionResult<List<DeviceDto>>> GetDevices() {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
 
-        return Ok(await _authService.GetDevicesAsync(User.Identity.Name));
+        return Ok(await _authService.GetDevicesAsync(userId));
     }
 
     /// <summary>
@@ -115,13 +113,12 @@ public class AuthController : ControllerBase {
     [HttpPut]
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices/{deviceId}")]
-    public async Task<ActionResult>
-        RenameDevice([FromRoute] Guid deviceId, [FromBody] DeviceRenameDto deviceRenameDto) {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+    public async Task<ActionResult> RenameDevice([FromRoute] Guid deviceId, [FromBody] DeviceRenameDto deviceRenameDto) {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
 
-        await _authService.RenameDeviceAsync(User.Identity.Name, deviceId, deviceRenameDto);
+        await _authService.RenameDeviceAsync(userId, deviceId, deviceRenameDto);
         return Ok();
     }
 
@@ -134,11 +131,11 @@ public class AuthController : ControllerBase {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("devices/{deviceId}")]
     public async Task<ActionResult> DeleteDevice([FromRoute] Guid deviceId) {
-        if (User.Identity == null || User.Identity.Name == null) {
-            throw new UnauthorizedException("Invalid authorisation");
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
         }
 
-        await _authService.DeleteDeviceAsync(User.Identity.Name, deviceId);
+        await _authService.DeleteDeviceAsync(userId, deviceId);
         return Ok();
     }
 }

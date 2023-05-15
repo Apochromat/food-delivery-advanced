@@ -31,19 +31,25 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task<AccountProfileFullDto> GetProfileAsync(string userId) {
-        if (userId == null) {
-            throw new ArgumentException("User id is empty");
-        }
-
-        var user = await _userManager.FindByIdAsync(userId);
+    public async Task<AccountProfileFullDto> GetProfileAsync(Guid userId) {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user == null) {
             throw new NotFoundException("User not found");
         }
 
         var profile = _mapper.Map<AccountProfileFullDto>(user);
         profile.Roles = (await _userManager.GetRolesAsync(user)).ToList();
+        profile.IsBanned = await IsUserBanned(user.Id);
         return profile;
+    }
+    
+    private async Task<bool> IsUserBanned(Guid userId) {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        return await _userManager.IsLockedOutAsync(user);
     }
 
     /// <summary>
@@ -51,13 +57,9 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task<AccountCustomerProfileFullDto> GetCustomerFullProfileAsync(string userId) {
-        if (userId == null) {
-            throw new ArgumentException("User id is empty");
-        }
-
+    public async Task<AccountCustomerProfileFullDto> GetCustomerFullProfileAsync(Guid userId) {
         var user = await _userManager.Users.Include(u => u.Customer)
-            .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+            .FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -72,12 +74,8 @@ public class AccountService : IAccountService {
     /// <param name="userId"></param>
     /// <param name="accountProfileEditDto"></param>
     /// <returns></returns>
-    public async Task EditProfileAsync(string userId, AccountProfileEditDto accountProfileEditDto) {
-        if (userId == null) {
-            throw new ArgumentException("User id is empty");
-        }
-
-        var user = await _userManager.FindByIdAsync(userId);
+    public async Task EditProfileAsync(Guid userId, AccountProfileEditDto accountProfileEditDto) {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -97,14 +95,10 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="accountCustomerProfileEditDto"></param>
-    public async Task EditCustomerProfileAsync(string userId,
+    public async Task EditCustomerProfileAsync(Guid userId,
         AccountCustomerProfileEditDto accountCustomerProfileEditDto) {
-        if (userId == null) {
-            throw new ArgumentException("User id is empty");
-        }
-
         var user = await _userManager.Users.Include(u => u.Customer)
-            .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+            .FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -122,12 +116,8 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task<AccountCourierProfileDto> GetCourierProfileAsync(string userId) {
-        if (userId == null) {
-            throw new ArgumentException("User id is empty");
-        }
-
-        var user = await _userManager.Users.Include(u => u.Courier).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+    public async Task<AccountCourierProfileDto> GetCourierProfileAsync(Guid userId) {
+        var user = await _userManager.Users.Include(u => u.Courier).FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -145,12 +135,8 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task<AccountCookProfileDto> GetCookProfileAsync(string userId) {
-        if (userId == null) {
-            throw new ArgumentException("User id is empty");
-        }
-
-        var user = await _userManager.Users.Include(u => u.Cook).FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+    public async Task<AccountCookProfileDto> GetCookProfileAsync(Guid userId) {
+        var user = await _userManager.Users.Include(u => u.Cook).FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -168,13 +154,9 @@ public class AccountService : IAccountService {
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task<AccountCustomerProfileDto> GetCustomerProfileAsync(string userId) {
-        if (userId == null) {
-            throw new ArgumentException("User id is empty");
-        }
-
+    public async Task<AccountCustomerProfileDto> GetCustomerProfileAsync(Guid userId) {
         var user = await _userManager.Users.Include(u => u.Customer)
-            .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+            .FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
