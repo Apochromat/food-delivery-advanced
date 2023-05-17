@@ -57,10 +57,6 @@ public class ConnectionManagerService : IConnectionManagerService {
     /// <exception cref="NotImplementedException"></exception>
     public async Task<bool> IsUserConnectedAsync(Guid userId) {
         var connections = await _dbContext.Connections.CountAsync(c => c.ReceiverId == userId);
-        if (connections > 0) {
-            return true;
-        }
-
-        return false;
+        return connections > 0;
     }
 }

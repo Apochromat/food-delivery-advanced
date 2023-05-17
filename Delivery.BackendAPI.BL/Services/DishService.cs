@@ -155,7 +155,7 @@ public class DishService : IDishService {
         if (dish == null) {
             throw new NotFoundException("Dish not found");
         }
-        
+
         dish.Name = dishUpdateDto.Name;
         dish.Description = dishUpdateDto.Description;
         dish.Price = dishUpdateDto.Price;
@@ -176,7 +176,7 @@ public class DishService : IDishService {
         if (dish == null) {
             throw new NotFoundException("Dish not found");
         }
-        
+
         dish.IsArchived = true;
         dish.UpdatedAt = DateTime.UtcNow;
         await _backendDbContext.SaveChangesAsync();
@@ -193,7 +193,7 @@ public class DishService : IDishService {
         if (dish == null) {
             throw new NotFoundException("Dish not found");
         }
-        
+
         dish.IsArchived = false;
         dish.UpdatedAt = DateTime.UtcNow;
         await _backendDbContext.SaveChangesAsync();
@@ -212,35 +212,13 @@ public class DishService : IDishService {
         if (restaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
-        
+
         var dishes = await _backendDbContext.Dishes
             .Where(x => x.Menus.FirstOrDefault()!.RestaurantId == restaurantId
                         && x.IsArchived)
             .ToListAsync();
-        
+
         var mapped = _mapper.Map<List<DishShortDto>>(dishes);
         return mapped;
-    }
-
-    /// <summary>
-    /// Check if customer is able to set rating
-    /// </summary>
-    /// <param name="dishId"></param>
-    /// <param name="customerId"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public Task<bool> IsAbleToSetRating(Guid dishId, Guid customerId) {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Set rating
-    /// </summary>
-    /// <param name="dishId"></param>
-    /// <param name="customerId"></param>
-    /// <param name="ratingSetDto"></param>
-    /// <exception cref="NotImplementedException"></exception>
-    public Task SetRating(Guid dishId, Guid customerId, RatingSetDto ratingSetDto) {
-        throw new NotImplementedException();
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Delivery.Notification.BL.Extensions; 
+namespace Delivery.Notification.BL.Extensions;
 
 /// <summary>
 /// Extension for notification service dependencies.
@@ -17,8 +17,9 @@ public static class ServiceDependencyExtension {
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     /// <returns></returns>
-    public static IServiceCollection AddNotificationServiceDependencies(this IServiceCollection services, IConfiguration configuration) {
-        services.AddDbContext<NotificationDbContext>(options => 
+    public static IServiceCollection AddNotificationServiceDependencies(this IServiceCollection services,
+        IConfiguration configuration) {
+        services.AddDbContext<NotificationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("NotificationDatabasePostgres")));
         services.AddHostedService<RabbitMqService>();
         services.AddScoped<IConnectionManagerService, ConnectionManagerService>();

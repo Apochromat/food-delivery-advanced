@@ -66,21 +66,4 @@ public interface IDishService {
     /// <param name="restaurantId"></param>
     /// <returns></returns>
     Task<List<DishShortDto>> GetArchivedDishes(Guid restaurantId);
-
-    /// <summary>
-    /// Is customer able to set rating
-    /// </summary>
-    /// <param name="dishId"></param>
-    /// <param name="customerId"></param>
-    /// <returns></returns>
-    Task<Boolean> IsAbleToSetRating(Guid dishId, Guid customerId);
-
-    /// <summary>
-    /// Set rating
-    /// </summary>
-    /// <param name="dishId"></param>
-    /// <param name="customerId"></param>
-    /// <param name="ratingSetDto"></param>
-    /// <returns></returns>
-    Task SetRating(Guid dishId, Guid customerId, RatingSetDto ratingSetDto);
 }

@@ -12,5 +12,5 @@ public class AccountCustomerProfileFullDto {
     /// <summary>
     /// User`s address
     /// </summary>
-    public required string Address { get; set; }
+    public string? Address { get; set; }
 }

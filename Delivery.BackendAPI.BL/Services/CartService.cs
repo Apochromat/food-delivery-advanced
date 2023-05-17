@@ -6,7 +6,7 @@ using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Delivery.BackendAPI.BL.Services; 
+namespace Delivery.BackendAPI.BL.Services;
 
 /// <summary>
 /// Cart service
@@ -28,14 +28,14 @@ public class CartService : ICartService {
     /// <inheritdoc/>
     public async Task ClearCartFromArchivedDishes(Guid userId) {
         var dishes = await _backendDbContext.DishesInCart
-            .Include(x=>x.Dish)
-            .Include(x=>x.Restaurant)
+            .Include(x => x.Dish)
+            .Include(x => x.Restaurant)
             .Where(x => x.CustomerId == userId)
             .ToListAsync();
         if (dishes.Count == 0) {
             return;
         }
-        
+
         var restaurant = await _backendDbContext.Restaurants
             .FirstOrDefaultAsync(x => x.Id == dishes.First().Restaurant.Id);
         if (restaurant == null || restaurant.IsArchived) {
@@ -57,24 +57,24 @@ public class CartService : ICartService {
     public async Task<CartDto> GetCart(Guid userId) {
         await ClearCartFromArchivedDishes(userId);
         var dishes = await _backendDbContext.DishesInCart
-            .Include(x=>x.Dish)
-            .Include(x=>x.Restaurant)
+            .Include(x => x.Dish)
+            .Include(x => x.Restaurant)
             .Where(x => x.CustomerId == userId)
             .ToListAsync();
         if (dishes.Count == 0) {
             throw new NotFoundException("Cart is empty");
         }
-        
+
         var restaurant = await _backendDbContext.Restaurants
             .FirstOrDefaultAsync(x => x.Id == dishes.First().Restaurant.Id);
         if (restaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
-        
-        var cart = new CartDto() { 
+
+        var cart = new CartDto() {
             Dishes = _mapper.Map<List<CartDishDto>>(dishes),
             Restaurant = _mapper.Map<RestaurantShortDto>(restaurant),
-            TotalPrice = dishes.Sum(x=>x.Dish.Price*x.Amount)
+            TotalPrice = dishes.Sum(x => x.Dish.Price * x.Amount)
         };
         return cart;
     }
@@ -88,37 +88,34 @@ public class CartService : ICartService {
     /// <exception cref="NotImplementedException"></exception>
     public async Task AddDishToCart(Guid userId, Guid dishId, int amount = 1) {
         var dish = await _backendDbContext.Dishes
-            .Include(x=>x.Menus)
+            .Include(x => x.Menus)
             .FirstOrDefaultAsync(x => x.Id == dishId);
         if (dish == null) {
             throw new NotFoundException("Dish not found");
         }
-        
+
         var dishRestaurant = await _backendDbContext.Restaurants
             .FirstOrDefaultAsync(x => x.Id == dish.Menus.First().RestaurantId);
-        
         if (dishRestaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
-        
+
         var cartRestaurant = await _backendDbContext.DishesInCart
-            .Include(x=>x.Restaurant)
+            .Include(x => x.Restaurant)
             .FirstOrDefaultAsync(x => x.CustomerId == userId);
-        
         if (cartRestaurant != null && cartRestaurant.Restaurant.Id != dishRestaurant.Id) {
             throw new BadRequestException("You can`t add dishes from different restaurants to cart");
         }
-        
+
         var dishInCart = await _backendDbContext.DishesInCart
             .FirstOrDefaultAsync(x => x.CustomerId == userId && x.Dish.Id == dishId);
-        
         if (dishInCart != null) {
             dishInCart.Amount += amount;
             _backendDbContext.DishesInCart.Update(dishInCart);
             await _backendDbContext.SaveChangesAsync();
             return;
         }
-        
+
         dishInCart = new DishInCart() {
             Id = new Guid(),
             CustomerId = userId,
@@ -126,7 +123,7 @@ public class CartService : ICartService {
             Amount = amount,
             Restaurant = dishRestaurant
         };
-        
+
         await _backendDbContext.DishesInCart.AddAsync(dishInCart);
         await _backendDbContext.SaveChangesAsync();
     }
@@ -145,16 +142,17 @@ public class CartService : ICartService {
         if (dishInCart == null) {
             throw new NotFoundException("Dish not found in cart");
         }
-        
+
         if (removeAll) {
             _backendDbContext.DishesInCart.Remove(dishInCart);
             await _backendDbContext.SaveChangesAsync();
             return;
         }
-        
+
         if (dishInCart.Amount < amount) {
             throw new BadRequestException("You can`t remove more dishes than you have");
         }
+
         dishInCart.Amount -= amount;
         if (dishInCart.Amount == 0) {
             _backendDbContext.DishesInCart.Remove(dishInCart);
@@ -162,6 +160,7 @@ public class CartService : ICartService {
         else {
             _backendDbContext.DishesInCart.Update(dishInCart);
         }
+
         await _backendDbContext.SaveChangesAsync();
     }
 
@@ -178,10 +177,11 @@ public class CartService : ICartService {
         if (dishesInCart.Count == 0 && force) {
             throw new NotFoundException("Cart is empty");
         }
-        if (!force) {
+
+        if (dishesInCart.Count == 0 && !force) {
             return;
         }
-        
+
         _backendDbContext.DishesInCart.RemoveRange(dishesInCart);
         await _backendDbContext.SaveChangesAsync();
     }

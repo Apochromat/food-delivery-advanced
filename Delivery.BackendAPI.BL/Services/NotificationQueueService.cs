@@ -17,18 +17,17 @@ public class NotificationQueueService : INotificationQueueService {
     public Task SendNotificationAsync(MessageDto messageDto) {
         var factory = new ConnectionFactory() { HostName = "localhost" };
         try {
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel()) {
-                channel.ExchangeDeclare(exchange: "notifications", type: ExchangeType.Fanout);
+            using var connection = factory.CreateConnection();
+            using var channel = connection.CreateModel();
+            channel.ExchangeDeclare(exchange: "notifications", type: ExchangeType.Fanout);
                 
-                string message = JsonSerializer.Serialize(messageDto);
-                var body = Encoding.UTF8.GetBytes(message);
+            var message = JsonSerializer.Serialize(messageDto);
+            var body = Encoding.UTF8.GetBytes(message);
 
-                channel.BasicPublish(exchange: "notifications",
-                    routingKey: "",
-                    basicProperties: null,
-                    body: body);
-            }
+            channel.BasicPublish(exchange: "notifications",
+                routingKey: "",
+                basicProperties: null,
+                body: body);
         }
         catch (Exception) {
             // ignored

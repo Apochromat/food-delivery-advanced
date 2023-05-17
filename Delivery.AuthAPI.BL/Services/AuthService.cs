@@ -120,17 +120,15 @@ public class AuthService : IAuthService {
                 User = user,
                 RefreshToken = $"{Guid.NewGuid()}-{Guid.NewGuid()}",
                 UserAgent = httpContext.Request.Headers["User-Agent"],
-                CreatedAt = DateTime.UtcNow,
-                LastActivity = DateTime.UtcNow,
-                ExpirationDate = DateTime.UtcNow.AddDays(_configuration.GetSection("Jwt")
-                    .GetValue<int>("RefreshTokenLifetimeInMonths"))
+                CreatedAt = DateTime.UtcNow
             };
             await _authDbContext.Devices.AddAsync(device);
-            await _authDbContext.SaveChangesAsync();
         }
 
         device.LastActivity = DateTime.UtcNow;
-        device.ExpirationDate = DateTime.UtcNow.AddMonths(6);
+        device.ExpirationDate = DateTime.UtcNow.AddDays(_configuration.GetSection("Jwt")
+            .GetValue<int>("RefreshTokenLifetimeInMonths"));
+        
         await _authDbContext.SaveChangesAsync();
 
         var jwt = new JwtSecurityToken(
@@ -242,7 +240,7 @@ public class AuthService : IAuthService {
     /// <param name="userId"></param>
     /// <returns></returns>
     public Task<List<DeviceDto>> GetDevicesAsync(Guid userId) {
-        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Id == userId);
+        var user = _userManager.Users.Include(x => x.Devices).FirstOrDefault(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -258,7 +256,9 @@ public class AuthService : IAuthService {
     /// <param name="deviceRenameDto"></param>
     /// <returns></returns>
     public async Task RenameDeviceAsync(Guid userId, Guid deviceId, DeviceRenameDto deviceRenameDto) {
-        var user = _userManager.Users.Include(x => x.Devices).First(u => u.Id == userId);
+        var user = _userManager.Users
+            .Include(x => x.Devices)
+            .FirstOrDefault(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -278,7 +278,7 @@ public class AuthService : IAuthService {
     /// <param name="userId"></param>
     /// <param name="deviceId"></param>
     public async Task DeleteDeviceAsync(Guid userId, Guid deviceId) {
-        var user = _userManager.Users.First(u => u.Id == userId);
+        var user = _userManager.Users.FirstOrDefault(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -298,7 +298,7 @@ public class AuthService : IAuthService {
     /// <param name="userId"></param>
     /// <param name="changePasswordDto"></param>
     public async Task ChangePasswordAsync(Guid userId, ChangePasswordDto changePasswordDto) {
-        var user = _userManager.Users.First(u => u.Id == userId);
+        var user = _userManager.Users.FirstOrDefault(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }

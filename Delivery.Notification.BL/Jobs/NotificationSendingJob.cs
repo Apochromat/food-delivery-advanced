@@ -47,6 +47,6 @@ public class NotificationSendingJob : IJob {
             }
         }
 
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 }

@@ -39,17 +39,8 @@ public class AccountService : IAccountService {
 
         var profile = _mapper.Map<AccountProfileFullDto>(user);
         profile.Roles = (await _userManager.GetRolesAsync(user)).ToList();
-        profile.IsBanned = await IsUserBanned(user.Id);
+        profile.IsBanned = await _userManager.IsLockedOutAsync(user);
         return profile;
-    }
-    
-    private async Task<bool> IsUserBanned(Guid userId) {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-
-        return await _userManager.IsLockedOutAsync(user);
     }
 
     /// <summary>
@@ -59,13 +50,16 @@ public class AccountService : IAccountService {
     /// <returns></returns>
     public async Task<AccountCustomerProfileFullDto> GetCustomerFullProfileAsync(Guid userId) {
         var user = await _userManager.Users.Include(u => u.Customer)
+            .Select(x => new AccountCustomerProfileFullDto() {
+                Id = x.Id,
+                Address = x.Customer.Address
+            })
             .FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
 
-        var profile = _mapper.Map<AccountCustomerProfileFullDto>(user.Customer);
-        return profile;
+        return user;
     }
 
     /// <summary>
@@ -103,10 +97,6 @@ public class AccountService : IAccountService {
             throw new NotFoundException("User not found");
         }
 
-        if (user.Customer == null) {
-            throw new NotFoundException("Customer not found");
-        }
-
         user.Customer.Address = accountCustomerProfileEditDto.Address;
         await _userManager.UpdateAsync(user);
     }
@@ -117,7 +107,9 @@ public class AccountService : IAccountService {
     /// <param name="userId"></param>
     /// <returns></returns>
     public async Task<AccountCourierProfileDto> GetCourierProfileAsync(Guid userId) {
-        var user = await _userManager.Users.Include(u => u.Courier).FirstOrDefaultAsync(u => u.Id == userId);
+        var user = await _userManager.Users
+            .Include(u => u.Courier)
+            .FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }

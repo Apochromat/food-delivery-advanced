@@ -6,7 +6,7 @@ using Delivery.Common.Exceptions;
 using Delivery.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Delivery.BackendAPI.BL.Services; 
+namespace Delivery.BackendAPI.BL.Services;
 
 /// <summary>
 /// Rating service
@@ -25,36 +25,36 @@ public class RatingService : IRatingService {
     ///<inheritdoc/>
     public async Task<RatingCheckDto> IsUserCanRate(Guid userId, Guid dishId) {
         var isOrdered = await _backendDbContext.Orders
-            .Where(x => 
+            .Where(x =>
                 x.CustomerId == userId
                 && x.Status == OrderStatus.Delivered)
             .SelectMany(x => x.Dishes)
             .Select(x => x.Dish.Id)
-            .Where(d=>d==dishId)
+            .Where(d => d == dishId)
             .CountAsync();
-        
-        return new RatingCheckDto() {IsAbleToRate = isOrdered > 0};
+
+        return new RatingCheckDto() { IsAbleToRate = isOrdered > 0 };
     }
 
     ///<inheritdoc/>
     public async Task RateDish(Guid userId, Guid dishId, RatingSetDto rating) {
         var isOrdered = await _backendDbContext.Orders
-            .Where(x => 
+            .Where(x =>
                 x.CustomerId == userId
                 && x.Status == OrderStatus.Delivered)
             .SelectMany(x => x.Dishes)
             .Select(x => x.Dish.Id)
-            .Where(d=>d==dishId)
+            .Where(d => d == dishId)
             .CountAsync();
-        
+
         if (isOrdered == 0) {
             throw new ForbiddenException("You can rate only ordered dishes");
         }
-        
+
         if (rating.Rating < 1 || rating.Rating > 5) {
             throw new BadRequestException("Rating must be between 1 and 5");
         }
-        
+
         var dish = await _backendDbContext.Dishes
             .FirstOrDefaultAsync(x => x.Id == dishId);
         if (dish == null) {
@@ -83,13 +83,13 @@ public class RatingService : IRatingService {
             var dishCalculatedRating = await _backendDbContext.Ratings
                 .Where(x => x.Dish.Id == dishId)
                 .AverageAsync(x => x.Value);
-        
+
             dish.CalculatedRating = (decimal)dishCalculatedRating;
         }
         else {
             dish.CalculatedRating = rating.Rating;
         }
-        
+
         await _backendDbContext.SaveChangesAsync();
     }
 }

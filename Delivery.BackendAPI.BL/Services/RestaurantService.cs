@@ -45,8 +45,7 @@ public class RestaurantService : IRestaurantService {
         }
         
         var allCount = _backendDbContext.Restaurants
-            .Count(x => x.IsArchived == false 
-                        && (name == null || x.Name.Contains(name)));
+            .Count(x => x.IsArchived == false && (name == null || x.Name.Contains(name)));
         if (allCount == 0) {
             throw new NotFoundException("Restaurants not found");
         }
@@ -59,8 +58,7 @@ public class RestaurantService : IRestaurantService {
         
         // Get restaurants
         var raw = _backendDbContext.Restaurants
-            .Where(x => x.IsArchived == false 
-                        && (name == null || x.Name.Contains(name)))
+            .Where(x => x.IsArchived == false && (name == null || x.Name.Contains(name)))
             .OrderByRestaurantSort(sort)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)

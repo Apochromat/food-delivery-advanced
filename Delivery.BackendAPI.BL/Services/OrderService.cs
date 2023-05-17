@@ -27,7 +27,8 @@ public class OrderService : IOrderService {
     /// <param name="mapper"></param>
     /// <param name="cartService"></param>
     /// <param name="notificationService"></param>
-    public OrderService(BackendDbContext backendDbContext, IMapper mapper, ICartService cartService, INotificationQueueService notificationService) {
+    public OrderService(BackendDbContext backendDbContext, IMapper mapper, ICartService cartService,
+        INotificationQueueService notificationService) {
         _backendDbContext = backendDbContext;
         _mapper = mapper;
         _cartService = cartService;
@@ -69,7 +70,7 @@ public class OrderService : IOrderService {
         var mapped = _mapper.Map<List<OrderShortDto>>(raw);
         return new Pagination<OrderShortDto>(mapped, page, pageSize, pages);
     }
-    
+
     /// <inheritdoc />
     public async Task<Pagination<OrderShortDto>> GetMyCustomerOrders(Guid customerId, List<OrderStatus>? status = null,
         string? number = null, int page = 1, int pageSize = 10, OrderSort sort = OrderSort.CreationDesc) {
@@ -186,7 +187,7 @@ public class OrderService : IOrderService {
 
     /// <inheritdoc />
     public async Task<OrderFullDto> GetOrder(Guid orderId) {
-        var order = await _backendDbContext.Orders.Include(x=>x.Dishes)
+        var order = await _backendDbContext.Orders.Include(x => x.Dishes)
             .FirstOrDefaultAsync(x => x.Id == orderId);
         if (order == null) {
             throw new NotFoundException("Order not found");
@@ -203,7 +204,7 @@ public class OrderService : IOrderService {
             .Include(x => x.Restaurant)
             .Where(x => x.CustomerId == customerId)
             .ToListAsync();
-        
+
         if (dishesInCart.Count == 0) {
             throw new BadRequestException("Cart is empty");
         }
@@ -217,7 +218,7 @@ public class OrderService : IOrderService {
             ArchivedDishDescription = x.Dish.Description,
             ArchivedDishImageUrl = x.Dish.ImageUrl
         }).ToList();
-        
+
         var order = new Order() {
             Id = new Guid(),
             CustomerId = customerId,
@@ -233,7 +234,7 @@ public class OrderService : IOrderService {
             Restaurant = dishesInCart.First().Restaurant,
             TotalPrice = dishesInCart.Sum(x => x.Amount * x.Dish.Price)
         };
-        
+
         await _cartService.ClearCart(order.CustomerId);
         await _backendDbContext.Orders.AddAsync(order);
         await _backendDbContext.SaveChangesAsync();
@@ -252,6 +253,7 @@ public class OrderService : IOrderService {
         else if (status == OrderStatus.AssignedForCourier) {
             order.CourierId = userId;
         }
+
         order.Status = status;
         await _backendDbContext.SaveChangesAsync();
         await _notificationService.SendNotificationAsync(new MessageDto() {
@@ -265,8 +267,8 @@ public class OrderService : IOrderService {
     /// <inheritdoc />
     public async Task RepeatOrder(Guid orderId, bool force = false) {
         var order = await _backendDbContext.Orders
-            .Include(x=>x.Dishes)
-            .ThenInclude(x=>x.Dish)
+            .Include(x => x.Dishes)
+            .ThenInclude(x => x.Dish)
             .FirstOrDefaultAsync(x => x.Id == orderId);
         if (order == null) {
             throw new NotFoundException("Order not found");
@@ -279,16 +281,15 @@ public class OrderService : IOrderService {
         catch (Exception) {
             // ignored
         }
-        
-        if (cart != null && (cart.Dishes.Count != 0 && force == false)) {
+
+        if (cart != null && cart.Dishes.Count != 0 && force == false) {
             throw new BadRequestException("Cart is not empty. Send force=true to override");
         }
 
         await _cartService.ClearCart(order.CustomerId, false);
-        
+
         foreach (var orderDish in order.Dishes) {
             await _cartService.AddDishToCart(order.CustomerId, orderDish.Dish.Id, orderDish.Amount);
         }
-        
     }
 }
