@@ -112,19 +112,19 @@ public class RestaurantController : Controller {
             model.Email = "";
         }
         catch (NotFoundException ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             errors.Add("Email", ex.Message);
             _toastNotification.Error(ex.Message);
             ModelState.AddModelError("", "");
         }
         catch (MethodNotAllowedException ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             errors.Add("Email", ex.Message);
             _toastNotification.Error(ex.Message);
             ModelState.AddModelError("", "");
         }
         catch (Exception ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error("Something went wrong");
             ModelState.AddModelError("", "");
         }
@@ -141,22 +141,22 @@ public class RestaurantController : Controller {
         try {
             await _restaurantService.RemoveManagerFromRestaurant(model.RestaurantId, model.Email);
             _toastNotification.Success("Manager removed successfully");
-            model.Email = "";
         }
         catch (NotFoundException ex) {
             _toastNotification.Error(ex.Message);
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
         }
         catch (MethodNotAllowedException ex) {
             _toastNotification.Error(ex.Message);
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
         }
         catch (Exception ex) {
             _toastNotification.Error("Something went wrong");
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
         }
-
-        model.Email = "";
+        finally {
+            model.Email = "";
+        }
 
         return RedirectToAction("ConcreteRestaurant", model);
     }
@@ -178,19 +178,19 @@ public class RestaurantController : Controller {
             model.Email = "";
         }
         catch (NotFoundException ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             errors.Add("Email", ex.Message);
             _toastNotification.Error(ex.Message);
             ModelState.AddModelError("", "");
         }
         catch (MethodNotAllowedException ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             errors.Add("Email", ex.Message);
             _toastNotification.Error(ex.Message);
             ModelState.AddModelError("", "");
         }
         catch (Exception ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error("Something went wrong");
         }
 
@@ -206,22 +206,22 @@ public class RestaurantController : Controller {
         try {
             await _restaurantService.RemoveCookFromRestaurant(model.RestaurantId, model.Email);
             _toastNotification.Success("Cook removed successfully");
-            model.Email = "";
         }
         catch (NotFoundException ex) {
             _toastNotification.Error(ex.Message);
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
         }
         catch (MethodNotAllowedException ex) {
             _toastNotification.Error(ex.Message);
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
         }
         catch (Exception ex) {
             _toastNotification.Error("Something went wrong");
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
         }
-
-        model.Email = "";
+        finally {
+            model.Email = "";
+        }
 
         return RedirectToAction("ConcreteRestaurant", model);
     }
@@ -239,7 +239,7 @@ public class RestaurantController : Controller {
             _toastNotification.Success("Restaurant created successfully");
         }
         catch (Exception ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error("Something went wrong");
         }
 
@@ -259,15 +259,15 @@ public class RestaurantController : Controller {
             _toastNotification.Success("Restaurant updated successfully");
         }
         catch (NotFoundException ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error(ex.Message);
         }
         catch (MethodNotAllowedException ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error(ex.Message);
         }
         catch (Exception ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error("Something went wrong");
         }
 
@@ -281,11 +281,11 @@ public class RestaurantController : Controller {
             _toastNotification.Success("Restaurant archived successfully");
         }
         catch (NotFoundException ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error(ex.Message);
         }
         catch (Exception ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error("Something went wrong");
         }
 
@@ -299,11 +299,11 @@ public class RestaurantController : Controller {
             _toastNotification.Success("Restaurant unarchived successfully");
         }
         catch (NotFoundException ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error(ex.Message);
         }
         catch (Exception ex) {
-            _logger.LogError(ex.Message, ex);
+            _logger.LogError(ex, "");
             _toastNotification.Error("Something went wrong");
         }
 
