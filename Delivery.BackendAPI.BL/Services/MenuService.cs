@@ -182,6 +182,10 @@ public class MenuService : IMenuService {
             throw new NotFoundException("Dish not found");
         }
 
+        if (dish.RestaurantId != menu.RestaurantId) {
+            throw new ConflictException("This dish is from another restaurant");
+        }
+
         menu.Dishes.Add(dish);
         await _backendDbContext.SaveChangesAsync();
     }
@@ -209,7 +213,10 @@ public class MenuService : IMenuService {
         if (dish == null) {
             throw new NotFoundException("Dish not found");
         }
-
+        if (menu.Dishes.All(x => x.Id != dishId)) {
+            throw new NotFoundException("Dish not found in menu");
+        }
+        
         menu.Dishes.Remove(dish);
         await _backendDbContext.SaveChangesAsync();
     }

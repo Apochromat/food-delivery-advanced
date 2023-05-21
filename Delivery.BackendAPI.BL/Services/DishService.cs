@@ -67,6 +67,7 @@ public class DishService : IDishService {
             ImageUrl = dishCreateDto.ImageUrl,
             Name = dishCreateDto.Name,
             Description = dishCreateDto.Description,
+            RestaurantId = restaurant.Id,
             Price = dishCreateDto.Price,
             IsVegetarian = dishCreateDto.IsVegetarian,
             IsArchived = false,
@@ -214,7 +215,7 @@ public class DishService : IDishService {
         }
 
         var dishes = await _backendDbContext.Dishes
-            .Where(x => x.Menus.FirstOrDefault()!.RestaurantId == restaurantId
+            .Where(x => x.RestaurantId == restaurantId
                         && x.IsArchived)
             .ToListAsync();
 

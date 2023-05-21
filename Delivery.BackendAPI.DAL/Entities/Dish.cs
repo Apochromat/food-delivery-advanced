@@ -57,6 +57,11 @@ public class Dish {
     public List<Menu> Menus { get; set; } = new List<Menu>();
 
     /// <summary>
+    /// Restaurant identifier
+    /// </summary>
+    public required Guid RestaurantId { get; set; }
+
+    /// <summary>
     /// Orders where dish is located
     /// </summary>
     public List<OrderDish> Orders { get; set; } = new List<OrderDish>();

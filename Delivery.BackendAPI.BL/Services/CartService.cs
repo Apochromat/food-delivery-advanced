@@ -95,7 +95,7 @@ public class CartService : ICartService {
         }
 
         var dishRestaurant = await _backendDbContext.Restaurants
-            .FirstOrDefaultAsync(x => x.Id == dish.Menus.First().RestaurantId);
+            .FirstOrDefaultAsync(x => x.Id == dish.RestaurantId);
         if (dishRestaurant == null) {
             throw new NotFoundException("Restaurant not found");
         }
