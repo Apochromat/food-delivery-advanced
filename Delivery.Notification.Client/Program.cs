@@ -46,7 +46,17 @@ async Task<string?> Login() {
     return null;
 }
 
-await connection.StartAsync();
+try {
+    await connection.StartAsync();
+}
+catch (Exception e) {
+    Console.WriteLine(e.Message);
+    return;
+}
+
+Console.WriteLine(connection.State == HubConnectionState.Connected
+    ? "Connected to notification hub"
+    : "Error connecting to notification hub");
 while (true) {
     var _ = Console.ReadLine();
 }

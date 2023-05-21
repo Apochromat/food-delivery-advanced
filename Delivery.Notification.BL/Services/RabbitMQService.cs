@@ -36,11 +36,11 @@ public class RabbitMqService : BackgroundService {
         var factory = new ConnectionFactory() { HostName = _configuration["RabbitMQ:HostName"] };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
-        _channel.ExchangeDeclare(exchange: "notifications", type: ExchangeType.Fanout);
+        _channel.ExchangeDeclare(exchange: _configuration["RabbitMQ:ExchangeName"], type: ExchangeType.Fanout);
 
         var queueName = _channel.QueueDeclare(queue: _configuration["RabbitMQ:QueueName"]).QueueName;
         _channel.QueueBind(queue: queueName,
-            exchange: "notifications",
+            exchange: _configuration["RabbitMQ:ExchangeName"],
             routingKey: string.Empty);
     }
 

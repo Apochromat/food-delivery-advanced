@@ -24,26 +24,9 @@ public class RestaurantController : Controller {
     }
 
     [HttpGet]
-    public IActionResult Index(int page = 1, RestaurantSearchModel? searchModel = null) {
-        var restaurants = _restaurantService.GetAllRestaurants(
-            searchModel?.Name, page, 1, searchModel?.IsArchived, searchModel?.Sort);
-        var model = new RestaurantListViewModel() {
-            Restaurants = restaurants.Items,
-            RestaurantCreateModel = new RestaurantCreateModel {
-                RestaurantCreateDto = new RestaurantCreateDto()
-            },
-            RestaurantSearchModel = searchModel ?? new RestaurantSearchModel(),
-            Page = restaurants.CurrentPage,
-            Pages = restaurants.PagesAmount,
-            PageSize = restaurants.PageSize
-        };
-        return View(model);
-    }
-
-    [HttpGet]
     public IActionResult Index(int page = 1, string? name = null, RestaurantSort sort = RestaurantSort.NameAsc, bool? isArchived = null) {
         var restaurants = _restaurantService.GetAllRestaurants(
-            name, page, 1, isArchived, sort);
+            name, page, 10, isArchived, sort);
         var model = new RestaurantListViewModel() {
             Restaurants = restaurants.Items,
             RestaurantCreateModel = new RestaurantCreateModel {
