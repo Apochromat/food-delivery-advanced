@@ -15,7 +15,8 @@ public static class QuartzConfigureExtension {
     /// <returns></returns>
     public static IServiceCollection ConfigureQuartz(this IServiceCollection services) {
         services.AddQuartz(q => {
-            // Just use the name of your job that you created in the Jobs folder.
+            q.UseMicrosoftDependencyInjectionJobFactory();
+            
             var jobKey = new JobKey("NotificationSendingJob");
             q.AddJob<NotificationSendingJob>(opts => opts.WithIdentity(jobKey));
 

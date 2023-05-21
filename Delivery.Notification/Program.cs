@@ -46,6 +46,7 @@ builder.Services.AddSignalR();
 builder.Services.AddNotificationServiceDependencies(builder.Configuration);
 
 var app = builder.Build();
+await app.ConfigureConnectionsAsync();
 app.UseCors();
 
 app.UseHttpsRedirection();
