@@ -409,8 +409,8 @@ public class OrderController : ControllerBase {
             throw new UnauthorizedException("User is not authorized");
         }
 
-        if (!await _permissionCheckerService.IsCookHasAccessToOrder(userId, orderId)) {
-            throw new ForbiddenException("Cook has no access to this order");
+        if (!await _permissionCheckerService.IsCustomerHasAccessToOrder(userId, orderId)) {
+            throw new ForbiddenException("Customer has no access to this order");
         }
 
         await _transactionValidationService.ValidateTransactionAsync(RoleType.Customer, orderId, status.Status);
@@ -430,6 +430,13 @@ public class OrderController : ControllerBase {
     [Route("order/{orderId}")]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
     public async Task<ActionResult<OrderFullDto>> GetOrder([FromRoute] Guid orderId) {
+        if (User.Identity == null || Guid.TryParse(User.Identity.Name, out Guid userId) == false) {
+            throw new UnauthorizedException("User is not authorized");
+        }
+
+        if (!await _permissionCheckerService.IsManagerHasAccessToOrder(userId, orderId)) {
+            throw new ForbiddenException("Manager has no access to this order");
+        }
         return Ok(await _orderService.GetOrder(orderId));
     }
 
@@ -452,6 +459,10 @@ public class OrderController : ControllerBase {
             throw new UnauthorizedException("User is not authorized");
         }
 
+        if (!await _permissionCheckerService.IsManagerHasAccessToOrder(userId, orderId)) {
+            throw new ForbiddenException("Manager has no access to this order");
+        }
+        
         await _transactionValidationService.ValidateTransactionAsync(RoleType.Manager, orderId, status.Status);
         await _orderService.SetOrderStatus(orderId, status.Status, userId);
         return Ok();

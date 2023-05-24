@@ -96,7 +96,9 @@ public class RestaurantController : ControllerBase {
             throw new UnauthorizedException("User is not authorized");
         }
 
-        await _permissionCheckerService.IsUserManagerOfRestaurant(userId, restaurantId);
+        if (await _permissionCheckerService.IsUserManagerOfRestaurant(userId, restaurantId) == false) {
+            throw new ForbiddenException("You are not manager of this restaurant");
+        }
         return Ok(await _restaurantService.GetRestaurantOrders(restaurantId, sort, status, number, page, pageSize));
     }
 
@@ -122,7 +124,9 @@ public class RestaurantController : ControllerBase {
             throw new UnauthorizedException("User is not authorized");
         }
 
-        await _permissionCheckerService.IsUserCookOfRestaurant(userId, restaurantId);
+        if (await _permissionCheckerService.IsUserCookOfRestaurant(userId, restaurantId) == false) {
+            throw new ForbiddenException("You are not cook of this restaurant");
+        }
         return Ok(await _restaurantService.GetCookRestaurantOrders(restaurantId, sort, number, page, pageSize));
     }
 }
